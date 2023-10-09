@@ -1,0 +1,109 @@
+@@@home@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background:white">
+	<%if(event){%>
+    <div class="sfit"> 
+    	<div class="sfit scrollY" style="z-index: 1;bottom:0px">
+    		<div style="width:600px;max-width: 100%;margin:auto;">
+                <div style="padding:0px 0px 10px 0px;background: white;">
+                    <div>
+                    	<div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div><%=event.name%></div>
+                        </div>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div style="font-size:11px;padding-bottom:5px;">Event Time</div>
+                            <div><%=event.pretty_time%></div>
+                        </div>
+                        <%if(event.location&&false){%>
+                        <%if(event.location.data){%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;" action="click:navigateTo">
+                            <div style="font-size:11px;padding-bottom:5px;">Location</div>
+                            <div><%=phone.location.getName(event.location.data,'simple')%></div>
+                        </div>
+                        <%}else if(event.location.text){%>
+                         <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div style="font-size:11px;padding-bottom:5px;">Location</div>
+                            <div><%=event.location.text%></div>
+                        </div>
+                        <%}%>
+                        <%}%>
+                        <%if(event.ticket&&event.ticket.tickets){%>
+                        <div style="padding-left:10px">
+                            <div style="font-size:11px;padding-bottom:5px;padding-top:10px">Tickets</div>
+                            <div>
+                            <%for (var i = 0; i < event.ticket.tickets.order.length; i++) {
+                                var id=event.ticket.tickets.order[i];
+                                var ticket=event.ticket.tickets.list[id];
+                                ticket.remaining=ticket.quantity;
+                                if(ticket.all) ticket.remaining-=ticket.all;
+                                %>
+                                <div style="padding:5px;font-size:15px;border-bottom:1px solid #eee" class="ticketitem" data-id="<%=ticket.id%>" data-type="mobile">
+                                    <table style="width:100%;color:#555">
+                                        <tr>
+                                            <td style="padding-left:5px">
+                                                <div style="font-size:16px" class="bold"><%=ticket.name%></div>
+                                                <div style="padding-left:5px"><%if(event.ticket_settings&&store.resp.event.ticket_settings.showremaining||ticket.remaining<10){%><span style="font-size:12px;font-weight: normal"><%=ticket.remaining%>/<%=ticket.quantity%> remaining</span><%}%></div>
+                                            </td>
+                                            <td style="width:80px;text-align: right;padding-right:5px;font-size:16px;vertical-align: middle;">
+                                                <%if(ticket.type=='donation'){%><%=$.fn.render({template:'event_donation',data:{data:{id:ticket.id}},returntemplate:true})%><%}else{%>$<%=modules.tools.toMoney(ticket.price)%><%}%></td>
+                                            <td style="width:60px;text-align: right;padding-right:5px;font-size:16px;vertical-align: top;padding-top: 3px;position: relative;">
+                                                <div class="ticketselect m-corner-all" style="display:inline-block;border:1px solid #ccc;">
+                                                	<div style="display: inline-block;">
+                                                    	<span class="ticket_quantity select"></span>
+                                                    </div>
+                                                    <i class="icon-down-open" style="position: absolute;top:12px;right:8px;pointer-events: none;font-size:12px"></i>
+                                                </div>
+                                                <div class="ticketsoldout" style="font-size:11px">
+                                                    Sold Out!
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            <%}%>
+                            </div>
+                        </div>
+                        <%}%>
+                        <div style="padding-top:50px;text-align: center;">
+                            <div class="button1" action="click:purchase" style="display: inline-block;">Get Tickets</div>
+                        </div>
+                    </div>
+                </div>
+    		</div>
+    	</div>
+    </div>
+	<%}else{%>
+	<div style="padding:50px;font-size:24px;text-align: center;"><i class="icon-warning-sign"></i> Event not found</div>
+	<%}%>
+</div>
+@@@tickets_view@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;overflow: hidden" class="apppageview">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;" class="content m-corner-top">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px;border-bottom:1px solid #ccc" class="themebg m-corner-top">
+				<table style="width:100%;color:#888">
+					<tr>
+						<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+							<i class="icon-cancel" style="font-size:14px;"></i>
+						</td>
+						<td style="text-align: center;font-size:18px;color:#888;padding:3px;">Tickets</td>
+						<td style="width:50px;text-align: right;padding-right:5px;font-size:16px;" class="timeremaining">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="position: relative;overflow: hidden" class="ticket_checkout_height scrollY">
+				<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pagepane">
+					<div>
+						<%for (var i = 0; i < qrs.length; i++) {
+							var qr=qrs[i];%>
+							<div style="padding:5px;text-align: center;"><div style="padding-bottom:5px;font-size: 18px;color:#888;font-weight: bold">Ticket <%=(i+1)%>/<%=(qrs.length)%></div><div><img src="<%=qr%>" style="width:80%;text-align: center;display: inline-block;"></div></div>
+						<%}%>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

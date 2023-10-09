@@ -1,0 +1,211 @@
+[{
+	"id":"chakras",
+	"admins":["UC9QP6XFW"],
+	"name":"Chakra Map",
+    "description":"Chakra Map",
+	"settings":{
+		"maptype":"viewport",
+		"adminEmail":"tom@groupup.me",
+		"showMenuOnLoad":false,
+        "nomenu":true,
+        "overlap":true,
+		"conf":"mapbox://styles/mapbox/streets-v12",
+        "accessToken":"pk.eyJ1IjoiYWN0dWFsaXplZWFydGgiLCJhIjoiY2xieXBvNXhsM2N4ZjNucGxmcDk0ZHVtYyJ9.GZeTh_Cri_-AY8OGTXEbsw",
+		"loader":{
+			"type":"heart",
+			"color":"#006939"
+		}
+	},
+    "layers":{
+        "community":{
+            "name":"Community",
+            "marker":"/pub/img/markers/community_marker.png",
+            "layer":"sacral"
+        },
+        "yoga":{
+            "name":"Yoga",
+            "marker":"/pub/img/markers/yoga_marker.png",
+            "layer":"root"
+        },
+        "spiritualcenters":{
+            "name":"Spiritual Centers",
+            "marker":"/pub/img/markers/sc_marker.png",
+            "layer":"crown"
+        },
+        "festivals":{
+            "name":"Festivals",
+            "marker":"/pub/img/markers/festival_marker.png",
+            "layer":"crown"
+        },
+        "blogs":{
+            "name":"Blogs",
+            "marker":"/pub/img/markers/blog_marker.png",
+            "layer":"throat"
+        },
+        "ethicalfood":{
+            "name":"Ethical Food",
+            "marker":"/pub/img/markers/food_marker.png",
+            "layer":"root"
+        },
+        "nonprofits":{
+            "name":"Non Profits",
+            "marker":"/pub/img/markers/nonprofit_marker.png",
+            "layer":"heart"
+        },
+        "energyhealers":{
+            "name":"Energy Healers",
+            "marker":"/pub/img/markers/healer_marker.png",
+            "layer":"crown"
+        },
+        "pois":{
+            "name":"Points of Interest",
+            "marker":"/pub/img/markers/poi_marker.png",
+            "layer":"thirdeye"
+        }
+    }
+},{
+	"id":"yoga",
+	"admins":["UC9QP6XFW"],
+	"load":"root",
+	"name":"Yoga Map",
+    "description":"Map of all yoga studios in the world",
+	"settings":{
+		"maptype":"aura",
+		"adminEmail":"tom@groupup.me",
+		"showMenuOnLoad":true,
+        "nomenu":true,
+		"conf":"https://s3.amazonaws.com/static.rtrt.me/mapbox/styles/rtrt/38/style.json",
+		"loader":{
+			"type":"heart",
+			"color":"#006939"
+		}
+	},
+    "layers":{
+        "yoga":{
+            "name":"Yoga",
+            "marker":"/pub/img/markers/yoga_marker.png",
+            "layer":"root"
+        }
+    }
+},{
+    "id":"unify",
+    "admins":["UC9QP6XFW"],
+    "load":"root",
+    "name":"Unify Map",
+    "description":"Unify Map",
+    "settings":{
+        "maptype":"aura",
+        "adminEmail":"tom@groupup.me",
+        "showMenuOnLoad":true,
+        "nomenu":true,
+        "conf":"https://s3.amazonaws.com/static.rtrt.me/mapbox/styles/rtrt/38/style.json",
+        "accessToken":"pk.eyJ1IjoibmVjdGFyIiwiYSI6ImNqZzJmYXB3bzFncjIycW54cXZoYmtoMmEifQ.PnsJMfrSCNLEn8gBp79Lyw",
+        "loader":{
+            "type":"heart",
+            "color":"#006939"
+        }
+    },
+    "layers":{
+        "yoga":{
+            "name":"Yoga",
+            "marker":"/pub/img/markers/yoga_marker.png",
+            "layer":"root"
+        }
+    }
+},{
+    "id":"retreats",
+    "admins":["UC9QP6XFW"],
+    "name":"Retreat Map",
+    "load":"retreats",
+    "description":"Map of retreat centers and events",
+    "settings":{
+        "maptype":"aura",
+        "adminEmail":"tom@groupup.me",
+        "showMenuOnLoad":true,
+        "nomenu":true,
+        "conf":"https://s3.amazonaws.com/static.rtrt.me/mapbox/styles/rtrt/38/style.json",
+        "loader":{
+            "type":"heart",
+            "color":"#006939"
+        }
+    },
+    "metalayers":{
+        "list":{
+            "retreats":{
+                "id":"retreats",
+                "name":"Retreats",
+                "sub_layers":["retreat"],
+                "colorHex":"#006939",
+                "img":"https://s3-us-west-2.amazonaws.com/groot/common/chakra_icon.png"
+            }
+        },
+        "order":["retreats"]
+    },
+    "layers":{
+        "retreat":{
+            "name":"Retreats",
+            "marker":"/pub/img/markers/sc_marker.png",
+            "layer":"retreats"
+        }
+    }
+},{
+    "id":"spiritualcenters",
+    "admins":["UC9QP6XFW"],
+    "name":"Spiritual Centers Map",
+    "load":"spiritualcenters",
+    "description":"Map of all spiritual centers",
+    "settings":{
+        "maptype":"aura",
+        "adminEmail":"tom@groupup.me",
+        "showMenuOnLoad":true,
+        "nomenu":true,
+        "conf":"https://s3.amazonaws.com/static.rtrt.me/mapbox/styles/rtrt/38/style.json",
+        "loader":{
+            "type":"heart",
+            "color":"#006939"
+        }
+    },
+    "metalayers":{
+        "list":{
+            "spiritualcenters":{
+                "id":"spiritualcenters",
+                "name":"Spiritual Centers",
+                "sub_layers":["spiritualcenters"],
+                "colorHex":"#006939",
+                "img":"https://s3-us-west-2.amazonaws.com/groot/common/chakra_icon.png"
+            }
+        },
+        "order":["retreats"]
+    },
+    "layers":{
+        "spiritualcenters":{
+            "name":"Spiritual Centers",
+            "marker":"/pub/img/markers/sc_marker.png",
+            "layer":"spiritualcenters"
+        }
+    }
+},{
+	"id":"communities",
+	"admins":["UC9QP6XFW"],
+	"name":"Communities Map",
+	"load":"communities",
+    "description":"Aggregation map of all intentional communties from FIC, GEN, and Numundo",
+	"settings":{
+		"maptype":"aura",
+		"adminEmail":"tom@groupup.me",
+		"showMenuOnLoad":true,
+        "nomenu":true,
+		"conf":"https://s3.amazonaws.com/static.rtrt.me/mapbox/styles/rtrt/38/style.json",
+		"loader":{
+			"type":"heart",
+			"color":"#006939"
+		}
+	},
+    "layers":{
+        "community":{
+            "name":"Communities",
+            "marker":"/pub/img/markers/community_marker.png",
+            "layer":"communities"
+        }
+    }
+}]

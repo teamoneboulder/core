@@ -1,0 +1,18 @@
+{foreach $data['data']['order'] as $key}
+    {var $item = $data['data']['list'][$key] }
+    <a href="{$item|getUrl:profile}" target="_blank" style="text-decoration: none;">
+    <div>
+    	<table style="width:100%">
+    		<tr>
+    			<td style="width:100px;vertical-align:top;">
+    				<div style="background-image:url({$item['pic']|getImg:profile});width:100px;height:150px; background-repeat:no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position:center;"></div>
+    			</td>
+    			<td style="padding-left:8px;vertical-align:top;">
+    				<div style="font-size:18px;">{$item['name']}</div>
+    				<div n:if="isset($item['callout'])" style="font-size:14px;padding:5px;">{$item['callout']}</div>
+    			</td>
+    		</tr>
+    	</table>
+    </div>
+    </a>
+{/foreach}

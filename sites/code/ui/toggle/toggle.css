@@ -1,0 +1,51 @@
+/*switch*/
+.onoffswitch {
+	margin:auto;
+    position: relative; width: 60px;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    height: 25px; padding: 0; line-height: 25px;
+    border: 2px solid #CCCCCC; border-radius: 25px;
+    background-color: #FFFFFF;
+    transition: background-color 0.3s ease-in;
+    text-align: right;
+    color:black;
+    padding-right:8px;
+    font-size: 10px;
+}
+.onoffswitch-label:before {
+    content: "";
+    display: block; width: 25px; margin: 0px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 33px;
+    border: 2px solid #CCCCCC; border-radius: 25px;
+    transition: all 0.3s ease-in 0s; 
+}
+.onoffbox.selected .onoffswitch-label {
+    background-color: #49E845;
+    color:white !important;
+    text-align: left;
+    padding-right:0px;
+    padding-left:10px;
+}
+.onoffbox.selected .onoffswitch-label, .onoffbox.selected .onoffswitch-label:before {
+   border-color: #49E845;
+}
+.onoffbox.selected .onoffswitch-label:before {
+    right: 0px; 
+}
+.ontext .offtext{
+	transition: all 0.3s ease-in 0s; 
+}
+.ontext{
+	display: none;
+}
+.onoffbox.selected .ontext{
+	display: block;
+}
+.onoffbox.selected .offtext{
+	display: none;
+}

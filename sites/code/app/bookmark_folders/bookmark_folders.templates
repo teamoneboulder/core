@@ -1,0 +1,59 @@
+@@@bookmark_folders_loading@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden" class="mainprofilepage">
+	<div style="position:absolute;top:0px;left:0;right:0;bottom:0px;z-index:2;" class="content apppage topnavcontent">
+		<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+	</div>
+</div>
+@@@bookmark_folders_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div class="feeditems">
+		<div style="border-bottom:1px solid #ccc;position: relative;" class="feeditems">
+			<input type="text" style="width:100vw;padding:5px 5px 5px 40px;font-size:24px;color:#555" placeholder="Search Folders" class="normalinput feeditems">
+			<i class="icon-search" style="position: absolute;top:8px;left:2px;font-size:24px;color:#888"></i>
+			<i class="icon-cancel x_cancel" style="position: absolute;top:8px;right:2px;font-size:24px;color:#888;z-index: 2;display: none"></i>
+			<div style="position: absolute;top:0;right:0;bottom:0;width:50px;z-index:1"></div>
+		</div>
+		<div class="content" style="padding-top:5px;min-height:100%">
+		</div>
+	</div>
+</div>
+@@@bookmark_folders_item@@@
+<div data-<%=template%>="<%=_tid%>" class="truebox bookmarkfolderitem" data-id="<%=data._id%>">
+	<div style="margin:3px;border:1px solid #ccc;background: white;" class="l-corner-all">
+		<div>
+			<table style="width:100%;">
+				<tr>
+					<td style="padding:8px;">
+						<div style="font-size:16px;font-weight: bold"><%=data.name.limitlength(20)%></div>
+						<div style="padding-left:3px;font-size:14px"><%if(data.count){%><%=data.count%><%}else{%>0<%}%> items</div>
+					</td>
+					<td style="width:40px;text-align: center;vertical-align: top;padding-top:5px" class="x_more" data-id="<%=data._id%>">
+						<i class="icon-dot-3" style="font-size:24px;padding:4px"></i>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<%if(data.pic){%>
+		<div style="background-image: url(<%=modules.tools.getImg(data.pic,'small')%>)" class="l-corner-bottom coverimg bookmarkfolderimg"></div>
+		<%}else{%>
+		<div style="background:#eee;" class="l-corner-bottom bookmarkfolderimg"></div>
+		<%}%>
+	</div>
+</div>
+@@@bookmark_folders_item2@@@
+<div data-<%=template%>="<%=_tid%>" style="width:50vw;display: inline-block;" class="truebox folderitem" data-id="<%=data._id%>">
+	<div style="margin:3px;border:1px solid #ccc;" class="l-corner-all">
+		<%if(data.pic){%>
+		<div style="height:20vh;background-image: url(<%=modules.tools.getImg(data.pic,'small')%>)" class="l-corner-top coverimg"></div>
+		<%}else{%>
+		<div style="height:20vh;background:#eee;" class="l-corner-top"></div>
+		<%}%>
+		<div style="height:40px;">
+			<table style="width:100%;height:100%">
+				<tr>
+					<td style="padding:5px;"><%=data.name%></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

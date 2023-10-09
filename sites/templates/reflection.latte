@@ -1,0 +1,18 @@
+<div>
+    <table style="width:100%">
+        <tr>
+            <td style="width:50px;vertical-align:top;">
+                <div style="background-image:url({$data['from']['pic']|getImg:square});width:50px;height:50px; background-repeat:no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position:center;"></div>
+            </td>
+            <td style="padding-left:5px">
+                <div style="font-weight:bold;font-size:14px;">
+                    {$data['from']['name']}
+                </div>
+                <div style="font-size:12px;padding:4px">
+                    {$data['reflection']['reflection']}
+                </div>
+                <div style="font-size:11px;color:#888;padding:5px">{$data['reflection']['_id']|getTs}</div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,14 @@
+#!/bin/bash
+cd ~
+git clone https://git.lighttpd.net/lighttpd/lighttpd1.4.git
+cd lighttpd1.4
+git checkout tags/lighttpd-1.4.54
+./autogen.sh
+./configure --with-openssl
+make
+make install
+mkdir -p /var/cache/lighttpd
+mkdir -p /var/cache/lighttpd/compress
+systemctl unmask lighttpd.service
+systemctl start lighttpd
+systemctl enable lighttpd

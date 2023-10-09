@@ -1,0 +1,41 @@
+@@@home@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg scrollY" style="background:white;z-index: 1;">
+	<div style="width:100%;height:100%;">
+		<div style="position: absolute;top:0;left:0;right:0;height:50px;background:#aaa">
+			<div class="table">
+				<div class="tcell notonsmall" style="padding-left:10px;text-align: left;">ONE|Boulder <%=year%> Event Expense Report for <b><%=app.user.profile.name%></b></div>
+				<div class="tcell x_print" style="width:200px;text-align: right;padding-right:10px"><i class="icon-download"></i> Download PDF</div>
+				<div class="tcell x_logout" style="width:90px;text-align: right;padding-right:10px"><i class="icon-logout"></i> Log Out</div>
+			</div>
+		</div>
+		<div style="position:absolute; top:50px;left:0;right:0;bottom:0;" class="scrollY">
+			<div style="width:800px;max-width: 100%;margin:auto;" id="content"></div>
+		</div>
+	</div>
+</div>
+@@@list@@@
+<div>
+	<%if(resp.success){%>
+	<div style="padding:20px;text-align: center;">Total Deductible Expenses for <%=year%><br/><br/><span style="font-size:24px;font-weight: bold;">$<%=_.toMoney(resp.data.total,1)%></span><br/></div>
+	<%for (var i = 0; i < resp.data.order.length; i++) {
+		var item=resp.data.list[resp.data.order[i]];%>
+		<div style="font-size:20px;padding:5px;background:#eee;margin-bottom: 4px;"><%=modules.moment.format(item[0].event_info.start,'date',false,1)%> <%=item[0].event_info.name%></div>
+		<div style="padding-left:10px">
+		<%for (var ti = 0; ti < item.length; ti++) {
+			var row=item[ti];%>
+			<div><%=_.fixContent(row.description,{stripHtml:true})%> <span style="float:right">$<%=_.toMoney(row.amount_flat)%> </span></div>
+		<%}%>
+		<div style="height:40px;"></div>
+		</div>
+	<%}%>
+	<div style="text-align: center;">ONE|Boulder <%=year%> Event Expense Report for <b><%=app.user.profile.name%></b></div>
+	<div style="text-align:center">Prepared <%=modules.moment.format(new Date().getTime(),'date')%></div>
+	<div style="height:200px;"></div>
+	<%}else if(resp.error=='no_results'){%>
+	<div style="padding:20px;text-align: center;">No Expenses found for this year.</div>
+	<%}else{%>
+	<div style="padding:20px;text-align: center;"><%=resp.error%></div>
+	<%}%>
+</div>
+@@@app_title@@@
+<div style="padding:5px;margin-top:35px;font-size:24px;text-align: center;font-weight: bold">    <div >ONE|Boulder</div>    <div style="padding-top:4px;font-size:12px;font-weight: normal"></div></div>

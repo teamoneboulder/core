@@ -1,0 +1,568 @@
+@@@header@@@
+<div style="position:relative;width:100%;height:45px;position:absolute;top:20px;left:0;right:0;" class="appheader" data-<%=template%>="<%=_tid%>">
+	<div class="sfit mobileheader">
+		<i class="icon-left-open backicon themeheaderfontcolor fasttransition" style="position: absolute;top:50%;margin-top:-20px;padding:5px 0px;z-index: 5;font-size:26px;z-index: 5"></i>
+		<%if(!this.restricted){%>
+		<i class="icon-search searchicon themeheaderfontcolor fasttransition" style="touch-action: none;pointer-events:none;position: absolute;top:50%;margin-top:-12px;z-index: 7;"></i>
+		<%}%>
+		<div class="sfit headernav" style="z-index: 1;">
+			<table style="width:100%;height:100%;" class="themeheadercolor">
+				<tr>
+					<td style="width:50px;text-align: center;">
+					</td>
+					<td style="text-align: center;font-size:20px" class="currentpage"></td>
+					<%if(!this.restricted){%>
+					<td style="width:50px;text-align: center;" class="x_add revicon" aria-label="Add Content" role="button">
+						<i class="icon-add-clean"></i>
+					</td>
+					<%}else{%>
+					<td style="width:50px;text-align: center;" class="x_logout">
+						<i class="icon-logout" style="font-size:20px"></i>
+					</td>
+					<%}%>
+				</tr>
+			</table>
+		</div>
+		<%if(!this.restricted){%>
+		<div class="headersearch" style="z-index: 6;position: absolute;top:0;left:0;bottom:0;">
+			<table style="width:100%;height:100%;width:100%;" class="themeiconcolor">
+				<tr>
+					<td style="padding-left:5px;">
+						<input type="text" class="appinput hidden mainsearch searchinput s-corner-all truebox mainsearchinput" style="width:40px;font-size:16px;" aria-label="Search" role="button">
+						<i class="x_cancelsearch icon-cancel revicon" style="position: absolute;top:50%;right:3px;margin-top:-15px;font-size:18px;padding:5px;"></i>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<%}%>
+	</div>
+	<div class="sfit webheader showsearch" style="background:white;border-bottom:1px solid #ccc;">
+		<div class="sfit" style="z-index: 1;">
+			<table style="width:100%;height:100%;">
+				<tr>
+					<td style="vertical-align: top;overflow: visible;position: relative;width:150px;">
+						<img src="https://s3.amazonaws.com/wearenectar/static/header_image_3.png" style="height: 60px;position: absolute;top:-2px;left:5px;z-index:3;touch-action: none;pointer-events: none;">
+						<div style="position: absolute;bottom:1px;left:0;width:100px;height:40px;background:white;z-index: 2"></div>
+						<div style="position: absolute;top:10px;left:2px;width:50px;height:50px;background:white;border:1px solid #ccc;z-index: 1" class="circle"></div>
+					</td>
+					<td style="width:320px"></td>
+					<td style="text-align: right">
+						<%if(app.user.profile){%>
+						<table style="float:right;">
+							<tr>
+								<td style="text-align: center;font-size:20px;display: none;" class="currentpage"></td>
+								<td style="width:200px;text-align: right;" class="x_complete revicon">
+								</td>
+								<td style="width:40px;text-align: center;" class="x_add revicon" id="webadd">
+									<i class="icon-add-clean"></i>
+								</td>
+								<td style="width:40px;text-align: center;position: relative;" class="x_notifications revicon">
+									<i class="icon-bell-thin-new" style="font-size:22px"></i>
+									<span style="position: absolute;top:2px;left:30%;margin-left:10px;color:white;display: none;" class="circle noticetheme totalnotificationsalert">
+										<table style="width:100%;height:100%;color:white;text-align: center">
+											<tr>
+												<td class="totalnotifications">0</td>
+											</tr>
+										</table>
+									</span>
+								</td>
+								<td style="width:40px;text-align: center;position: relative;" class="x_chats revicon">
+									<i class="<%=app.getIcon('chat')%>" style="font-size:22px"></i>
+									<span style="position: absolute;top:2px;left:30%;margin-left:10px;color:white;display: none;" class="circle noticetheme totalchatalert">
+										<table style="width:100%;height:100%;color:white;text-align: center">
+											<tr>
+												<td class="totalchats">0</td>
+											</tr>
+										</table>
+									</span>
+								</td>
+								<td style="width:50px;text-align: right;position: relative;" class="x_profile revicon">
+									<div style="display:inline-block;width:44px;height:44px;border-left:1px solid white;background-image:url(<%=modules.tools.getImg(identity.data.pic,'square')%>)" class="coverimg mainprofilepic" id="mainwebpic"></div>
+									<span style="position: absolute;top:2px;left:30%;margin-left:8px;color:white;display: none;" class="circle noticetheme othernotificationsalert">
+										<table style="width:100%;height:100%;color:white;text-align: center">
+											<tr>
+												<td class="othernotifications">0</td>
+											</tr>
+										</table>
+									</span>
+								</td>
+							</tr>
+						</table>
+						<%}else{%>
+
+						<div style="padding:8px;font-size:16px;display: inline-block;margin:0" class="x_learnmore button bluebtn">Create Account</div>
+						<div style="padding:8px;font-size:16px;display: inline-block;margin:0;margin-left:5px;margin-right:5px" class="x_login button pinkbtn">Sign In</div>
+						<div style="padding:8px;font-size:16px;display: inline-block;margin:0;margin-right:5px" class="x_continue_fb button fbbtn">Continue with Facebook</div>
+						<%}%>
+					</td>
+				</tr>
+			</table>
+			<div class="onboardcomplete" style="display:none;position: absolute;top:100%;right:0px;background:white;width:400px;border-top:1px solid #ccc;border-left:1px solid #ccc">
+				<div style="position: relative;" class="noticepage2 onboardcontent"></div>
+			</div>
+			<div class="notifications" style="display:none;position: absolute;top:100%;right:0px;background:white;width:400px;border-top:1px solid #ccc;border-left:1px solid #ccc">
+				<div style="position: relative;" class="notificationpage noticepage2"></div>
+			</div>
+			<div class="chats" style="display:none;position: absolute;top:100%;right:0px;background:white;width:400px;border-left:1px solid #ccc">
+				<div style="height:40px;background: white;border-top:1px solid #ccc;border-bottom:1px solid #ccc;position: relative;">
+					<div class="sfit defaultview">
+						<table style="width:100%;height:100%">
+							<tr>
+								<td style="width:40px;text-align: center;" class="x_searchchat">
+									<i class="icon-search" style="font-size:16px;"></i>
+								</td>
+								<td style="text-align:center;font-size:16px" class="bold">
+									Chats
+								</td>
+								<td style="width:40px;text-align: center;" class="x_addchat">
+									<i class="icon-add-clean" style="font-size:16px;"></i>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="sfit searchview" style="display: none;">
+						<table style="width:100%;height:100%">
+							<tr>
+								<td style="position: relative;">
+									<i class="icon-search" style="position: absolute;top:8px;left:2px;padding:5px;font-size:14px"></i>
+									<input type="text" placeholder="Search Chats" style="font-size:16px;width:310px;margin:auto;padding:10px 40px 10px 40px;" class="chatsearch">
+									<i class="icon-cancel x_cancelchatsearch" style="position: absolute;top:8px;right:2px;padding:5px;font-size:14px"></i>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div style="position: relative;" class="noticepage">
+					<div class="chatspage sfit" style="z-index: 1"></div>
+					<div class="chatsearcharea sfit" style="z-index: 2;display: none;background: white;"></div>
+				</div>
+			</div>
+		</div>
+		<div style="z-index: 2;position: absolute;top:0;left:150px;bottom:0;">
+			<i class="icon-search searchicon themeheadercolor fasttransition" style="position: absolute;top:50%;margin-top:-11px;font-size:18px;background: transparent;"></i>
+			<table style="width:100%;height:100%;width:100%;" class="themeiconcolor">
+				<tr>
+					<td style="padding-left:8px;">
+						<input type="text" class="appinput hidden mainsearch searchinput searchcorner l-corner-all truebox mainsearchinput" style="width:40px;font-size:16px;background: transparent;">
+						<i class="x_cancelsearch icon-cancel revicon themeheadercolor" style="position: absolute;top:50%;right:3px;margin-top:-12px;font-size:14px;padding:5px;display: none;background: transparent;"></i>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+@@@header_public@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:30px;font-size:18px;color:#888">
+	<div style="text-align: center;padding:20px;">
+		<i class="icon-info-circled-alt" style="font-size:52px"></i>
+	</div>
+	<div style="text-align: center;">
+		Become a member to use the search!
+	</div>
+</div>
+@@@nectar_search_results@@@
+<div class="sfit" data-<%=template%>="<%=_tid%>">
+	<div style="text-align:center">
+	<%if(this.result&&result.webPages&&result.webPages.value&&result.webPages.value.length){%>
+	<%for (var i = result.webPages.value.length - 1; i >= 0; i--) {
+		var item=result.webPages.value[i];%>
+		<div class="links" style="padding:10px;display:inline-block;border-bottom:1px solid white;color:white;text-align:left" data-link="<%=item.url%>">
+			<div style="font-size:13px;"><b><%=item.name%></b></div>
+			<div style="font-size:11px"><%=item.snippet%></div>
+		</div>
+	<%};%>
+	<%}else{%>
+	<div style="padding:20px;text-align:center;color:white">No Results</div>
+	<%}%>
+	</div>
+</div>
+@@@nectar_search@@@
+<div class="sfit" data-<%=template%>="<%=_tid%>">
+	<div style="text-align:center">
+	<%if(result.suggestionGroups[0].searchSuggestions.length){%>
+	<%for (var i = result.suggestionGroups[0].searchSuggestions.length - 1; i >= 0; i--) {
+		var item=result.suggestionGroups[0].searchSuggestions[i];%>
+		<div class="autocomplete l-corner-all" style="padding:10px;font-size:18px;display:inline-block;margin:5px;border:1px solid white;color:white" data-query="<%=item.query%>"><b><%=item.displayText%></b></div>
+	<%};%>
+	<%}else{%>
+	<div style="padding:20px;text-align:center;color:white">No Suggestions</div>
+	<%}%>
+	</div>
+</div>
+@@@search_history@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background:white">
+	<div style="position:absolute;top:0px;left:0;right:0;height:30px;" class="headercolor">
+		<%=_ui.swipenav.render({id:'historynav',itemClass:'search_nav',nav:nav})%>
+	</div>
+	<div style="position: absolute;top:35px;left:0;right:0;bottom:0;">
+		<div class="content"></div>
+	</div>
+</div>
+@@@search_history_item@@@
+<%if(data.object.data){%>
+<%if($.fn.render.getTemplate('search_history_'+data.object.type)&&data.object.data){%>
+	<%=$.fn.render({template:'search_history_'+data.object.type,data:{data:data.object.data,oid:data._id},returntemplate:true})%>
+<%}else{%>
+<%if(app.isdev){%>
+	<div>Display in dev only: issue with history [<%=data.id%>]</div>
+<%}%>
+<%}%>
+<%}%>
+@@@search_results_fundraisers@@@
+<div style="text-align: center">
+	<%if(this.data&&data.order&&data.order.length){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var item=data.list[data.order[i]];
+		%>
+		<%=$.fn.render({template:'search_results_fundraiser',data:{data:item,opts:{},search:true},returntemplate:true})%>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>
+@@@search_results_fundraiser@@@
+<div class="searchitem" data-id="<%=data.id%>" data-oid="<%=data.id%>" style="background: white;">
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<div style="width:60px;height:60px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black">
+				<div style="overflow: hidden;">
+					<div style="font-size:18px;padding-left:10px"><b>Fundraiser</b> <%=data.name%></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_history_fundraiser@@@
+<div class="historyitem" data-id="<%=data.id%>" <%if(this.oid){%>data-oid="<%=oid%>"<%}%>>
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black">
+				<div style="overflow: hidden;">
+					<div style="font-size:18px;padding-left:10px"><b>Fundraiser</b> <%=data.name%></div>
+					<div style="padding-left:12px;font-size:11px;padding-top:1px">"<%=modules.tools.stripTags(data.description).limitlength(80)%>"</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_results_events@@@
+<div style="text-align: center">
+	<%if(this.data&&data.order&&data.order.length){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var item=data.list[data.order[i]];
+		%>
+		<%=$.fn.render({template:'search_results_event',data:{data:item,opts:{},search:true},returntemplate:true})%>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>
+@@@search_results_event@@@
+<div class="searchitem" data-id="<%=data.id%>" data-oid="<%=data.id%>" style="background: white;">
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<div style="width:60px;height:60px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black">
+				<div style="overflow: hidden;">
+					<div style="font-size:18px;padding-left:10px"><b>Event</b> <%=data.name%></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_history_event@@@
+<div class="historyitem" data-id="<%=data.id%>" <%if(this.oid){%>data-oid="<%=oid%>"<%}%>>
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black">
+				<div style="overflow: hidden;">
+					<div style="font-size:18px;padding-left:10px"><b>Event</b> <%=data.name%></div>
+					<div style="padding-left:12px;font-size:11px;padding-top:1px">"<%=modules.tools.stripTags(data.description).limitlength(80)%>"</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_results_post@@@
+<div class="<%if(this.search){%>searchitem<%}else{%>historyitem<%}%>" data-id="<%=data.id%>" data-oid="<%=data.id%>" style="background: white;">
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<%if(data.by.data){%>
+				<div style="width:60px;height:60px;background-image:url(<%=modules.tools.getImg(data.by.data.pic,'small')%>" class="coverimg"></div>
+				<%}else{%>
+				<div style="width:60px;height:60px;background:#eee" class=""></div>
+				<%}%>
+			</td>
+			<td style="color:black">
+				<div style="overflow: hidden;">
+					<div style="font-size:18px;padding-left:10px"><b>Post</b> by <%if(data.by&&data.by.data&&data.by.data.name){%><%=data.by.data.name%><%}else if(data.page&&data.page.data){%><%=data.page.data.name%><%}%><%if(data.page&&data.page.id!=data.by.id&&data.page&&data.page.data){%>to <%=data.page.data.name%><%}%></div>
+					<%if(data.message){%>
+					<div style="padding-left:12px;font-size:11px;padding-top:1px">"<%=data.message.limitlength(80)%>"</div>
+					<%}else if(data.media&&data.media.type=='link'){%>
+					<div style="padding-left:12px;font-size:11px;padding-top:1px">"<%=data.media.data.title.limitlength(80)%>"</div>
+					<%}%>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_history_post@@@
+<%
+if(data.user){ 
+%>
+<div class="historyitem" data-id="<%=data.id%>" <%if(this.oid){%>data-oid="<%=oid%>"<%}%>>
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<%if(data.user){%>
+				<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.user.pic,'small')%>" class="coverimg"></div>
+				<%}else{%>
+				<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.page.data.pic,'small')%>" class="coverimg"></div>
+				<%}%>
+			</td>
+			<td style="color:black">
+				<div style="overflow: hidden;">
+					<div style="font-size:18px;padding-left:10px"><b>Post</b> by <%if(data.user){%><%=data.user.name%><%}else{%><%=data.page.data.name%><%}%></div>
+					<%if(data.message){%>
+					<div style="padding-left:12px;font-size:11px;padding-top:1px">"<%=data.message.limitlength(80)%>"</div>
+					<%}else if(data.media&&data.media.type=='link'){%>
+					<div style="padding-left:12px;font-size:11px;padding-top:1px">"<%=data.media.data.title.limitlength(80)%>"</div>
+					<%}%>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<%}%>
+@@@search_history_person@@@
+<div class="historyitem" data-id="<%=data.id%>" <%if(this.oid){%>data-oid="<%=oid%>"<%}%>>
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.pic,'profile')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black">
+				<div style="font-size:18px;padding-left:10px"><%=data.name%></div>
+				<div></div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_history_page@@@
+<div class="historyitem" data-id="<%=data.id%>" <%if(this.oid){%>data-oid="<%=oid%>"<%}%>>
+	<table>
+		<tr>
+			<td style="vertical-align: top">
+				<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black">
+				<div style="font-size:18px;padding-left:10px"><b>Page</b> <%=data.name%></div>
+				<%if(data.callout){%><div style="padding-top:3px;padding-left:13px;color:#888"><%=data.callout.limitlength(30)%></div><%}%>
+				<%if(data.location){%><div style="padding-top:3px;padding-left:13px;color:#888;display: none;"><%=app.location.getName(data.location.info,'city')%></div><%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_history_group@@@
+<div class="historyitem" data-id="<%=data.id%>" <%if(this.oid){%>data-oid="<%=oid%>"<%}%>>
+	<table>
+		<tr>
+			<td>
+				<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.pic,'profile')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black">
+				<div style="font-size:18px;padding-left:10px"><%=data.name%></div>
+				<div></div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_results_pages@@@
+<div style="text-align: center">
+	<%if(this.data&&data.order&&data.order.length){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var item=data.list[data.order[i]];
+		%>
+		<%=$.fn.render({template:'search_results_page',data:{data:item,opts:{},search:true},returntemplate:true})%>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>
+@@@search_results_page@@@
+<div class="<%if(this.search){%>searchitem<%}else{%>historyitem<%}%>" data-id="<%=data.id%>" data-oid="<%=data.id%>" style="background: white;">
+	<table>
+		<tr>
+			<td style="vertical-align: top" style="width:60px;">
+				<div style="width:60px;height:60px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>" class="coverimg"></div>
+			</td>
+			<td style="color:black;text-align: left;">
+				<div style="font-size:18px;padding-left:10px"><b>Page</b> <%=data.name%></div>
+				<%if(data.callout&&data.callout!='false'){%><div style="padding-top:3px;padding-left:13px;color:#888"><%=data.callout.limitlength(30)%></div><%}%>
+				<%if(data.location&&data.location.info){%><div style="padding-top:3px;padding-left:13px;color:#888"><%=app.location.getName(data.location.info,'citystate')%></div><%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_results_bookmarks@@@
+<div style="text-align: center">
+	<%if(this.data&&data.order&&data.order.length){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var item=data.list[data.order[i]];
+		%>
+		<%=$.fn.render({template:'stream_bookmarkitem',data:{data:item,opts:{}},returntemplate:true})%>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>
+@@@search_results@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background:#ccc">
+	<div>
+		<div style="height:30px;" class="searchheader headercolor">
+			<%=_ui.swipenav.render({id:'searchnav',itemClass:'search_nav',nav:header})%>
+		</div>
+		<div class="resultslist" style="min-height:40vh;">
+		<%if($.fn.render.getTemplate('search_results_'+filter)){%>
+			<%=$.fn.render({template:'search_results_'+filter,data:{data:this.data},returntemplate:true})%>
+		<%}else{%>
+			<div>
+				template coming soon!
+			</div>
+		<%}%>
+		</div>
+	</div>
+</div>
+@@@search_results_all@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background:#ccc">
+	<div>
+		<div style="height:30px;" class="searchheader headercolor">
+			<%=_ui.swipenav.render({id:'searchnav',itemClass:'search_nav',nav:header})%>
+		</div>
+		<div class="resultslist" style="min-height:40vh;">
+			<%if(data&&data.order&&data.order.length){%>
+			<%for (var i = 0; i < data.order.length; i++) {
+				var item=data.list[data.order[i]];
+				if(item._type=='people') item._type='user';
+				%>
+				<%if($.fn.render.getTemplate('search_results_'+item._type)){%>
+					<%=$.fn.render({template:'search_results_'+item._type,data:{data:item,search:true},returntemplate:true})%>
+				<%}else if(app.isdev){%>
+					<div>
+						template [search_results_<%=item._type%>] coming soon!
+					</div>
+				<%}else{%>
+				<% onerror('template [search_results_'+item._type+'] coming soon!')%>
+				<%}%>
+			<%}%>
+			<%}else{%>
+			<div style="font-size:20px;color:#555;padding:20px;text-align: center;"><i class="icon-warning-sign"></i> No results</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@search_results_tags@@@
+<div style="text-align: left">
+	<%if(data){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var u=data.list[data.order[i]];%>
+		<div style="padding:5px;margin:5px;font-size:16px;display: inline-block;" class="themebg s-corner-all searchitem" data-id="<%=u.id%>">#<%=u.id%></div>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px;text-align: center;"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>
+@@@search_results_groups@@@
+<div style="text-align: center">
+	<%if(data){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var u=data.list[data.order[i]];%>
+		<div style="width:46vw;height:46vw;margin:1vw;position:relative;display:inline-block;background-image:url(<%=modules.tools.getImg(u.pic,'profile')%>)" class="searchitem s-corner-all coverimg" data-id="<%=data.order[i]%>">
+			<div style="position:absolute;bottom:0;right:0;left:0;font-size:18px;color:white;text-align: left" class="upgradient"><b><%=u.name%></b></div>
+		</div>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>
+@@@search_results_posts@@@
+<div style="text-align: center">
+	<%if(this.data&&data.order&&data.order.length){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var item=data.list[data.order[i]];
+		%>
+		<%=$.fn.render({template:'search_results_post',data:{data:item,opts:{},search:true},returntemplate:true})%>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>
+@@@search_results_user@@@
+<div class="searchitem" data-id="<%=data.id%>" data-oid="<%=data.id%>" style="background:white">
+	<table style="width:100%">
+		<tr>
+			<td style="width:60px">
+				<div style="width:60px;height:60px;position:relative;background-image:url(<%=modules.tools.getImg(data.pic,'profile')%>)" class="coverimg">
+				</div>
+			</td>
+			<td style="padding-left:10px;font-size:18px;text-align: left">
+				<div><%=data.name%></div>
+				<%if(data.mutual){%><div style="font-size:14px;padding-top:2px;padding-left:2px;color:#888"><%=data.mutual%> mutual friends</div><%}%>
+			</td>
+			<td style="width:40px;text-align: center;">
+				<%if(data.pending&&!data.friends){%>
+				<i class="icon-hourglass x_pending" data-id="<%=data.id%>" style="font-size:24px;padding:5px"></i>
+				<%}else if(data.friends){%>
+				<i class="icon-friend-check x_arefriends" data-id="<%=data.id%>" style="font-size:24px;padding:5px"></i>
+				<%}else{%>
+				<i class="icon-add-clean x_toaddfriend" data-id="<%=data.id%>" style="font-size:24px;padding:5px"></i>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@search_results_users@@@
+<div style="text-align: center">
+	<%if(data){%>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var u=data.list[data.order[i]];%>
+		<div class="searchitem" data-id="<%=data.order[i]%>" data-oid="<%=data.order[i]%>" style="background:white">
+			<table style="width:100%">
+				<tr>
+					<td style="width:60px">
+						<div style="width:60px;height:60px;position:relative;background-image:url(<%=modules.tools.getImg(u.pic,'profile')%>)" class="coverimg">
+						</div>
+					</td>
+					<td style="padding-left:10px;font-size:18px;text-align: left">
+						<div><%=u.name%></div>
+						<%if(u.mutual){%><div style="font-size:14px;padding-top:2px;padding-left:2px;color:#888"><%=u.mutual%> mutual friends</div><%}%>
+					</td>
+					<td style="width:40px;text-align: center;">
+						<%if(u.pending&&!u.friends){%>
+						<i class="icon-hourglass x_pending" data-id="<%=data.order[i]%>" style="font-size:24px;padding:5px"></i>
+						<%}else if(u.friends){%>
+						<i class="icon-friend-check x_arefriends" data-id="<%=data.order[i]%>" style="font-size:24px;padding:5px"></i>
+						<%}else{%>
+						<i class="icon-add-clean x_toaddfriend" data-id="<%=data.order[i]%>" style="font-size:24px;padding:5px"></i>
+						<%}%>
+					</td>
+				</tr>
+			</table>
+		</div>
+	<%};%>
+	<%}else{%>
+	<div style="font-size:20px;color:#555;padding:20px"><i class="icon-warning-sign"></i> No results</div>
+	<%}%>
+</div>

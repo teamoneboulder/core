@@ -1,0 +1,11 @@
+.isPhoneGap.hasNotch .toastarea{
+	margin-top:35px !important;
+}
+.toastarea{
+	margin-top:5px;
+	backdrop-filter: blur(5px);
+     -webkit-backdrop-filter: blur(5px);
+}
+.isPhoneGap .toastarea{
+	margin-top:25px;
+}

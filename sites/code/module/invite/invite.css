@@ -1,0 +1,27 @@
+.pcount{
+	display: inline-block;
+	padding:3px;
+}
+.inviterow.invited .invitebtn{
+	display: none;
+}
+.inviterow.invited .removeinvite{
+	display: inline-block;
+}
+.removeinvite{
+	display: none;
+}
+.invitebtn{
+	display: inline-block;
+}
+@media only screen and (min-device-width: 802px) {
+	.inviteview .content{
+		left:50% !important;
+		width:600px !important;
+		margin-left:-300px !important;
+	}
+	.inviteview input{
+		width:90% !important;
+		margin-left:5% !important;
+	}
+}

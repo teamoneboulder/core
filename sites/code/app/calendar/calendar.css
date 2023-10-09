@@ -1,0 +1,17 @@
+.calendarview .mbsc-cal-day-picker{
+	height:300px !important;
+}
+.calendarview .mbsc-cal-scroll-c{
+	height:260px !important;
+}
+.calendarview .mbsc-cal-hdr{
+	padding:0 !important;
+}
+@media only screen and (min-device-width: 802px) {
+	.calendarview .calendar{
+		min-height: 100% !important;
+	}
+}
+.fc-event-container{
+	cursor: pointer;
+}

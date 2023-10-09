@@ -1,0 +1,1 @@
+tail -f ${LOGDIR}/lighttpd/error.log

@@ -1,0 +1,2 @@
+#!/bin/bash
+cloc ${ROOT} --csv --by-file --exclude-dir .git,flower,node_modules,stash,vendor --report-file=${ROOT}/sites/flower/CodeFlower/data/app.cloc

@@ -1,0 +1,1665 @@
+@@@formbuilder_content_row@@@
+<div data-<%=template%>="<%=_tid%>" style="position:relative;">
+	<div class="feeditems3 formbuildercontent <%if(enableRequiredAsterisk){%>formbuildershowasterisk<%}%>" style="background:white;padding-top:5px;padding-bottom:15px">
+		Inline Item!
+	</div>
+</div>
+@@@formbuilder_content@@@
+<div <%if(!inline){%>class="sfit"<%}%> data-<%=template%>="<%=_tid%>" style="<%if(inline){%>position:relative;<%}%>">
+	<div class="feeditems3 formbuildercontent <%if(enableRequiredAsterisk){%>formbuildershowasterisk<%}%> <%if(mobileLayout){%>formbuilder_forcemobilelayout<%}%>" style="background:white;padding-top:5px;padding-bottom:15px">
+		<%
+			var order=(schema.renderOrder)?schema.renderOrder:schema.order;
+		%>
+		<%if(schema.guidelines){%>
+		<div style="padding:5px;border-bottom:2px solid #ccc;" class="truebox">
+			<div style="font-size:14px;font-weight: bold;padding-bottom: 3px;"><%if(schema.guideline_name){%><%=schema.guideline_name%><%}else{%>Posting Guidelines<%}%></div>
+			<div style="padding:5px;font-size: 16px;"><%=schema.guidelines%></div>
+		</div>
+		<%}%>
+		<%for (var i = 0; i < order.length; i++) {
+			var item=schema.fields[order[i]];
+			if(!item){
+				console.warn('invalid schema item ['+order[i]+'], not found in field');
+				continue;
+			}
+			item.id=order[i];
+			if(!item.form) continue;
+			if(excludeFields.indexOf(order[i])>=0) continue;
+			if(includeFields&&includeFields.indexOf(order[i])==-1) continue;
+			if(item.adminOnly&&!app.user.profile.admin) continue;
+			if(item.permission&&!_.intersect(item.permission,app.user.profile.roles).length) continue;
+			%>
+			<%if(types[item.form.type]){%>
+			<div style="position:relative;">
+			<%=types[item.form.type].render(order[i],item)%>
+			<%if(item.form.privacy){
+				item.currentPrivacy=_.dotGet(item.form.privacy.key,current);
+			%>
+			<div style="position:absolute;top:5px;right:5px"><%=$.fn.render({template:'formbuilder_privacy_'+item.form.privacy.type,returntemplate:true,data:{item:item}})%></div>
+			<%if(item.required){%>
+			<i class="icon-asterisk" style="position:absolute;top:20px;right:5px;color:#888;font-size:12px"></i>
+			<%}%>
+			<%}else{%>
+			<div style="position:absolute;top:5px;right:5px;" class="notonweb">
+			<%if(item.tooltip){%>
+			<i class="icon-info-circled-alt x_tooltip" data-id="<%=item.id%>" style="color:#888;font-size:22px;margin-right: 5px;"></i>
+			<%}%>
+			<%if(item.required&&item.form.type!='hidden'){%>
+			<i class="icon-asterisk" style="color:#888;font-size:22px"></i>
+			<%}%>
+			</div>
+			<%}%>
+			<%if(item.subText){%>
+			<div><%=item.subText%></div>
+			<%}%>
+			</div>
+			<%}else{%>
+			<%console.warn('Invalid render type ['+item.form.type+']');%>
+			<%}%>
+		<%}%>
+		<%if(canDelete){%>
+		<div style="padding-top:50px;text-align: center;">
+			<div style="background: #f02;padding:5px 10px;color:white;display: inline-block;margin:auto" action="click:remove" class="m-corner-all"><i class="icon-trash-empty"></i> Delete Item</div>
+		</div>
+		<%}%>
+		<%if(!inline){%>
+		<div style="height:80vh" class="notonweb"></div>
+		<div style="height:80px" class="notonmobile"></div>
+		<%}%>
+	</div>
+	<div style="position: fixed;bottom:0;left:0;right:0;display: none;background:white;z-index: 100" class="mainsearchresults"></div>
+</div>
+@@@formbuilder_privacy_basic@@@
+<div style="padding:4px 8px;background:#dedede" class="m-corner-all" action="click:setPrivacy" data-privacy="<%=item.id%>">
+	<%if(item.currentPrivacy&&item.currentPrivacy=='private'){%>
+	Privacy: <i class="icon-lock"></i>
+	<%}else{%>
+	Privacy: <i class="icon-globe"></i>
+	<%}%>
+</div>
+@@@formbuilder_select_list@@@
+<div data-<%=template%>="<%=_tid%>" style="max-height:200px;" class="scrollY">
+	<div>
+		<%for (var i = 0; i < data.length; i++) {
+			var item=data[i];%>
+			<div style="padding:5px;border-bottom:1px solid #ccc" class="formbuilderselectitem reghover x_select <%if(current&&current==item.value){%>selected<%}%>" data-value="<%=item.value%>">
+				<table style="width:100%">
+					<tr>
+						<td style="width:30px;text-align: center">
+							<i class="icon-check-1 selectcheck highlighttext2"></i>
+						</td>
+						<td style="padding-left:5px;font-size:16px;text-align: left;">
+							<%=item.display%>
+						</td>
+					</tr>
+				</table>
+			</div>
+		<%}%>
+	</div>
+</div>
+@@@formbuilder_input_page_web@@@
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;z-index: 1000;padding:<%=padding%>px;" class="apppageview">
+	<div class="content" style="<%if(this.width){%>width:<%=width%>;<%}else{%>width:420px;<%}%>background: white;border:1px solid #ccc;">
+		<%if(!opts.notitle){%>
+		<%if(opts.title){%>
+		<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px">
+			<table style="width:100%;color:#888">
+				<tr>
+					<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+						<i class="icon-cancel" style="font-size:14px;"></i>
+					</td>
+					<td style="text-align: center;font-size:18px;color:#888;padding:3px;"><%if(opts.title){%><%=opts.title%><%}%></td>
+					<td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;font-size:18px;" class="x_set highlightcolor">
+						<%if(opts.done){%>
+						<%=opts.done%>
+						<%}else{%>
+						Set
+						<%}%>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<%}else{%>
+		<%}%>
+		<%}%>
+		<div class="inputarea">
+		</div>
+		<%if(!opts.notitle){%>
+		<%if(!opts.title){%>
+		<div style="padding:5px;font-size:13px;text-align: center;" class="themebutton x_closer">
+			Close
+		</div>
+		<%}%>
+		<%}%>
+		<%if(opts.canClear){%>
+		<div style="padding:5px;font-size:13px;text-align: center;" class="themebutton x_clear">
+			Clear
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@formbuilder_input_page@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;<%if(fixed){%>position:fixed;<%}else{%>position:absolute;<%}%>top:0;left:0;z-index: 100000;background: transparent;overflow: hidden" class="apppageview">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;" class="content">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<%if(this.title){%>
+			<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px">
+				<table style="width:100%;color:#888">
+					<tr>
+						<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+							<i class="icon-cancel" style="font-size:14px;"></i>
+						</td>
+						<td style="text-align: center;font-size:18px;color:#888;padding:3px;"><%=title%></td>
+						<td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;font-size:18px;" class="x_set highlightcolor">
+							Done
+						</td>
+					</tr>
+				</table>
+			</div>
+			<%}%>
+			<div class="inputarea">
+			</div>
+			<%if(this.canClear){%>
+			<div style="padding:10px;font-size:13px;text-align: center;" class="themebutton x_clear">
+				Clear
+			</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_moreinfo@@@
+<span>
+	<%if(item.required){%>
+	<span aria-label="Required" data-balloon-pos="up">
+		<sup>
+			<i class="highlighttext2 icon-asterisk" style="font-size:7px"></i>
+		</sup>
+	</span>
+	<%}%>
+</span>
+@@@formbuilder_url_name@@@
+<div class="formelement" data-type="url_name" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div class="placeholdertitle notonweb" style="padding-bottom:4px;padding-top:4px"><%=name%></div>
+			<div>
+				<input class="forminput formbuilder_input" type="text" value="<%=current%>" placeholder="<%=name%>"/>
+			</div>
+			<div style="padding-left:15px;padding-bottom:10px">
+				<%=app.domain%>/<%if(form.prefix){%><%=form.prefix%><%}%><span class="currentvalue"><%=current%></span> <span class="iconarea"></span>
+			</div>
+			<div class="response"></div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_url_response@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-left:15px">
+	<%if(this.loading){%>
+	<div style="" class="bold">
+		<i class="icon-re esh animate-spin"></i> Loading...
+	</div>
+	<%}%>
+	<%if(this.error){%>
+	<div style="color:green" class="bold">
+		Error: <%=error%>
+	</div>
+	<%}%>
+	<%if(this.response){%>
+	<%if(valid==1){%>
+	<div style="color:green" class="bold">
+		This URL is available!
+	</div>
+	<%}else{%>
+	<%if(this.message){%>
+	<div style="color:#f02" class="bold">
+		<%=message%>
+	</div>
+	<%}else{%>
+	<div style="color:#f02" class="bold">
+		This URL has already been taken
+	</div>
+	<%}%>
+	<%}%>
+	<%}%>
+</div>
+@@@formbuilder_phone_input@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="text-align: center;padding:10px 0px" class="phoneinput">
+		<input type="tel" style="padding-top:5px;padding-bottom:5px;font-size:20px;border:1px solid #ccc;" class="truebox s-corner-all" placeholder="<%=name%>">
+	</div>
+</div>
+@@@formbuilder_phone@@@
+<div class="formelement forminput2" data-type="phone" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<%if(form.inline){%>
+			<div class="phonebox"></div>
+			<%}else{%>
+			<%if(this.current&&current.number){%>
+			<%if(name){%>
+			<div class="placeholdertitle" style="padding-bottom:4px "><%=name%></div>
+			<%}%>
+			<div class="iti-flag <%=current.iso2%>" style="display:inline-block"></div> <%=current.code%> <%=current.number.toPhoneNumber()%>
+			<%}else{%>
+			<div class="placeholdercolor">
+				<%=name%>
+			</div>
+			<%}%>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_hidden@@@
+<div class="formelement forminput2" data-type="hidden" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" style="display: none;"></div>
+@@@formbuilder_timezone@@@
+<div class="formelement forminput2" data-type="timezone" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<%if(current){%>
+			<div class="placeholdertitle notonweb"><%=name%></div>
+			<div><%=current%> <span><i class="icon-cancel x_clear" style="font-size:12px;padding:5px;"></i></span></div>
+			<%}else{%>
+			<div class="placeholdercolor notonweb">
+				<%=name%>
+			</div>
+			<div>
+				<input class="forminput formbuilder_input" type="text" placeholder="<%=name%>"/>
+			</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_timezone_item@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:8px;border-bottom:1px solid #ccc;font-size:16px;" data-id="<%=data.id%>" class="tagitem">
+	<%=modules.tools.highlightString(data.timezone,opts.search,'highlighttext2')%>
+</div>
+@@@formbuilder_url@@@
+<div class="formelement forminput2" data-type="url" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<%if(current){%>
+			<div class="placeholdertitle notonweb"><%=name%></div>
+			<div><%=current%></div>
+			<%}else{%>
+			<div class="placeholdercolor">
+				<%=name%>
+			</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_tooltip@@@
+<div data-<%=template%>="<%=_tid%>" style="display: inline-block;">
+	<i class="icon-info-circled-alt" data-tooltip="<%=data.tooltip%>" data-tooltip-pos="right" data-tooltip-size="large"></i>
+</div>
+@@@formbuilder_media@@@
+<div class="formelement forminput2" data-type="media" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div class="placeholdertitle notonweb" style="padding-bottom:10px;"><%=name%> > <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+			<div class="mediatray">
+				<%if(this.current&&current.order){%>
+				<%for (var i = 0; i < current.order.length; i++) {
+					var item=current.list[current.order[i]];%>
+					<%=$.fn.render({template:'formbuilder_previewimg',data:{id:item.id,pic:item.data,editing:false},returnhtml:true})%>
+				<%}%>
+				<%}%>
+			</div>
+			<div>
+				<div style="display: inline-block;margin:5px;border:1px solid #ccc;padding:5px;" class="s-corner-all x_addphotos">
+					<div style="font-size:15px"><i class="icon-images"></i> Add Photos</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_previewimg@@@
+<div data-<%=template%>="<%=_tid%>" style="display:inline-block;margin:5px;position:relative;" data-image="<%=id%>">
+	<img src="<%if(this.pic){%><%=_.getImg(pic,'small')%><%}else{%><%=app.idot%><%}%>" style="height:80px" class="s-corner-all previewimg">
+	<div style="position:absolute;top:-12px;right:-12px;background:#f00;padding:5px;display: none;" class="circle x_remove" data-id="<%=id%>">
+		<div style="width:15px;height:15px;">
+			<table style="width:100%;height:100%;text-align: center;"><tr><td>
+			<i class="icon-cancel" style="font-size:8px;padding:0;margin:0;color:white;font-weight: bold"></i>
+			</td></tr></table>
+		</div>
+	</div>
+	<div style="position:absolute;top:0px;right:0px;padding:6px;color:white;background: rgba(55,55,55,.4);" class="x_remove s-corner-all" data-id="<%=id%>">
+		<i class="icon-cancel" style="font-size:12px;padding:0;margin:0;color:white;font-weight: bold"></i>
+	</div>
+	<%if(editing){%>
+	<div class="sfit indicator s-corner-all" style="background: rgba(55,55,55,.3);z-index: 10;bottom:5px"></div>
+	<%}%>
+</div>
+@@@formbuilder_payment@@@
+<div class="formelement forminput2" data-type="payment" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div class="placeholdertitle notonweb" style="padding-bottom:10px;"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+			<%if(this.methods&&methods){%>
+			<%if(df(methods,'data.usd.methods')){%>
+			 <%for (var i = 0; i < methods.data.usd.methods.length; i++) {
+                var card=methods.data.usd.methods[i];%>
+                <div class="cardmethod toggler <%if(methods.data.usd.default_source&&methods.data.usd.default_source==card.id){%>checked<%}%>" data-id="<%=card.id%>">
+					<table style="width:100%">
+						<tr>
+							<td style="width:40px;text-align: center;" class="">
+								<i class="icon-check" style="font-size:30px;color:#0193be"></i>
+								<i class="icon-check-empty" style="font-size:30px;"></i>
+							</td>
+							<td style="width:40px;text-align: center;">
+								<i class="icon-credit-card" style="font-size:18px;"></i>
+							</td>
+							<td style="padding-left:5px;font-size:18px"><%=card.brand%> &middot; <%=card.last4%>
+							</td>
+							<td style="width:100px;text-align: right;padding-right:5px">
+								exp <%=card.exp_month%>/<%=card.exp_year%>
+							</td>
+						</tr>
+					</table>
+				</div>
+            <%}%>
+            <%}else{%>
+            <div>No cards added yet</div>
+            <%}%>
+            <div style="padding:10px;text-align:center;">
+            	<div class="button1 l-corner-all x_addcard" style="display: inline-block;font-size:12px;padding:3px 10px"><i class="icon-add-clean"></i> Add a card</div>
+            </div>
+			<%}else{%>
+			<i class="icon-refresh animate-spin"></i> Loading Payment Methods...
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_onoff@@@
+<div class="formelement forminput2" data-type="onoff" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%><%if(this.tooltip&&tooltip){%><%=$.fn.render({template:'formbuilder_tooltip',data:{data:this},returntemplate:true})%><%}%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div class="placeholdertitle notonweb" style="padding-bottom:10px;"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+			<div>
+			<%=_ui.toggle.render({id:key,selected:(this.current&&current)?1:0})%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_url_input@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="text-align: center;padding:10px 0px;position: relative;">
+		<i class="icon-globe formbuilder_inputicon" style="position:absolute;top:16px;font-size:22px;color:#888;padding-left:2px"></i>
+		<input type="text" style="padding-top:5px;padding-bottom:5px;padding-left:35px;font-size:20px;border:1px solid #ccc;" class="truebox s-corner-all keepborder formbuilder_inputarea" placeholder="https://..." value="<%=current%>">
+	</div>
+	<div class="x_error"></div>
+</div>
+@@@formbuilder_url_input_ticket@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="text-align: center;padding:10px 0px;position: relative;">
+		<i class="icon-globe formbuilder_inputicon" style="position:absolute;top:16px;font-size:22px;color:#888;padding-left:2px"></i>
+		<input type="text" style="padding-top:5px;padding-bottom:5px;padding-left:35px;font-size:20px;border:1px solid #ccc;" class="truebox s-corner-all keepborder formbuilder_inputarea" placeholder="<%=name%>" value="<%=current.url%>">
+	</div>
+	<div class="x_error"></div>
+</div>
+@@@formbuilder_url_error@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="padding:10px;font-size:14px"><i class="icon-info-circled-alt"></i> We were not able to validate this url.  If you believe it is correct, press Continue below.</div>
+	<div style="padding:10px;margin:10px;text-align: center;font-size:16px;font-weight: bold;" class="x_continue">
+		Continue
+	</div>
+</div>
+@@@formbuilder_mulitselect_items2@@@
+<div data-<%=template%>="<%=_tid%>">
+<%if(max){%>
+<div style="padding:10px;text-align: center;">Select up to <span class="bold"><%=max%></span></div>
+<%}%>
+<div style="max-height:60vh;" class="scrollY">
+	<%if(menu&&menu.length){%>
+	<%for (var i = 0; i < menu.length; i++) {
+		var item=menu[i];
+	%>
+	<div style="padding:4px;font-size:18px" class="multibuttonitem <%if(current&&current.values.indexOf(item.value)>=0){%>selected<%}%>" data-id="<%=item.value%>">
+		<table style="width:100%">
+			<tr>
+				<td style="width:30px;text-align: center">
+					<div style="width:30px;height:30px;border:1px solid #ccc" class="circle">
+						<table style="width:100%;height:100%;text-align: center;">
+							<tr>
+								<td>
+									<i class="icon-check-1 highlighttext2 formbuildermultiselect_check fasttransition" style="font-size:18px;"></i>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+				<td style="padding-left:8px;padding-right:5px;vertical-align: middle;text-align: left;"><b><%=item.display%></b></td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<%}else{%>
+	<div style="padding:10px;">No Items in menu</div>
+	<%}%>
+</div>
+</div>
+@@@formbuilder_mulitselect_items@@@
+<div data-<%=template%>="<%=_tid%>" style="max-height:60vh;" class="scrollY">
+	<%if(menu&&menu.length){%>
+	<%for (var i = 0; i < menu.length; i++) {
+		var item=menu[i];
+	%>
+	<div style="padding:5px;font-size:14px" class="multibuttonitem <%if(current&&current.values.indexOf(item.value)>=0){%>selected<%}%>" data-id="<%=item.value%>">
+		<table style="width:100%">
+			<tr>
+				<td style="width:30px;text-align: center">
+					<div style="width:30px;height:30px;border:1px solid #ccc" class="circle">
+						<table style="width:100%;height:100%;text-align: center;">
+							<tr>
+								<td>
+									<i class="icon-check-1 highlighttext2 formbuildermultiselect_check fasttransition" style="font-size:18px;"></i>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</td>
+				<td style="padding-left:8px;padding-right:5px;vertical-align: top;text-align: left;"><b><%=item.name%></b> <%=item.description%></td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<%}else{%>
+	<div style="padding:10px;">No Items in menu</div>
+	<%}%>
+</div>
+@@@formbuilder_buttonselect_items@@@
+<div data-<%=template%>="<%=_tid%>" style="max-height:300px;" class="scrollY">
+	<%if(menu&&menu.length){%>
+	<%for (var i = 0; i < menu.length; i++) {
+		var item=menu[i];
+	%>
+	<div style="padding:8px;font-size:14px" class="buttonitem" data-id="<%=item.value%>">
+		<table style="width:100%">
+			<tr>
+				<td style="width:120px;vertical-align: top;">
+					<div class="nbtn themebutton bold truebox" style="width:100%;margin:0"><%=item.name%></div>
+				</td>
+				<td style="padding-left:8px;padding-right:5px;vertical-align: top;text-align: left;"><%=item.description%></td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<%}else{%>
+	<div style="padding:10px;">No Items in menu</div>
+	<%}%>
+</div>
+@@@formbuilder_uploadfile_item@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="width:250px;border:1px solid #ccc;" class="s-corner-all">
+		<table style="width:100%;">
+			<tr>
+				<td style="width:40px;text-align: center;">
+					<%if(ext=='pdf'){%>
+					<i class="icon-doc-text" style="font-size:22px"></i>
+					<%}%>
+				</td>
+				<td style="padding:5px">
+					<div><%=name%></div>
+					<%if(!this.uploaded){%>
+					<div class="progarea" style="padding-top:4px">
+						<div style="background:#ccc;padding:1px" class="m-corner-all">
+							<div class="themebutton m-corner-all progbar" style="height:4px;width:0px;"></div>
+						</div>
+					</div>
+					<%}%>
+				</td>
+				<td style="vertical-align: top;width:30px;text-align: center;padding-top:5px;" class="x_cancel">
+					<i class="icon-cancel"></i>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@formbuilder_drive@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="drive" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+		<div class="contentarea">
+			<%=_ui.pageloader.render({theme:false,inline:true,themeClass:'lds-ellipsis-black'})%>
+		</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_drive_item@@@
+<div style="position:relative;<%if(this.selected){%>border:1px solid #ccc;<%}else{%>border-bottom:1px solid #ccc;<%}%>" class="file attachments <%if(this.selected){%>s-corner-all<%}else{%>tagitem<%}%>" data-id="<%=data.id%>" data-<%=template%>="<%=_tid%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:80px;text-align: center;">
+				<div style="background: #eee;">
+					<%if(opts.icons[data.mimeType]){%>
+						<div style="width:80px;height:80px;background-image: url(<%=opts.base%><%=data.id%>)" class="coverimg <%if(this.selected){%>s-corner-left<%}%>"></div>
+					<%}else{%>
+						<div style="width:80px;height:80px;background-image: url(<%=opts.icons.default.pic%>)" class="coverimg <%if(this.selected){%>s-corner-left<%}%>"></div>
+					<%}%>
+				</div>
+			</td>
+			<td style="font-size:16px;text-align: left;padding-left:10px;">
+				<div><%=data.name%></div>
+				<div style="padding-top:5px">
+					<%if(opts.icons[data.mimeType]){%>
+					<table>
+						<tr>
+							<td>
+								<img src="<%=opts.icons[data.mimeType].pic%>" style="height:25px;display: inline-block;">
+							</td>
+							<td style="font-size:12px;padding-left:5px">
+								<%=opts.icons[data.mimeType].name%>
+							</td>
+						</tr>
+					</table>
+					<%}else{%>
+					<table>
+						<tr>
+							<td>
+								<img src="<%=opts.icons.default.pic%>" style="height:25px;display: inline-block;">
+							</td>
+							<td style="font-size:12px;padding-left:5px;">
+								<%=opts.icons.default.name%>
+							</td>
+						</tr>
+					</table>
+					<%}%>
+				</div>
+				<%if(this.selected){%>
+				<div style="padding:5px;font-size:12px;color:#888" class="x_setperms">
+					<i class="icon-lock"></i> Change File Settings
+				</div>
+				<%}%>
+			</td>
+			<%if(this.selected){%>
+			<td style="width:20px;vertical-align: top;text-align: center;padding-top:5px" class="x_clear">
+				<i class="icon-cancel" style="font-size:16px;color:#888;padding:5px"></i>
+			</td>
+			<%}%>
+		</tr>
+	</table>
+</div>
+@@@formbuilder_drive_input@@@
+<div data-<%=template%>="<%=_tid%>">
+	<input class="forminput formbuilder_input_inline l-corner-all" type="text" value="" placeholder="Search/Browse Drive" style="margin:5px 0px;padding:3px 10px;border:1px solid #ccc"/>
+</div>
+@@@formbuilder_drive_selector@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div class="accountdropdown"><%=button%></div>
+	<div class="driveadd"></div>
+</div>
+@@@formbuilder_uploadfile@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="uploadfile" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+		<%if(current&&current.name){%>
+		<div class="placeholdertitle notonweb"><%=name%></div>
+		<div style="padding-top:4px;">
+			<%=current.name%>
+		</div>
+		<%}else{%>
+		<div class="placeholdercolor contentarea">
+			<div style="padding:5px;margin:2px;border:1px solid #ccc;width:250px;" class="s-corner-all x_upload"><i class="icon-upload"></i> Upload File</div>
+		</div>
+		<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_button@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="button" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div class="placeholdertitle notonweb"><%=name%></div>
+			<div>
+				<%for (var i = 0; i < form.options.order.length; i++) {
+					var item=form.options.list[form.options.order[i]];
+				%>
+				<div data-id="<%=item.value%>" style="display: inline-block;padding:5px 8px;border:1px solid #ccc;margin-left:-1px" class="<%if(i==0){%>s-corner-left<%}%> <%if((form.options.order.length-1)==i){%>s-corner-right<%}%> truebox formbutton fasttransition <%if(this.current&&current.value==item.value){%>selected<%}%>"><%=item.name%></div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_select@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="select" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div>
+		<%if(current){%>
+		<div class="placeholdertitle notonweb" style="padding:0px 10px"><%=name%></div>
+		<div style="padding-top:4px;" class="x_selectitemselect">
+			<div style="padding:4px 6px; font-size:18px;border:1px solid #ccc" class="s-corner-all"><i class="icon-arrow-combo"></i> <%=current.name%></div>
+		</div>
+		<%}else{%>
+		<div class="placeholdercolor" style="padding:0px 10px">
+			<%=name%>
+		</div>
+		<div class="x_selectitemselect">
+			<div style="padding:4px 6px; font-size:18px;border:1px solid #eee" class="s-corner-all"><i class="icon-arrow-combo"></i> <i>Select Option</i></div>
+		</div>
+		<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_select_items@@@
+<div data-<%=template%>="<%=_tid%>" style="max-height:60vh;" class="scrollY">
+	<%if(menu&&menu.length){%>
+	<%for (var i = 0; i < menu.length; i++) {
+		var item=menu[i];
+	%>
+	<div style="padding:5px;font-size:14px" class="buttonitem <%if(current&&current.value==item.value){%>selected<%}%>" data-id="<%=item.value%>">
+		<table style="width:100%">
+			<tr>
+				<td style="width:25px;text-align: center">
+					<i class="icon-check-1 highlighttext2 formbuilderselect_check fasttransition" style="font-size:18px;"></i>
+				</td>
+				<td style="padding-left:8px;padding-right:5px;vertical-align: top;text-align: left;"><b><%=item.name%></b></td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<%}else{%>
+	<div style="padding:10px;">No Items in menu</div>
+	<%}%>
+</div>
+@@@formbuilder_multiselect@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="multiselect" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+		<%if(current){%>
+		<div class="placeholdertitle notonweb"><%=name%></div>
+		<div style="padding-top:4px;">
+			<%for (var i = 0; i < current.order.length; i++) {
+				var item=current.list[current.order[i]];%>
+				<div style="padding:4px 6px; display: inline-block;font-size:18px"><%=item.display%></div>
+			<%}%>
+		</div>
+		<%}else{%>
+		<div class="placeholdercolor">
+			<%=name%>
+		</div>
+		<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_buttonselect@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="buttonselect" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+		<%if(current){%>
+		<div class="placeholdertitle notonweb"><%=name%></div>
+		<div style="padding-top:4px;">
+			<%=current.name%>
+		</div>
+		<%}else{%>
+		<div class="placeholdercolor">
+			<%=name%>
+		</div>
+		<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_namepic_pic@@@
+<div data-<%=template%>="<%=_tid%>" style="position: relative;">
+	<div style="width:80px;height:80px;border-right:1px solid #ccc;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'square')%>);<%}%>" class="x_upload coverimg">
+		<table style="width:100%;height:100%;text-align: center;color:#888;<%if(current){%>display:none;<%}%>" class="notuploaded">
+			<tr>
+				<td>
+					<div><i class="icon-images" style="font-size:30px;"></i></div>
+					<div style="padding-top:4px;"><%=placeholder%></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@formbuilder_namepic@@@
+<div class="formelement" data-type="namepic" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="notonweb">
+		<div style="display: inline-block;width:80px;vertical-align: top;">
+			<%=$.fn.render({template:'formbuilder_namepic_pic',data:{current:current[form.linkedTo],placeholder:placeholders[form.linkedTo]},returntemplate:true})%>
+		</div>
+		<div style="display: inline-block;vertical-align: top;" class="namepic_box">
+			<textarea style="width:100%;margin-left:3px;min-height:60px" class="forminput formbuilder_input truebox autosize <%if(form.maxlength){%>maxlengtharea<%}%>" <%if(form.maxlength){%>maxlength="<%=form.maxlength%>"<%}%> placeholder="<%=placeholders.name%>"><%=current.name%></textarea>
+		</div>
+	</div>
+	<div class="notonmobile">
+		<div style="position: relative">
+			<div class="webplaceholder"><%=placeholders[form.linkedTo]%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+			<div class="formbuilder_contentarea" style="margin:10px;">
+				<div style="position:relative;width:80px;height:80px;border:1px solid #ccc;<%if(current[form.linkedTo]){%>background-image:url(<%=modules.tools.getImg(current[form.linkedTo],'square')%>);<%}%>" class="x_upload coverimg s-corner-all">
+					<table style="width:100%;height:100%;text-align: center;color:#888;<%if(current[form.linkedTo]){%>display:none;<%}%>" class="notuploaded">
+						<tr>
+							<td>
+								<div><i class="icon-images" style="font-size:30px;"></i></div>
+								<div style="padding-top:4px;">Upload</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div style="position: relative">
+			<div class="webplaceholder"><%=placeholders.name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+			<div class="formbuilder_contentarea">
+				<textarea style="width:100%;margin-left:3px;min-height:60px" class="forminput formbuilder_input truebox autosize <%if(form.maxlength){%>maxlengtharea<%}%>" <%if(form.maxlength){%>maxlength="<%=form.maxlength%>"<%}%> placeholder="<%=placeholders.name%>"><%=current.name%></textarea>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_ticket@@@
+<div class="formelement forminput2" data-type="ticket" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px;">
+			<div class="placeholdertitle notonweb"><%=name%></div>
+			<div class="x_select_type">
+				<div style="padding:5px;" class="x_hosted">
+					Use Built-in Ticketing
+				</div>
+				<div style="padding:5px;" class="x_external">
+					Host Tickets on External Site
+				</div>
+			</div>
+			<div class="enterurl">
+				<div>
+					<div style="padding-top:5px;display: inline-block;">Hosted Externally <i class="icon-cancel x_clear" style="float:right;padding:5px;font-size:14px;"></i></div>
+				</div>
+				<div class="urlarea">
+					<%=$.fn.render({template:'formbuilder_ticket_url',data:{current:current},returntemplate:1})%>
+				</div>
+			</div>
+			<div class="hostededit">
+				<div style="padding-top:5px;display: inline-block;">Self-Hosted <i class="icon-cancel x_clear x_clearhosted" style="float:right;padding:5px;font-size:14px"></i></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_ticket_overview@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:8px">
+	<div>
+	<%if(current.tickets){
+	%>
+	<div style="border:1px solid #ccc;overflow: hidden" class="s-corner-all">
+	<%for (var i = 0; i < current.tickets.order.length; i++) {
+		var ticket=current.tickets.list[current.tickets.order[i]];
+		%>
+		<div style="padding:5px;" class="formbuilder_ticket">
+			<div style="font-size:18px;"><i class="icon-ticket" style="margin-right:5px"></i><span class="bold"><%=ticket.name%></span></div>
+			<%if(ticket.description){%>
+			<div style="font-size:16px;padding-top:2px;"><i class="icon-info-circled-alt"></i> <%=ticket.description.limitlength(200)%></div>
+			<%}%>
+			<div style="font-size:14px;padding-top:4px;">
+				Price: $<%=modules.tools.toMoney(ticket.price)%>&nbsp;&middot;&nbsp;
+				Quantity: <%=ticket.quantity%>
+			</div>
+			<div style="text-align: right;padding-right:5px;font-size:14px;margin-top:5px">
+				<span style="padding:5px;" class="x_edit" data-id="<%=ticket.id%>"><i class="icon-pencil"></i> Edit</span>
+				<span style="padding:5px;display: none;" class="x_delete" data-id="<%=ticket.id%>"><i class="icon-trash-empty"></i> Delete</span>
+			</div>
+		</div>
+	<%}%>
+	</div>
+	<%}else{%>
+	<div style="text-align: center;font-size:14px;padding:10px;">
+		<i>No Tickets set-up yet</i>
+	</div>
+	<%}%>
+	</div>
+	<div style="padding-top:10px;text-align: center">
+		<div class="bluethemedbutton x_addticket" style="padding:5px 15px;display: inline-block;">
+			Add Tickets!
+		</div>
+	</div>
+</div>
+@@@formbuilder_icon@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:8px;text-align: left;border-bottom: 1px solid #ccc" data-type="icon" data-key="<%=key%>" class="formelement forminput">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div style="padding-top:8px" class="x_select">
+				<%if(!webLayout){%>
+				<%if(!current){%>
+				<div class="nbtn_plain">Select Icon</div>
+				<%}else{%>
+				<i class="<%=current%>" style="font-size:20px;"></i>
+				<%}}else{%>
+				<%if(!current){%>
+				<div class="nbtn_plain">Select Icon</div>
+				<%}else{%>
+				<i class="<%=current%>" style="font-size:20px;"></i>
+				<%}%>
+				<%}%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_color@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:8px;text-align: left;border-bottom: 1px solid #ccc" data-type="color" data-key="<%=key%>" class="formelement forminput">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div>
+			<div class="placeholdertitle notonweb">
+				<%=name%>
+			</div>
+			<div style="padding-top:8px">
+				<div class="colorpicker" style="width:200px;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_money@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:8px;text-align: left;border-bottom: 1px solid #ccc" data-type="money" data-key="<%=key%>" class="formelement forminput">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div>
+			<div class="placeholdertitle notonweb">
+				<%=name%>
+			</div>
+			<div style="padding-top:8px">
+				<%if(!webLayout){%>
+				<%if(!current){%>
+				<%=form.placeholder%>
+				<%}else{%>
+				<%if(form.prefix){%><%}else{%>$<%}%><%=modules.tools.toMoney(current)%>
+				<%}%>
+				<%}else{%>
+				<div style="position: relative;width:200px;">
+					<i class="icon-dollar" style="position: absolute;top:4px;left:0px;z-index: 1;color:#888"></i>
+					<textarea style="width:100%;height:30px;padding-left:25px;resize: none;padding-top:5px;padding-bottom:5px" class="formbuilder_input truebox" placeholder="<%=form.placeholder%>"></textarea>
+				</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_points@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:8px;text-align: left;border-bottom: 1px solid #ccc" data-type="points" data-key="<%=key%>" class="formelement forminput">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div>
+			<div class="placeholdertitle notonweb">
+				<%=name%>
+			</div>
+			<div style="padding-top:8px">
+				<%if(!webLayout){%>
+				<%if(!current){%>
+				<div style="padding-top:5px;">
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="1">1</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="5">5</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="11">11</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="22">22</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="55">55</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="custom">Custom</div>
+				</div>
+				<%}else{%>
+				<%=current%>
+				<%}%>
+				<%}else{%>
+				<div style=";margin-bottom:5px">
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="1">1</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="5">5</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="11">11</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="22">22</div>
+					<div style="display: inline-block;margin-right:5px;" class="nbtn_plain s-corner-all selectpoint" data-val="55">55</div>
+				</div>
+				<div style="position: relative;border-bottom:1px solid #ccc;width:200px;">
+					<textarea style="width:100%;height:30px;padding-left:25px;resize: none;padding-top:5px;padding-bottom:5px" class="formbuilder_input truebox" placeholder="<%=form.placeholder%>"></textarea>
+				</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_int@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:8px;text-align: left;border-bottom: 1px solid #ccc" data-type="int" data-key="<%=key%>" class="formelement forminput">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div>
+			<div class="placeholdertitle notonweb">
+				<%=name%>
+			</div>
+			<div style="padding-top:8px" class="notonweb">
+				<%if(!current){%>
+				<%=form.placeholder%>
+				<%}else{%>
+				<%=current%>
+				<%}%>
+			</div>
+			<div class="notonmobile">
+				<input type="text" class="enterint" style="border:0px;padding:5px 0px;width:150px;text-align: left;font-size:16px" placeholder="<%=form.placeholder%>" value="<%=current%>"><%=form.postfix%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_ticket_url@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:8px">
+	<%if(!current.url){%>
+	<div class="placeholdercolor">
+		Enter URL
+	</div>
+	<%}else{%>
+	<i class="icon-globe"></i> <%=current.url%>
+	<%}%>
+</div>
+@@@formbuilder_text@@@
+<div class="formelement" data-type="text" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%> style="border-bottom:1px solid #ccc;">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div class="placeholdertitle notonweb"><%=name%></div>
+		<div>
+			<input class="forminput formbuilder_input" type="<%if(form.mask){%><%=form.mask%><%}else{%>text<%}%>" value="<%=current%>" placeholder="<%=name%>"/>
+		</div>
+	</div>
+</div>
+@@@formbuilder_date@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="date" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+		<%if(current){%>
+		<div class="placeholdertitle notonweb"><%=name%></div>
+		<div style="padding-top:4px;">
+			<%=modules.moment.format(current,(form.format)?form.format:'event',false,1,timezone)%>
+		</div>
+		<%}else{%>
+		<div class="placeholdercolor">
+			<%=name%>
+		</div>
+		<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_page@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="page" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%> style="border-bottom:1px solid #ccc;">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<%if(current){%>
+		<div class="placeholdertitle notonweb" style="padding-left:10px;padding-bottom:4px;"><%=name%></div>
+		<div>
+			<%if(form.static){
+				current.static=true;
+			}%>
+			<%=$.fn.render({template:form.template,data:current,returntemplate:true})%>
+		</div>
+		<%}else{%>
+		<div style="padding:0px 10px">
+			<div class="placeholdercolor" style="position: relative;">
+				<input type="text" class="normalinput truebox pageinput" style="font-size:20px;padding:5px 5px 5px 10px;background:transparent;width:100vw;" placeholder="<%=form.placeholder%>">
+				<i class="tagcancel icon-cancel" style="display:none;position: absolute;top:5px;right:5px;font-size:18px;padding:5px;"></i>
+			</div>
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@formbuilder_rating@@@
+<div class="formelement forminput2 <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="rating" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%> style="border-bottom:1px solid #ccc;">
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div class="placeholdertitle notonweb" style="padding-bottom:4px;"><%=name%></div>
+			<div class="placeholdercolor" style="position: relative;">
+				<div class="rating" <%if(current){%>data-rate-value="<%=current%>"<%}%> style="font-size:50px"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_textarea_fancy@@@
+<div class="formelement <%if(!opts.form.keepPlaceholder){%>disableplaceholder<%}%>" data-type="textarea_fancy" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%> style="border-bottom:1px solid #ccc;">
+	<%=modules.textarea_global.render(rdata)%>
+</div>
+@@@formbuilder_redactor@@@
+<div class="formelement <%if(false){%>disableplaceholder<%}%>" data-type="redactor" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div class="formelementtitle fasttransition">
+			<div class="placeholdertitle"><%=name%></div>
+		</div>
+		<%if(minToolbar){%>
+		<table style="width:100%;">
+			<tr>
+				<td style="vertical-align: top">
+					<div style="font-size:16px;padding-right:5px">
+						<textarea style="width:100%;resize:none;font-size:16px" class="forminput truebox redactorcontent" placeholder="<%=name%>"><%=current%></textarea>
+					</div>
+				</td>
+				<td style="width:50px;vertical-align: top" class="min_toolbar"></td>
+			</tr>
+		</table>
+		<%}else{%>
+		<div style="font-size:16px;padding-right:5px">
+			<textarea style="width:100%;resize:none;font-size:16px" class="forminput truebox redactorcontent" placeholder="<%=name%>"><%=current%></textarea>
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@formbuilder_input@@@
+<div class="formelement <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="input" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea <%if(form.hideMaxLength){%>hidemaxlength<%}%>">
+		<div class="formelementtitle fasttransition">
+			<div class="placeholdertitle"><%=name%></div>
+		</div>
+		<input type="text" style="width:100%;" class="forminput truebox" placeholder="<%=name%>" value="<%=current%>">
+	</div>
+</div>
+@@@formbuilder_birthday@@@
+<div class="formelement <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}%>" data-type="birthday" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea <%if(form.hideMaxLength){%>hidemaxlength<%}%>">
+		<div class="formelementtitle fasttransition">
+			<div class="placeholdertitle"><%=name%></div>
+		</div>
+		<div style="position: relative;padding:10px" class="birthday"></div>
+	</div>
+</div>
+@@@formbuilder_textarea@@@
+<div class="formelement <%if(current){%>hasvalue<%}%> <%if(false){%>disableplaceholder<%}else if(!form.placeholder_full){%>placeholderpadding fasttransition<%}%>" data-type="textarea" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea <%if(form.hideMaxLength){%>hidemaxlength<%}%>">
+		<%if(form.placeholder_full){%>
+		<div style="padding:10px 10px 0px 10px">
+			<div class="placeholdertitle" style="font-size:16px;display: block;"><%=form.placeholder_full%></div>
+		</div>
+		<%}else{%>
+		<div class="formelementtitle fasttransition">
+			<div class="placeholdertitle"><%if(form.placeholder){%><%=form.placeholder.limitlength(100)%><%}else{%><%=name.limitlength(60)%><%}%></div>
+		</div>
+		<%}%>
+		<div style="padding:5px 0px">
+			<%=$.fn.render({template:'textarea',data:{minHeight:(form.minHeight)?form.minHeight:'100px',fontSize:16,placeholder:(form.placeholder)?form.placeholder:name,message:current,maxlength:(form.maxlength)?form.maxlength:false},returnhtml:1})%>
+		</div>
+		<div class="counterarea" style="padding-left:5px"></div>
+		<%if(form.infoLink){%>
+		<div style="padding:5px;text-align: right;font-size:11px">
+			<span link="<%=form.infoLink.link%>" style="font-weight: bold;"><%=form.infoLink.text%></span>
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@formbuilder_tagadd@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:7px;" class="tagaddbox">
+	<%if(!top){%>
+	<div class="tagcursor s-corner-all placeholdercolor" style="display: inline-block;<%if(form.width){%>width:<%=form.width%><%}else{%>width:150px;<%}%>padding:3px;margin:2px;font-size:16px;"><i class="icon-add-clean" style="font-size:14px"></i> <%if(form.placeholder){%><%=form.placeholder%><%}else{%><%=name%><%}%></div>
+	<%}else{%>
+	<div style="height:30px;"></div>
+	<%}%>
+	<%if(tags&&tags.length){%>
+	<%for (var i = 0; i < tags.length; i++) {
+		var tag=tags[i];
+		if(this.tag_info&&tag_info[tag]) var data=tag_info[tag];
+		else var data={
+			id:tag
+		};
+		%>
+		<%=$.fn.render({template:render_template,data:{tag:tag,data:data,top:top},returntemplate:true})%>
+	<%}%>
+	<%}%>
+</div>
+@@@formbuilder_tag_guide@@@
+<div style="pointer-events: auto;display:block;padding:3px 5px;font-weight:bold;font-size:18px;margin:3px 0px;<%if(!top){%>opacity:0<%}%>" class="tagitem <%if(this.search&&this.exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>" data-tag="<%=data.id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="font-size:14px">
+				<%=data.title%>
+			</td>
+			<%if(!this.search){%>
+			<td style="width:25px;text-align:right;padding-right:5px" class="x_remove normalicon" data-id="<%=data.id%>">
+				<i class="icon-cancel" style="font-size:14px;"></i>
+			</td>
+			<%}%>
+		</tr>
+	</table>
+</div>
+@@@formbuilder_tag_person@@@
+<div style="pointer-events: auto;display:block;padding:3px 5px;font-weight:bold;font-size:18px;margin:3px 0px;<%if(!top){%>opacity:0<%}%>" class="tagitem <%if(this.search&&this.exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>" data-tag="<%=data.id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:35px">
+				<%if(data.pic){%>
+				<div style="width:30px;height:30px;background-image:url(<%=modules.tools.getImg(data.pic,'square')%>)" class="coverimg circle"></div>
+				<%}else{%>
+				<div style="width:30px;height:30px;background:#ccc;" class="coverimg circle">
+					<table style="width:100%;height:100%;text-align: center">
+						<tr>
+							<td style="font-size:18px;">
+								<%=data.name[0]%>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<%}%>
+			</td>
+			<td style="font-size:14px">
+				<%=data.name%>
+			</td>
+			<%if(!this.search){%>
+			<td style="width:25px;text-align:right;padding-right:5px" class="x_remove normalicon" data-id="<%=data.id%>">
+				<i class="icon-cancel" style="font-size:14px;"></i>
+			</td>
+			<%}%>
+		</tr>
+	</table>
+</div>
+@@@formbuilder_iconcontent@@@
+<div class="sfit scrollY" data-<%=template%>="<%=_tid%>" style="text-align: left">
+	<%for (var i = 0; i < icons.order.length; i++) {
+		var icon=icons.list[icons.order[i]];
+		if(search&&icon.id.indexOf(search)==-1) continue;
+		%>
+		<div style="display: inline-block;vertical-align: top;width:50px;height:50px;" class="iconitem s-corner-all" data-icon="<%=icon.id%>">
+			<div class="table" style="color:#555">
+				<div class="tcell"><i class="<%=icon.id%>" style="font-size:26px;"></i></div>
+			</div>
+		</div>
+	<%}%>
+</div>
+@@@formbuilder_iconpicker@@@
+<div style="height:70vh;position: relative;">
+	<div style="position: absolute;top:0;left:0;right:0;height:50px;border-bottom:1px solid #ccc">
+		<div class="table">
+			<div class="tcell" style="padding-left:10px;text-align: left;font-size:20px;">Select Icon</div>
+			<div class="tcell" style="text-align: right;padding-right: 35px;">
+				<input type="text" style="padding:5px;border:1px solid #ccc;" class="s-corner-all x_search" placeholder="Search Icons">
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;top:50px;left:0;right:0;bottom:0;" class="iconlist">
+		<div style="padding:20px;text-align: center;font-size:20px;margin-top:40px;color:#888">
+			<i class="icon-refresh animate-spin"></i> Loading...
+		</div>
+	</div>
+</div>
+@@@formbuilder_general_person@@@
+<div class="formelement" data-type="general_person" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea general_person_add">
+	</div>
+</div>
+@@@formbuilder_general_person_add@@@
+<div  data-<%=template%>="<%=_tid%>">
+	<%if(current){%>
+	<%if(current.type=='user'){%>
+	<%if(!current.id){%>
+	<div>
+		<div style="position: relative;min-height:35px;" class="tagbox">
+			<div style="position: relative;">
+				<input type="text" class="normalinput truebox taginput" style="font-size:20px;padding:5px 5px 5px 5px;background:transparent;width:100vw;" placeholder="Search Users">
+				<i class="tagcancel icon-cancel" style="display:none;position: absolute;top:5px;right:5px;font-size:18px;padding:5px;"></i>
+			</div>
+		</div>
+	</div>
+	<%}else{%>
+	<div>
+		<table style="width:100%;">
+			<tr>
+				<td style="width:35px">
+					<div style="width:30px;height:30px;background-image:url(<%=modules.tools.getImg(current.data.pic,'square')%>)" class="coverimg circle"></div>
+				</td>
+				<td>
+					<div><%=current.data.name%></div>
+				</td>
+				<td style="width:30px;text-align: center" class="x_remove">
+					<i class="icon-cancel" style="font-size:18px;"></i>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<%}else{%>
+	<div>
+		<table style="width:100%;">
+			<tr>
+				<td style="width:40px;text-align: center;">
+					<i class="icon-user" style="font-size:30px"></i>
+				</td>
+				<td>
+					<div><input type="text" value="<%if(current.data){%><%=current.data.name%><%}%>" data-id="name" class="userinfo" placeholder="Name" style="padding:5px;font-size:16px;"></div>
+					<div><input type="text" value="<%if(current.data){%><%=current.data.email%><%}%>" data-id="email" class="userinfo" placeholder="Email" style="padding:5px;font-size:16px;"></div>
+				</td>
+				<td style="width:30px;text-align: center" class="x_remove">
+					<i class="icon-cancel" style="font-size:18px;"></i>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<%}else{%>
+	<div class="nbtn x_select greybtn s-corner-all" data-id="user">User</div>
+	<div class="nbtn x_select greybtn s-corner-all" data-id="<%=form.anon_schema%>">Anonymous User</div>
+	<%}%>
+</div>
+@@@formbuilder_tag_ticket@@@
+<div style="pointer-events: auto;display:block;padding:3px 5px;font-weight:bold;font-size:18px;margin:3px 0px;<%if(!top){%>opacity:0<%}%>" class="tagitem <%if(this.search&&this.exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>" data-tag="<%=data.id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:35px">
+				<i class="icon-ticket" style="font-size:20px;"></i>
+			</td>
+			<td style="font-size:14px">
+				<%=data.name%>
+			</td>
+			<%if(!this.search){%>
+			<td style="width:25px;text-align:right;padding-right:5px" class="x_remove normalicon" data-id="<%=data.id%>">
+				<i class="icon-cancel" style="font-size:14px;"></i>
+			</td>
+			<%}%>
+		</tr>
+	</table>
+</div>
+@@@formbuilder_tag_page@@@
+<div style="pointer-events: auto;<%if(this.search){%>display:block;<%}else{%>display:inline-block;<%}%>padding:3px 5px;font-weight:bold;font-size:18px;margin:3px 0px;" class="tagitem" data-id="<%=data.id%>" data-tag="<%=data.id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:35px">
+				<%if(data.pic){%>
+				<div style="width:30px;height:30px;background-image:url(<%=modules.tools.getImg(data.pic,(data.id[0]=='E')?'background':'square')%>)" class="coverimg circle"></div>
+				<%}else{%>
+				<div style="margin:auto;width:30px;height:30px;background:#ccc;" class="coverimg circle">
+					<table style="width:100%;height:100%;text-align: center">
+						<tr>
+							<td style="font-size:18px;">
+								<%=data.name[0]%>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<%}%>
+			</td>
+			<td style="font-size:14px;padding-left:5px">
+				<%=data.name%> <%if(data.start){%><%=modules.moment.format(data.start,'date',false,1)%><%}%>
+			</td>
+			<%if(!this.search&!this.static){%>
+			<td style="width:25px;text-align:right;padding-right:5px" class="x_remove normalicon" data-id="<%=data.id%>">
+				<i class="icon-cancel" style="font-size:14px;"></i>
+			</td>
+			<%}%>
+		</tr>
+	</table>
+</div>
+@@@formbuilder_tag_album@@@
+<div style="pointer-events: auto;display:block;padding:3px 5px;font-weight:bold;font-size:18px;margin:3px 0px;" class="tagitem" data-id="<%=data.id%>" data-tag="<%=data.id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:35px">
+				<%if(data.pic){%>
+				<div style="width:30px;height:30px;background-image:url(<%=modules.tools.getImg(data.pic,'square')%>)" class="coverimg"></div>
+				<%}else{%>
+				<div style="margin:auto;width:30px;height:30px;background:#ccc;" class="coverimg circle">
+					<table style="width:100%;height:100%;text-align: center">
+						<tr>
+							<td style="font-size:18px;">
+								<%=data.name[0]%>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<%}%>
+			</td>
+			<td style="font-size:14px;padding-left:5px">
+				<%=data.name%>
+			</td>
+			<%if(!this.search&!this.static){%>
+			<td style="width:25px;text-align:right;padding-right:5px" class="x_remove normalicon" data-id="<%=data.id%>">
+				<i class="icon-cancel" style="font-size:14px;"></i>
+			</td>
+			<%}%>
+		</tr>
+	</table>
+</div>
+@@@formbuilder_tag_normalitem@@@
+<div style="font-weight:bold;pointer-events: auto;display:inline-block;padding:3px 5px;font-size:18px;margin:2px;<%if(!top){%>opacity:0<%}%>" class="tagitem s-corner-all highlightcolor " data-tag="<%=data.id%>" data-id="<%=data.id%>"><%if(data.name){%><%=data.name%><%}else{%><%=data.id%><%}%> 
+	<%if(!this.search){%><i class="icon-cancel x_remove" data-id="<%=data.id%>" style="padding-top:5px;font-size:14px;color:#888;float:right"></i><%}%>
+</div>
+@@@formbuilder_tag_systemitem@@@
+<div style="font-weight:bold;pointer-events: auto;<%if(!this.search){%>display:inline-block;<%}else{%>display:block;<%}%>padding:3px 5px;font-size:18px;margin:2px;<%if(!top){%>opacity:0<%}%>" class="tagitem s-corner-all highlightcolor " data-tag="<%=data.id%>" data-id="<%=data.id%>">
+	<div>
+		<div style="display: inline-block;padding-right:10px;">
+			<div style="font-size:14px;"><%=data.id%></div>
+			<div style="font-size:11px;padding:2px">
+		<%if(data.name){%><%=data.name%><%}else{%><%=data.id%><%}%> 
+			</div>
+		</div>
+	<%if(!this.search){%><i class="icon-cancel x_remove" data-id="<%=data.id%>" style="padding-top:5px;font-size:14px;color:#888;float:right"></i><%}%>
+	</div>
+</div>
+@@@formbuilder_tag_item@@@
+<div style="font-weight:bold;pointer-events: auto;<%if(this.search){%>display:inline-block;<%}else{%>display:block;<%}%>padding:3px 5px;font-size:18px;margin:2px;<%if(!top){%>opacity:0<%}%>" class="tagitem s-corner-all highlightcolor " data-tag="<%=data.id%>" data-id="<%=data.id%>">#<%if(data.name){%><%=data.name%><%}else{%><%=data.id%><%}%> 
+	<%if(!this.search){%><i class="icon-cancel x_remove" data-id="<%=data.id%>" style="padding-top:5px;font-size:14px;color:#888;float:right"></i><%}%>
+</div>
+@@@formbuilder_tag_item_plain@@@
+<div style="font-weight:bold;pointer-events: auto;<%if(this.search){%>display:inline-block;<%}else{%>display:inline-block;<%}%>padding:3px 5px;font-size:18px;margin:2px;<%if(!top){%>opacity:0<%}%>" class="tagitem s-corner-all highlightcolor " data-tag="<%=data.id%>" data-id="<%=data.id%>"><%if(data.name){%><%=data.name%><%}else{%><%=data.id%><%}%> 
+	<%if(!this.search){%><i class="icon-cancel x_remove" data-id="<%=data.id%>" style="padding-top:5px;font-size:14px;color:#888;float:right"></i><%}%>
+</div>
+@@@formbuilder_tag@@@
+<div class="formelement" data-type="tag" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="position: relative;min-height:35px;" class="tagbox">
+			<%if(current){%>
+			<div class="placeholdertitle notonweb" style="padding-top:5px;padding-bottom:5px;padding-left:10px; "><%=name%></div>
+			<div><%=$.fn.render({template:form.template,data:{data:info},returntemplate:true})%></div>
+			<%}else{%>
+			<%if(form.icon){%>
+			<i class="<%=form.icon%>" style="position: absolute;top:8px;left:5px;z-index: 1;font-size:24px;color:#aaa"></i>
+			<%}%>
+			<div style="position: absolute;top:0;<%if(form.icon){%>left:40px;<%}else{%>left:5px;<%}%>right:0;z-index: 3;pointer-events: none;" class="tagrender_top"></div>
+			<div style="position: absolute;top:0;<%if(form.icon){%>left:40px;<%}else{%>left:5px;<%}%>right:0;z-index: 1" class="tagrender_bottom"></div>
+			<div style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 2">
+				<input type="text" class="normalinput truebox taginput" style="font-size:20px;padding:5px 5px 5px 40px;background:transparent;width:100vw;">
+				<div style="position: absolute;top:0;right:0;bottom:0;width:50px;z-index: 1">
+				</div>
+				<i class="tagcancel icon-cancel" style="display:none;position: absolute;top:5px;right:5px;font-size:18px;padding:5px;z-index: 2"></i>
+			</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_tags@@@
+<div class="formelement" data-type="tags" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%if(form.placeholder){%><%=form.placeholder%><%}else{%><%=name%><%}%><%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="position: relative;min-height:35px;" class="tagbox">
+			<%if(form.icon){%>
+			<i class="<%=form.icon%>" style="position: absolute;top:8px;left:5px;z-index: 1;font-size:24px;color:#aaa"></i>
+			<%}%>
+			<div style="position: absolute;top:0;<%if(form.icon){%>left:40px;<%}else{%>left:5px;<%}%>right:0;z-index: 3;pointer-events: none;" class="tagrender_top"></div>
+			<div style="position: absolute;top:0;<%if(form.icon){%>left:40px;<%}else{%>left:5px;<%}%>right:0;z-index: 1" class="tagrender_bottom"></div>
+			<div style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 2">
+				<input type="text" class="normalinput truebox taginput" style="font-size:20px;padding:5px 5px 5px 40px;background:transparent;width:100vw;">
+				<i class="tagcancel icon-cancel" style="display:none;position: absolute;top:5px;right:5px;font-size:18px;padding:5px;"></i>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_video@@@
+<div class="formelement forminput2" data-type="video" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%><%if(this.tooltip&&tooltip){%><%=$.fn.render({template:'formbuilder_tooltip',data:{data:this},returntemplate:true})%><%}%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<div class="placeholdertitle notonweb" style="padding-bottom:10px;"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+			<div class="mediatray">
+				<%if(this.current&&(current.src||current.data)){%>
+				<div class="videopreviewarea"></div>
+				<div class="x_remove" style="padding:5px;color:#f02;font-weight: bold;text-align: right;"><i class="icon-minus"></i> Remove Video</div>
+				<%}else{%>
+				<div style="display: inline-block;margin:5px;border:1px solid #ccc;padding:5px;" class="s-corner-all x_addvideo">
+					<div style="font-size:15px"><i class="icon-videocam"></i> Add Video</div>
+				</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@formbuilder_image@@@
+<div class="formelement" data-type="image" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%if(form.placeholder){%><%=form.placeholder%><%}else if(this.name){%><%=name%><%}else{%>Image<%}%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<%if(form.display=='cover'){%>
+		<div class="notonweb">
+			<div style="position:relative;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'small')%><%}%>" class="coverimg x_upload formbuilder_cover">
+				<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+					<tr>
+						<td>
+							<div style="width:150px;margin:auto;color:#888;text-align: center;">
+								<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+								<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="notonmobile">
+			<div style="border:1px solid #ccc; position:relative;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'small')%><%}%>" class="coverimg x_upload formbuilder_cover s-corner-all">
+				<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+					<tr>
+						<td>
+							<div style="width:150px;margin:auto;color:#888;text-align: center;">
+								<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+								<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<%}else if(form.display=='profile'){%>
+		<div class="notonweb">
+			<div style="position:relative;width:100vw;height:80vh;border-bottom:1px solid #ccc;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'small')%><%}%>" class="coverimg x_upload">
+				<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+					<tr>
+						<td>
+							<div style="width:150px;margin:auto;color:#888;text-align: center;">
+								<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+								<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="notonmobile">
+			<div style="width:100%;height:300px;">
+				<div style="width:150px;height:250px;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'small')%><%}%>" class="coverimg x_upload">
+					<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+						<tr>
+							<td>
+								<div style="width:150px;margin:auto;color:#888;text-align: center;">
+									<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+									<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<%}else if(form.display=='square'){%>
+		<div class="notonweb">
+			<div style="position:relative;width:50vw;height:50vw;border-bottom:1px solid #ccc;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'square')%><%}%>" class="coverimg x_upload">
+				<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+					<tr>
+						<td>
+							<div style="width:150px;margin:auto;color:#888;text-align: center;">
+								<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+								<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="notonmobile">
+			<div style="width:100%;padding:10px;">
+				<div style="width:150px;height:150px;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'square')%><%}%>" class="coverimg x_upload m-corner-all">
+					<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+						<tr>
+							<td>
+								<div style="width:150px;margin:auto;color:#888;text-align: center;">
+									<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+									<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<%}else if(form.display=='background'){%>
+		<div style="position: relative;">
+			<div class="notonweb">
+				<div style="position:relative;width:100vw;height:50vw;border-bottom:1px solid #ccc;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'background')%>)<%}%>" class="coverimg x_upload">
+					<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+						<tr>
+							<td>
+								<div style="width:150px;margin:auto;color:#888;text-align: center;">
+									<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+									<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="notonmobile">
+				<div style="width:400px;height:200px;border:1px solid #ccc;margin:10px;" class="s-corner-all">
+					<div style="position:relative;width:100%;height:100%;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'background')%>)<%}%>" class="coverimg x_upload s-corner-all">
+						<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+							<tr>
+								<td>
+									<div style="width:150px;margin:auto;color:#888;text-align: center;">
+										<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+										<div>Upload Image</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%}else if(form.display=='fitWidth'){%>
+		<div style="position:relative;border-bottom:1px solid #ccc;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'small')%>);height:<%=modules.tools.getImgHeight(current,{width:'body',fitWidth:1,units:'%'})%>px;<%}else{%>height:80vh;<%}%>" class="coverimg x_upload notonweb formwidth">
+			<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+				<tr>
+					<td>
+						<div style="width:150px;margin:auto;color:#888;text-align: center;">
+							<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+							<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image><%}%></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="position:relative;;border-bottom:1px solid #ccc;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'small')%>);height:<%=modules.tools.getImgHeight(current,{width:'body',fitWidth:1,units:'%'})%>px;<%}else{%>height:300px;<%}%>" class="coverimg x_upload notonmobile formwidth">
+			<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+				<tr>
+					<td>
+						<div style="width:150px;margin:auto;color:#888;text-align: center;">
+							<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+							<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image><%}%></div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<%}else if(form.display=='header'){%>
+		<div style="position: relative;">
+			<div class="notonweb">
+				<div style="position:relative;width:100vw;height:20vw;border-bottom:1px solid #ccc;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'header')%>)<%}%>" class="coverimg x_upload">
+					<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+						<tr>
+							<td>
+								<div style="width:150px;margin:auto;color:#888;text-align: center;">
+									<div style="padding-bottom:10px"><i class="icon-images" style="font-size:50px"></i></div>
+									<div><%if(form.placeholder){%><%=form.placeholder%><%}else{%>Upload Image<%}%></div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="notonmobile">
+				<div style="width:400px;height:80px;border:1px solid #ccc;margin:10px;" class="s-corner-all">
+					<div style="position:relative;width:100%;height:100%;<%if(current){%>background-image:url(<%=modules.tools.getImg(current,'header')%>)<%}%>" class="coverimg x_upload s-corner-all">
+						<table style="width:100%;height:100%;<%if(current){%>display:none;<%}%>" class="notuploaded">
+							<tr>
+								<td>
+									<div style="margin:auto;color:#888;text-align: center;">
+										<table style="margin:auto">
+											<tr>
+												<td>
+													<i class="icon-images" style="font-size:30px"></i>
+												</td>
+												<td>
+													<div style="display: inline-block;font-size:16px;">Upload Image</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@formbuilder_location@@@
+<div class="formelement forminput2 <%if(this.current&&current.id){%>hasvalue<%}%> <%if(form.disablePlaceholder){%>disableplaceholder<%}%>" data-type="location" data-key="<%=key%>" data-<%=template%>="<%=_tid%>" <%if(form.group){%>data-group="<%=form.group%>"<%}%>>
+	<div class="webplaceholder"><%=name%> <%=$.fn.render({template:'formbuilder_moreinfo',data:{item:this},returntemplate:true})%></div>
+	<div class="formbuilder_contentarea">
+		<div style="padding:0px 10px">
+			<%if(current.id&&current.data){%>
+			<%if(name){%>
+			<div class="placeholdertitle notonweb" style="padding-bottom:4px "><%=name%></div>
+			<%}%>
+		    <div style="font-size:16px;"><%=phone.location.getName(current.data,'simple')%></div>
+		    <%if(current.more){%>
+		    <div style="font-size:11px;padding:5px 0px 5px 10px"><%=current.more%></div>
+		    <%}%>
+			<%}else if(current.text){%>
+			<%if(name){%>
+			<div class="placeholdertitle notonweb" style="padding-bottom:4px "><%=name%></div>
+			<div style="font-size:16px;"><%=current.text%></div>
+			<%}%>
+			<%}else{%>
+			<div class="placeholdercolor">
+			<%=name%>
+			</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@formbuilder_address@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if((!data.id||!data.data)&&!data.text){%>
+	<div style="border-bottom:1px solid #ccc;position: relative;">
+		<i class="icon-search appcontent" style="position:absolute;top:2px;left:5px;font-size:18px"></i>
+		<input class="s-corner-all truebox addressinput normalinput appinput_clean" placeholder="<%=name%>" style="padding:5px 5px 5px 40px;">
+	</div>
+	<div style="height:30vh" class="scrollY">
+		<div class="resultslist"></div>
+	</div>
+	<%}else if(data.text){%>
+	<div data-<%=template%>="<%=_tid%>" style="padding:10px;color:#888;text-align: left;border:1px solid white;margin:5px" class="s-corner-all">
+	    <div style="font-size:16px;"><%=data.text%></div>
+	</div>
+	<div style="padding:5px;text-align: center;color:#555">
+		<div class="x_removecity" style="display: inline-block;padding:3px;margin-right:10px">Change</div>
+		<div class="x_clear " style="display: inline-block;padding:3px">Clear</div>
+	</div>
+	<%}else{%>
+	<div data-<%=template%>="<%=_tid%>" style="padding:10px;color:#888;text-align: left;border:1px solid white;margin:5px" class="s-corner-all x_removecity">
+	    <div style="font-size:16px;"><%=phone.location.getName(data.data,'simple')%></div>
+	</div>
+	<%if(apt){%>
+	<div style="text-align: center;padding-bottom: 10px">
+		<div class="prettyinput2" style="margin-left:15px;width:290px">
+			<input type="text" style="width:290px;padding:5px;border-bottom:1px solid #ccc;font-size:12px;" class="normalinput truebox x_apt" placeholder="(optional) More Info / Address Line 2" value="<%=data.more%>">
+		</div>
+	</div>
+	<%}%>
+	<div style="padding:5px;text-align: center;color:#555">
+		<div class="x_removecity" style="display: inline-block;padding:3px;margin-right:10px">Change</div>
+		<div class="x_clear " style="display: inline-block;padding:3px">Clear</div>
+	</div>
+	<%}%>
+</div>

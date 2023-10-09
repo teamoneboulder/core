@@ -1,0 +1,83 @@
+.swipenavitem{
+	display: inline-block;
+	font-size:16px;
+	font-weight: bold;
+	cursor: pointer;
+	-webkit-transform: translate3d(0, 0, 0);
+  transform:translate3d(0,0,0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+    -moz-transition-duration: .2s;
+    -webkit-transition-duration: .2s;
+    -o-transition-duration: .2s;
+    -transition-timing-function: ease;
+}
+.swipenavitem2{
+	display: inline-block;
+	font-size:16px;
+	font-weight: bold;
+	opacity: .7;
+	cursor: pointer;
+	-webkit-transform: translate3d(0, 0, 0);
+  transform:translate3d(0,0,0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+    -moz-transition-duration: .2s;
+    -webkit-transition-duration: .2s;
+    -o-transition-duration: .2s;
+    -transition-timing-function: ease;
+}
+.swipenavprettytext{
+	font-size:20px;
+	color:#555;
+	border-bottom:2px solid transparent;
+}
+.swipenavprettytext.selected{
+	border-bottom:2px solid #0e345e;
+}
+.eventnavitem{
+	border:1px solid white;
+	margin:0px 3px;
+}
+.nectarnav{
+	color:#555;
+}
+.nectarnav:not(.selected){
+	opacity: .6;
+}
+.nectarnav.selected{
+	color:#62bfdb !important;
+}
+.swipenavtext{
+	opacity: .6;
+	padding:4px 8px;
+}
+body:not(.isMobile) .swipenavitem:hover{
+	opacity: .8;
+}
+.swipenavitem.selected{
+	opacity: 1;
+}
+.swipenavitem2.selected{
+	opacity: 1;
+}
+.swipenavcontainer{
+	height:100%;
+	min-width:100%;
+	text-align: center;
+}
+.swipenav{
+	height:100%;
+}
+.emojinav{
+	padding-bottom:2px;
+}
+.emojinav.selected{
+	border-bottom:2px solid #0e345e;
+}
+.emojinav{
+	border-bottom:2px solid transparent;
+}
+.emojinav:not(.selected) .emojiimg{
+	opacity: .6
+}

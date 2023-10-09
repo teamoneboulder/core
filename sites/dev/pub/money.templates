@@ -1,0 +1,73 @@
+@@@money_home@@@
+<div class="sfit">
+	<div style="position: absolute;top:0;left:0;right:0;height:50px;background:#eee">
+		<div class="sfit x_enter">
+			<div class="table">
+				<div class="tcell" style="width:20px;padding-left:5px">
+					<i class="icon-real-time"></i>
+				</div>
+				<div class="tcell" style="width:200px;padding-left:5px">
+					<input type="text" style="padding:5px;background:rgba(255,255,255,.4);width:180px" class="s-corner-all" placeholder="Enter Token(s) USDC,BUSD" id="tokens">
+				</div>
+				<div class="tcell" style="width:60px;">
+					<div class="s-corner-all x_toggle">Exact</div>
+				</div>
+				<div class="tcell" style="width:200px;padding-left:5px">
+					<input type="text" style="padding:5px;background:rgba(255,255,255,.4);width:180px" class="s-corner-all" placeholder="Total Volume Greater Than" id="volume" value="10000">
+				</div>
+				<div class="tcell" style="width:100px;">
+					<div class="s-corner-all linkitem x_apply" style="border:1px solid #ccc;text-align: center;">Apply Filter</div>
+				</div>
+				<div class="tcell"></div>
+			</div>
+		</div>
+	</div>
+	<div style="position:absolute;top:51px;left:0;right:0;height:40px;">
+		<div class="itable" style="background:#eee;width:900px;margin:auto;max-width:100%;text-align: center;">
+			<div class="tcell" style="width:100px;padding:5px;">Domain</div>
+			<div class="tcell" style="width:200px;padding:5px;">Tokens</div>
+			<div class="tcell" style="width:100px;text-align: center;padding:5px">Year APR</div>
+			<div class="tcell" style="width:100px;text-align: center;padding:5px">Volume</div>
+			<div class="tcell" style="width:100px;text-align: center;padding:5px">Price</div>
+			<div class="tcell" style="width:500px;text-align: center;padding:5px">
+				Links
+			</div>
+			<div class="tcell"></div>
+		</div>
+	</div>
+	<div style="position:absolute;top:91px;left:0;right:0;bottom:0">
+		<div class="sfit scroller">
+			<div>
+				<div class="itemlist" style="width:900px;margin:auto;max-width:100%;"></div>
+			</div>
+		</div>
+		<div class=" scroller2" style="position: absolute;top: 0;left: 50%;bottom: 0;width:300px;margin:auto;margin-left:400px">
+			<div>
+				<div class="itemlist2"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@money_item@@@
+<div class="itable" data-domain="<%=data.exchangeDomain%>">
+	<%
+		var t=data.tokenLink.split('/');
+	%>
+	<div class="tcell" style="width:100px;padding:5px;"><%=data.exchangeDomain%> </div>
+	<div class="tcell" style="width:200px;padding:5px;"><%for (var i = 0; i < data.tokens.length; i++) {
+		var token=data.tokens[i];%>
+		<%=token%> <span style="font-size:11px"><%if(data.prices&&data.prices[token]){%>(<%=data.prices[token].addCommas()%>)<%}%></span> <%if(data.tokens[i+1]){%>, <%}%>
+	<%}%></div>
+	<div class="tcell" style="width:100px;text-align: center;padding:5px"><%=data.apr.year.addCommas()%>%</div>
+	<div class="tcell" style="width:100px;text-align: center;padding:5px"><%if(data.volume){%><%=data.volume.addCommas()%><%}%></div>
+	<div class="tcell" style="width:100px;text-align: center;padding:5px"><%if(data.price){%><%=data.price.addCommas()%><%}%></div>
+	<div class="tcell" style="width:500px;text-align: center;padding:5px">
+		<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:5px;" class="s-corner-all linkitem" link="<%=data.page%>">VFAT Page</div>
+		<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:5px;" class="s-corner-all linkitem" link="<%=data.tokenLink%>">Swap Link</div>
+		<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:5px;" class="s-corner-all linkitem" link="<%=data.exchangeLink%>">Exchange Link</div>
+		<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:5px;" class="s-corner-all linkitem" link="https://bscscan.com/address/<%=(t[t.length-1])%>">BSCScan</div>
+		<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:5px;" class="s-corner-all linkitem" link="https://rugdoc.io/?s=<%=data.exchangeDomain%>">Rug Doctor</div>
+		<span style="font-size:9px" action="click:blacklist" data-id="<%=data.exchangeDomain%>">Blacklist</span>
+	</div>
+	<div class="tcell"></div>
+</div>

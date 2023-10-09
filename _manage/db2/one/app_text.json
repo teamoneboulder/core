@@ -1,0 +1,94 @@
+[{
+	"id":"set_up",
+	"name":"Set Up"
+},{
+	"id":"update_email",
+	"name":"Update Email"
+},{
+	"id":"ob_plan_services_basic",
+	"name":"Provider plan Short"
+},{
+	"id":"ob_plan_events_basic",
+	"name":"Producer plan information"
+},{
+	"id":"onboardstorypage",
+	"name":"Onboard Story Page"
+},{
+	"id":"onboardevents",
+	"name":"Onboard Producer Page"
+},{
+	"id":"onepass_info",
+	"name":"ONE|Pass overview / welcome"
+},{
+	"id":"onepass_plan",
+	"name":"ONE|Pass Plan info"
+},{
+	"id":"soon_tool_resource",
+	"name":"Coming Soon Resource Library"
+},{
+	"id":"soon_tool_market",
+	"name":"Coming Soon Market"
+},{
+	"id":"soon_tool_jobs",
+	"name":"Coming Soon jobs"
+},{
+	"id":"soon_tool_academy",
+	"name":"Coming Soon Academy"
+},{
+	"id":"qr_explorer_to_player",
+	"name":"Explorer QR scan message to upgrade to player"
+},{
+	"id":"ob_event_distinction",
+	"name":"ONE|Boulder event distinction"
+},{
+	"id":"welcome_become_player",
+	"name":"Welcome text to prompt people to become a ONE|Boulder Player (from /welcome screen)"
+},{
+	"id":"ob_plan_player_founder",
+	"name":"ONE|Boulder player founder plan text"
+},{
+	"id":"ob_plan_producer_founder",
+	"name":"ONE|Boulder Producer founder plan text"
+},{
+	"id":"onboardservicespage",
+	"name":"Provider Plan Long"
+},{
+	"id":"onboardpage",
+	"name":"Content on onboard page"
+},{
+	"id":"onboardpointspage",
+	"name":"Content on onboard from points page"
+},{
+	"id":"onboardneedsspage",
+	"name":"Content on onboard from requests page"
+},{
+	"id":"or_plan_daypass",
+	"name":"ONE|Riverside Day Pass"
+},{
+	"id":"or_plan_communityplus",
+	"name":"ONE|Riverside Community Plus Plan"
+},{
+	"id":"or_plan_community",
+	"name":"ONE|Riverside Community Plan"
+},{
+	"id":"ob_plan_producer",
+	"name":"ONE|Boulder Producer Plan"
+},{
+	"id":"ob_plan_player",
+	"name":"ONE|Boulder player plan"
+},{
+	"id":"onboard_game_welcome",
+	"name":"Onboarding Game Welcome"
+},{
+	"id":"onboard_game_aims",
+	"name":"Onboarding Game Aims"
+},{
+	"id":"onboard_game_points",
+	"name":"Onboarding Game Points"
+},{
+	"id":"onboard_game_gifting",
+	"name":"Onboarding Gifting Culture"
+},{
+	"id":"ticket_terms",
+	"name":"Ticket Terms"
+}]

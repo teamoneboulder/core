@@ -1,0 +1,56 @@
+@@@ui_dropdown@@@
+<div id="<%=id%>" data-ui="dropdown" style="width:100%;height:100%;position:relative;">
+	<%
+		var selected=false;
+	%>
+	<div style="position: absolute;z-index:5;top:100%;left:0;right:0;overflow:hidden;display: none;margin-top:-1px" class="dropdownlist">
+		<div class="dropdowndata" style="margin-top:-105%;border:1px solid #eee;background:white;">
+		<%for (var i = 0; i < data.order.length; i++) {
+			var item=data.list[data.order[i]];
+			%>
+			<div class="dropdownitem <%if(item.id==data.selected){%>selected<%}%>" style="padding:5px;font-size:14px" data-id='<%=item.id%>' data-name="<%=item.name%>"><%=item.name%></div>
+		<% }%>
+		</div>
+	</div>
+	<div class="truebox" style="width:100%;padding:5px;border:1px solid #eee;">
+		<div class="currentselection">
+			<%if(data.selected&&data.list[data.selected]){%>
+			<%=data.list[data.selected].name%>
+			<%}else if(this.question){%>
+			<%=question%>
+			<%}else{%>
+			Whats your ask?
+			<%}%>
+		</div>
+		<div class="dropdownicon" style="position:absolute;top:50%;margin-top:-8px;right:3px;z-index:2">
+			<i class="icon-down-open" style="font-size:14px"></i>
+		</div>
+	</div>
+</div>
+@@@ui_dropdown2@@@
+<div id="<%=id%>" data-ui="dropdown" style="width:100%;height:100%;position:relative;" <%if(data.selected){%>class="hasselection"<%}%>>
+	<div style="position: absolute;z-index:5;top:100%;left:0;right:0;overflow:hidden;display: none;margin-top:-1px" class="dropdownlist">
+		<div class="dropdowndata" style="margin-top:-105%;border:1px solid #eee;background:white;">
+			<div style="margin:5px;padding:5px;background:#eee" class="s-corner-all dropdownquestion"><%=question%></div>
+		<%for (var i = 0; i < data.order.length; i++) {
+			var item=data.list[data.order[i]];
+			%>
+			<div class="dropdownitem <%if(item.id==data.selected){%>selected<%}%>" style="padding:5px;font-size:14px" data-id='<%=item.id%>' data-name="<%=item.name%>"><%=item.name%></div>
+		<% }%>
+		</div>
+	</div>
+	<div class="truebox" style="width:100%;padding:5px;">
+		<div class="currentselection">
+			<%if(data.selected&&data.list[data.selected]){%>
+			<%=data.list[data.selected].name%>
+			<%}else if(this.question){%>
+			<%=question%>
+			<%}else{%>
+			Whats your ask?
+			<%}%>
+		</div>
+		<div class="dropdownicon" style="position:absolute;top:50%;margin-top:-8px;right:3px;z-index:2">
+			<i class="icon-down-open" style="font-size:14px"></i>
+		</div>
+	</div>
+</div>

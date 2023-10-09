@@ -1,0 +1,49 @@
+<div>
+    <table style="width:100%">
+        <tr>
+            <td style="width:50px;vertical-align:top;">
+                <div style="background-image:url({$data['chat']['by_info']['pic']|getImg:square});width:50px;height:50px; background-repeat:no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position:center;"></div>
+            </td>
+            <td style="padding-left:5px">
+                <div style="font-weight:bold;font-size:14px;">
+                    {$data['chat']['by_info']['name']}
+                </div>
+                <div n:if="isset($data['chat']['content'])" style="font-size:12px;padding:4px">
+                    {$data['chat']|parseChatContent|noescape}
+                </div>
+                <div n:if="isset($data['chat']['attachment'])" style="font-size:11px;color:#888;padding:5px">
+                    <div n:if="$data['chat']['attachment']['type']=='event'">
+                        with an attached event
+                    </div>
+                    <div n:if="$data['chat']['attachment']['type']=='post'">
+                        with an attached post
+                    </div>
+                </div>
+                <div n:if="isset($data['chat']['media'])" style="font-size:11px;color:#888;padding:5px">
+                    <div n:if="$data['chat']['media']['type']=='images'">
+                        {if ($data['chat']['media']['data']|sizeof)==1}
+                        <div>
+                            sent {$data['chat']['media']['data']|sizeof} image
+                        </div>
+                        {/if}
+                        {if ($data['chat']['media']['data']|sizeof)>1}
+                        <div>
+                            sent {$data['chat']['media']['data']|sizeof} images
+                        </div>
+                        {/if}
+                    </div>
+                    <div n:if="$data['chat']['media']['type']=='video'">
+                        sent a video
+                    </div>
+                    <div n:if="$data['chat']['media']['type']=='link'">
+                        sent a link
+                    </div>
+                    <div n:if="$data['chat']['media']['type']=='audio'">
+                        sent an audio message
+                    </div>
+                </div>
+                <div style="font-size:11px;color:#888;padding:5px">{$data['chat']['_id']|getTs}</div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,320 @@
+@@@map_container@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="overflow: hidden">
+    <div class="sfit fasttransition" style="z-index:1" class="map_container">
+        <div class="map_maparea" style="position:absolute;top:0;left:0;right:0;bottom:0"></div>
+        <%if(settings.add&&!settings.readonly){%>
+        <div class="map_bottomnav fasttranstion">
+            <div class="tooltip tooltip_bl">
+                <div class="circle themecolor menuicon x_add fasttransition" style="padding:10px;">
+                    <i class="icon-plus nomargin" style="font-size:24px;margin:0"></i>
+                </div>
+                <span class="tooltiptext" style="font-size:20px">Add Content</span>
+            </div>
+        </div>
+        <%}%>
+        <%if(settings.search){%>
+        <div style="position:absolute;top:10px;left:10px;z-index:10">
+            <table>
+                <tr>
+                    <td style="vertical-align:top">
+                        <div class="s-corner-all themecolor menuicon x_search fasttransition" style="padding:5px 10px;display:inline-block;margin-left:10px;position:relative;">
+                            <div class="searchcontainer">
+                                <table>
+                                    <tr>
+                                        <td style="color:white;">
+                                            <i class="icon-search nomargin moresearchicon" style="font-size:24px;margin:0"></i>
+                                            <i class="icon-cancel nomargin moresearchcancel" style="font-size:24px;margin:0"></i>
+                                        </td>
+                                        <td>
+                                            <div style="padding-left:15px;display:inline-block;white-space: nowrap;" class="moresearch">
+                                                <input type="text" style="margin-top:2px;padding:5px;border:1px solid #ccc;background:rgba(255,255,255,.7);font-size:20px;" class="s-corner-all x_locationsearch" placeholder="Search Map">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="results" >
+                <div style="text-align:center;">
+                    <div style="padding:2px" class="themecolor">
+                        <%if(settings.search&&settings.search.marker){%>
+                        <span class="gbtn s-corner-all truebox themecolordark togglesearchview" data-view="locations" style="width:120px;">Markers <span class="locationsearchstatus"></span></span>
+                        <%}%>
+                        <%if(settings.search&&settings.search.cities){%>
+                        <span class="gbtn s-corner-all togglesearchview" data-view="cities" style="margin-left:5px;width:120px;">Cities <span class="citysearchstatus"></span></span>
+                        <%}%>
+                    </div>
+                </div>
+                <div class="searchpage themeColor s-corner-bottom" style="padding:2px;display:none" class="s-corner-bottom shadow_b" data-viewarea="cities">
+                    <div class="resultslist s-corner-bottom" style="padding:2px;background:white;overflow:hidden;color:black"></div>
+                </div>
+                <div class="searchpage themeColor s-corner-bottom" style="padding:2px;" class="s-corner-bottom shadow_b" data-viewarea="locations">
+                    <div class="resultslist2 s-corner-bottom" style="padding:2px;background:white;overflow:hidden;color:black" ></div>
+                </div>
+            </div>
+        </div>
+        <%}%>
+        <div style="position:absolute;top:85px;right:0;z-index:5">
+            <%if(settings.login){%>
+            <div class="map_glnavcontainer s-corner-left themeFont themecolor_transparent userprofile">
+            </div>
+            <%}%>
+            <div class="map_glnavcontainer s-corner-left themeFont themecolor_transparent">
+                <div class="map_nav map_ctrl tooltip tooltip_right navmenuicon" data-menu="layers">
+                    <div>
+                        <div class="map_menuiconbox">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <span class="tooltiptext">Layers</span>
+                    <div class="layerrightarrow"></div>
+                </div>
+                <div class="map_nav map_ctrl tooltip tooltip_right map_subctrl forceshow" data-menu="center">
+                    <i class="icon-home" ></i>
+                    <span class="tooltiptext">Center</span>
+                </div>           
+                <div class="map_nav s-corner-all x_tiltit map_ctrl tooltip tooltip_right" data-menu="toggletilt" style="display:none;">
+                    <span class="viewmode" style="font-size:22px;font-weight:bold">3D</span>
+                    <span class="tooltiptext">2D/3D Mode</span>
+                </div>
+                <div class="map_nav map_ctrl tooltip tooltip_right locatebtn" data-menu="locate">
+                    <i class="icon-target" ></i>
+                    <span class="tooltiptext">Location</span>
+                </div>           
+                <!-- <div class="map_nav s-corner-all map_ctrl tooltip tooltip_right nohover" data-menu="help">
+                    <div>
+                        <i class="icon-help map_helpicon" ></i>
+                        <i class="icon-cancel map_helpcloseicon" ></i>
+                    </div>
+                    <span class="tooltiptext">Close Help</span>
+                </div> -->
+            </div>
+        </div>
+        <div style="position:absolute;bottom:60px;left:10px;z-index:10;color:black" class="growlarea"></div>
+        <div class="sfit map_navbg" style="background:rgba(55,55,55,.3);z-index:4;"></div>
+        <div style="position:absolute;top:5px;right:50px;z-index:5;width:260px;padding:2px;" class="themecolor s-corner-all truebox map_layerbox">
+            <div style="padding:5px;text-align:center;font-size:18px"><b>Maps</b></div>
+            <div style="background:#ccc;" class="s-corner-all map_layerlist">
+                <%if(false) for (var i = 0; i < layers.order.length; i++) {
+                    var layer=layers.list[layers.order[i]];%>
+                    <div class="map_layer normalicon">
+                        <table style="width:100%;">
+                            <tr>
+                                <td style="width:40px;">
+                                    <div style="width:30px;height:30px;margin:5px;background-image:url(<%=modules.tools.getImg(layer.img)%>)" class="fitimg"></div>
+                                </td>
+                                <td>
+                                    <div style="font-size:18px;padding-left:3px;color:black"><%=layer.name%></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <%};%>
+            </div>
+            <div class="themearrow_right" style="position:absolute;top:11px;left:100%;"></div>
+        </div>
+        <div class="sfit map_helpbg" style="background:rgba(55,55,55,.3);z-index:3;">
+            <div style="position:absolute;bottom:10px;left:0;right:0;z-index:5;color:white;text-align:center" class="attributionbox" class="s-corner-all truebox groupuplink">
+                <div class="maintext"><a class="groupuplink4" data-intent="http://www.openstreetmap.org/" data-type="external">© OpenStreetMap contributors</a></div>
+            </div>
+        </div>
+    </div>
+    <div style="position:absolute;bottom:0;left:50%;width:200px;margin-left:-100px;z-index:1;" class="fasttransition map_layertoggle"></div>
+</div>
+@@@map_loading@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit map_loading" style="background:#eee;z-index:20">
+    <div class="sfit" style="z-index:2">
+        <table style="width:100%;height:100%;text-align:center">
+            <tr>
+                <td>
+                    <div>
+                        <i class="icon-refresh animate-spin" style="font-size:60px"></i>
+                    </div>
+                    <div style="padding-top:10px;font-size:20px"><b>Loading</b></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="flowerbg sfit" style="z-index:1"></div>
+</div>
+@@@markerview@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;min-height:100%;" class="shadow_top_diffuse">
+    <div style="height:100px;position:relative;position:absolute;top:0;left:0;right:0;z-index:3;background:white" class="togglemore shadow_bottom">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;" class="themecolor"></div>
+        <table style="width:100%;height:100%;padding-top:5px" class="truebox">
+            <tr>
+                <td style="vertical-align:top">
+                    <div style="padding-left:15px;padding-top:15px;font-size:20px;font-weight:bold" class="markertitle">
+                        <%if(name){%><%=name%><%}else{%><span style="color:#888">No Name</span><%}%>
+                        <i class="icon-pencil x_edit" style="font-size:24px;float:right"></i>
+                    </div>
+                    <div style="padding-top:10px;padding-left:20px;">
+                        <!-- <i class="icon-star" style="font-size:16px"></i><i class="icon-star" style="font-size:16px"></i><i class="icon-star" style="font-size:16px"></i><i class="icon-star" style="font-size:16px"></i><i class="icon-star-empty" style="font-size:16px"></i> -->
+                        <%if(this.links){
+                            for (var i = 0; i < links.length; i++) {
+                                var link=links[i];%>
+                                <div class="gbtn s-corner-all truebox linkitem" data-href="<%=link.url%>" style="width:150px;margin-left:5px;padding:5px;border:1px solid #ccc;display: inline-block;"><i class="icon-globe"></i> <%=link.name%></div>
+                            <%};
+                            %>
+                        <%}%>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="background:white;position:absolute;top:100px;left:0;right:0;bottom:0;z-index:2">
+        <div class="sfit scrollY" data-id="markescroller">
+            <div style="width:700px;max-width:94%;margin:auto;" class="markercontent">
+                <div style="padding:20px 10px 500px 10px;max-width:600px;margin:auto">
+                <%if(this.description){%>
+                    <%=description%>
+                <%}else{%>
+                    no content
+                <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%if(this.media&&media&&media.order[0]){%>
+    <div style="position:absolute;top:0px;left:0px;right:0px;height:30vh;background:white">
+        <div class="coverimg mapcovertop" style="position: absolute;top: 55px;left: 0;right: 0;bottom: 0;background-image:url(<%=modules.tools.getImg(media.list[media.order[0]].data,'small',1)%>);z-index:1" id="markerimg"  action="click:imageviewer:<%=phi.formatOptions({
+        ele:'$',
+        data:media,
+        index:0
+    })%>"></div>
+    </div>
+    <%}else{%>
+    <div style="position:absolute;top:0px;left:0px;right:0px;height:30vh;background:black;z-index:1" id="markerimg"></div>
+    <%}%>
+</div>
+@@@markerview_web@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;min-height:100%;">
+    <div style="position: absolute;top:0;right:-30px;width:30px;height:30px;background:white;z-index: 2" class="s-corner-br x_hide">
+        <div class="divtable"><i class="icon-cancel" style="font-size:18px;"></i></div>
+    </div>
+    <div class="shadow_right sfit scrollY" style="z-index: 1">
+        <%if(this.images&&images&&images[0]){%>
+        <div class="coverimg" style="height:220px;background-image:url(<%=modules.tools.getImg(images[0],'small',1)%>);z-index:1" id="markerimg"></div>
+        <%}else{%>
+        <div style="height:220px;background:black;z-index:1" id="markerimg"></div>
+        <%}%>
+        <table style="width:100%;padding-top:5px" class="truebox">
+            <tr>
+                <td style="vertical-align:top">
+                    <div style="padding-left:15px;padding-top:15px;font-size:20px;font-weight:bold" class="markertitle">
+                        <%if(name){%><%=name%><%}else{%><span style="color:#888">No Name</span><%}%>
+                    </div>
+                    <div style="padding-top:10px;padding-left:20px;">
+                        <!-- <i class="icon-star" style="font-size:16px"></i><i class="icon-star" style="font-size:16px"></i><i class="icon-star" style="font-size:16px"></i><i class="icon-star" style="font-size:16px"></i><i class="icon-star-empty" style="font-size:16px"></i> -->
+                        <%if(this.links){
+                            for (var i = 0; i < links.length; i++) {
+                                var link=links[i];%>
+                                <div class="gbtn s-corner-all truebox linkitem" data-href="<%=link.url%>" style="width:150px;margin-left:5px"><i class="icon-globe"></i> <%=link.name%></div>
+                            <%};
+                            %>
+                        <%}%>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div style="background:white;z-index:2">
+            <div>
+                <div class="markercontent">
+                    <div style="padding:20px 10px;max-width:600px;margin:auto">
+                    <%if(this.description){%>
+                        <%=description%>
+                    <%}else{%>
+                        no content
+                    <%}%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@@@form_tag_layer@@@
+<div data-<%=template%>="<%=_tid%>" style="margin:4px;padding:4px;display:inline-block;background:white;border:1px solid #ccc;font-size:20px" class="s-corner-all">
+    <table>
+        <tr>
+            <td>
+                <div style="width:25px;height:25px;background-image:url(<%=modules.tools.getImg(marker,'thumb')%>)" class="coverimg"></div>
+            </td>
+            <td>
+                <%=name%>
+            </td>
+            <%if(this.removeable){%>
+            <td>
+                <i class="icon-cancel x_removetag menuicon" style="color:black"></i>
+            </td>
+            <%}%>
+        </tr>
+    </table>
+</div>
+@@@marker_info@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+    <%if(marker.images&&marker.images.length&&false){%>
+    <div style="height:50vh;position:relative;background:black;">
+        <div style="height:100%;position:relative;" id="imgcontainer" class="transition">
+            <div style="width:<%=(100*marker.images.length)%>%">
+            <%for (var i = 0; i < marker.images.length; i++) {
+                var img=marker.images[i];%>
+                <div style="position:absolute;top:0;left:<%=(100*i)%>%;width:100%;height:100%;background-image:url(<%=modules.tools.getImg(img,'small',1)%>);display:inline-block" class="<%if(i==0){%>coverimg<%}else{%>fitimg<%}%>"></div>
+            <%};%>
+            </div>
+        </div>
+        <i data-dir="+" class="rightimgarrow imgarrows icon-right" style="position:absolute;top:50%;margin-top:-20px;right:5px;font-size:40px;color:white;"></i>
+        <i data-dir="-" class="leftimgarrow imgarrows icon-left" style="position:absolute;top:50%;margin-top:-20px;left:5px;font-size:40px;color:white;"></i>
+    </div>
+    <%}%>
+     <div style="padding:20px 10px;max-width:600px;margin:auto">
+    <%if(marker.description){%>
+        <%=marker.description%>
+    <%}else{%>
+        no content
+    <%}%>
+    </div>
+    <div style="height:50vh"></div>
+</div>
+@@@marker_loading@@@
+<div id="markerloading" data-<%=template%>="<%=_tid%>" style="position:absolute;bottom:0;left:0;right:0;z-index:100;text-align:center;padding:10px">
+    <div style="display:inline-block;padding:5px 20px" class="l-corner-all themeColor">
+        <i class="icon-refresh animate-spin"></i> Loading
+    </div>
+</div>
+@@@markerele@@@
+<div style="position:absolute;left:0;right:0;background:white;z-index:4;" class="fasttransition map_markerview map_markerview_mobile"></div>
+@@@markerele_web@@@
+<div style="position:absolute;top:0;left:0;bottom:0;width:400px;background:white;z-index:4;display:none;" class="fasttransition map_markerview"></div>
+@@@layertoggle@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:4px;background:rgba(55,55,55,.5);color:white;text-align:center" class="s-corner-all">
+    <i class="icon-left-open x_toggler menuicon" data-dir="-" style="font-size:18px;<%if((current+1)==1){%>opacity:0<%}%>"></i> <%=current+1%> of <%=total%> <i class="icon-right-open x_toggler menuicon" data-dir="+" style="font-size:18px;<%if((current+1)==total){%>opacity:0<%}%>"></i>
+</div>
+@@@marker_info_web@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+    <%if(marker.images&&marker.images.length){%>
+    <div style="height:250px;position:relative;background:black;">
+        <div style="height:100%;position:relative;" id="imgcontainer" class="transition">
+            <div style="width:<%=(100*marker.images.length)%>%">
+            <%for (var i = 0; i < marker.images.length; i++) {
+                var img=marker.images[i];%>
+                <div style="position:absolute;top:0;left:<%=(100*i)%>%;width:100%;height:100%;background-image:url(<%=modules.tools.getImg(img,'small',1)%>);display:inline-block" class="<%if(i==0){%>coverimg<%}else{%>fitimg<%}%>"></div>
+            <%};%>
+            </div>
+        </div>
+        <i data-dir="+" class="rightimgarrow imgarrows icon-right" style="position:absolute;top:50%;margin-top:-20px;right:5px;font-size:40px;color:white;"></i>
+        <i data-dir="-" class="leftimgarrow imgarrows icon-left" style="position:absolute;top:50%;margin-top:-20px;left:5px;font-size:40px;color:white;"></i>
+    </div>
+    <%}%>
+     <div style="padding:20px 10px;max-width:600px;margin:auto">
+    <%if(marker.description){%>
+        <%=marker.description%>
+    <%}else{%>
+        no content
+    <%}%>
+    </div>
+</div>

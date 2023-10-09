@@ -1,0 +1,55 @@
+[{
+	"id":"yoga",
+    "name":"Yoga",
+    "pic":{
+    	"url":"/pub/img/markers/yoga_marker.png"
+    }
+},{
+	"id":"community",
+    "name":"Community",
+    "pic":{
+    	"url":"/pub/img/markers/community_marker.png"
+    }
+},{
+	"id":"spiritualcenters",
+    "name":"Spiritual Centers",
+    "pic":{
+    	"url":"/pub/img/markers/sc_marker.png"
+    }
+},{
+	"id":"festivals",
+    "name":"Festivals",
+    "pic":{
+    	"url":"/pub/img/markers/festival_marker.png"
+    }
+},{
+	"id":"blogs",
+    "name":"Blogs",
+    "pic":{
+    	"url":"/pub/img/markers/blog_marker.png"
+    }
+},{
+	"id":"ethicalfood",
+    "name":"Ethical Food",
+    "pic":{
+    	"url":"/pub/img/markers/food_marker.png"
+    }
+},{
+	"id":"nonprofits",
+    "name":"Non Profits",
+    "pic":{
+    	"url":"/pub/img/markers/nonprofit_marker.png"
+    }
+},{
+	"id":"energyhealers",
+    "name":"Energy Healers",
+    "pic":{
+   		"url":"/pub/img/markers/healer_marker.png"
+   	}
+},{
+	"id":"pois",
+    "name":"Points of Interest",
+    "pic":{
+    	"url":"/pub/img/markers/poi_marker.png"
+    }
+}]

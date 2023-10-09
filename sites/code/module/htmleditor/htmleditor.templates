@@ -1,0 +1,19 @@
+@@@htmleditor@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100%;">
+	<!-- <div class="panel__top" style="z-index: 2;">
+	    <div class="panel__devices"></div>
+	    <div class="panel__basic-actions" ></div>
+	    <div class="panel__switcher"></div>
+	</div> -->
+	<div class="editor-row" style="z-index: 1">
+	  <div class="editor-canvas">
+	    <div class="gjs"></div>
+	  </div>
+	  <!-- <div class="panel__right">
+	    <div class="layers-container"></div>
+	    <div class="styles-container"></div>
+	    <div class="traits-container"></div>
+	    <div class="blocks-container"></div>
+	  </div> -->
+	</div>
+</div>

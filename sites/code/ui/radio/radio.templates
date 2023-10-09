@@ -1,0 +1,64 @@
+@@@radio@@@
+<div class="radiolist" data-ui="radio" <%if(this.id){%>id="<%=id%>"<%}%>>
+	<%for (var i = 0; i < items.order.length; i++) {
+		var item=items.list[items.order[i]];
+		%>
+		<%if(item.other){%>
+		<%}else{%>
+		<div class="radioitem <%if(this.selected&&selected==item.id){%>selected<%}%>" data-id="<%=item.id%>" style="padding:8px 0px">
+			<table style="width:100%;">
+				<tr>
+					<td style="width:25px;text-align: center;">
+						<div style="width:25px;height:25px;border:1px solid #ccc" class="circle fasttransition">
+							<table style="width:100%;height:100%;text-align:center;color:white">
+								<tr>
+									<td><i class="icon-check-thin" style="font-size:15px"></i></td>
+								</tr>
+							</table>
+						</div>
+					</td>
+					<td style="font-size:16px;color:#888;padding-left:10px;text-align: left;">
+						<%=item.name%>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<%}%>
+	<%}%>
+</div>
+@@@radio_fbauth@@@
+<div data-ui="radio" <%if(this.id){%>id="<%=id%>"<%}%>>
+	<%for (var i = 0; i < items.order.length; i++) {
+		var item=items.list[items.order[i]];
+		%>
+		<%if(item.other){%>
+		<%}else{%>
+		<div class="radioitem fbradio <%if(this.selected&&selected==item.id||selected.indexOf(item.id)>=0){%>selected <%if(this.forceSelected&&forceSelected.indexOf(item.id)>=0){%>forceselected<%}%><%}%>" <%if(this.forceSelected&&forceSelected.indexOf(item.id)>=0){%>data-dontuntoggle="1"<%}%> data-id="<%=item.id%>" data-multiple="1" style="padding:8px 0px">
+			<div>
+				<table style="width:100%;">
+					<tr>
+						<td style="width:25px;text-align: center;vertical-align: middle;">
+							<div style="width:25px;height:25px;border:1px solid #ccc" class="circle fasttransition">
+								<table style="width:100%;height:100%;text-align:center;color:white">
+									<tr>
+										<td><i class="icon-check-thin" style="font-size:15px"></i></td>
+									</tr>
+								</table>
+							</div>
+						</td>
+						<td style="font-size:16px;color:#888;padding-left:10px;text-align: left;vertical-align: middle">
+							<div class="bold fbcolor"><%=item.name%></div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<%if(item.title){%>
+				<div style="padding:6px 3px;font-size:16px;"><%=item.title%></div>
+				<%}%>
+				<div style="padding:3px;font-size:14px;color:#888"><%=item.description%></div>
+			</div>
+		</div>
+		<%}%>
+	<%}%>
+</div>

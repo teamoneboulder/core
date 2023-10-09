@@ -1,0 +1,35 @@
+@@@home@@@
+<div class="sfit" style="background:#aaa" data-<%=template%>="<%=_tid%>">
+	<div style="width:600px;max-width: 90vw;margin:50px auto;height:80vh;position: relative;" class="l-corner-all">
+		<div style="background: white;" class="l-corner-top">
+			<div class="table">
+				<div class="tcell" style="text-align: left;font-size:22px;padding-left:10px;font-weight: bold;padding-top:5px">Notification Settings</div>
+			</div>
+		</div>
+		<div class="mobilepageresponsive scrollY" style="position: absolute;top:30px;left:0;right:0;bottom:100px;background: white;">
+			<div class="sfit content notificationpage" style="z-index: 1">
+	            <%if(store.resp&&store.resp.success){%>
+	            <div class="itable truebox" style="padding:5px">
+	                <div class="tcell" style="min-width:100px"></div>
+	                <div class="tcell" style="width:50px;text-align: center;font-size:28px;"><div><i class="icon-mail"></i></div><div style="font-size:11px">Email</div></div>
+	                <div class="tcell" style="width:50px;text-align: center;font-size:28px;"><div><i class="icon-bell"></i></div><div style="font-size:11px">Push</div></div>
+	            </div>
+	            <%for (var i = 0; i < store.resp.data.types.order.length; i++) {
+	                var type=store.resp.data.types.list[store.resp.data.types.order[i]];%>
+	                <div class="itable truebox" style="width:100%;padding:5px;">
+	                    <div class="tcell" style="padding-left:5px;font-size:18px;text-align: left"><%=type.name%></div>
+	                    <div class="x_toggle tcell <%if(store.resp.data.current&&store.resp.data.current.email&&store.resp.data.current.email[store.resp.data.types.order[i]]&&store.resp.data.current.email[store.resp.data.types.order[i]]=="0"){%>unchecked<%}else{%>checked<%}%>" style="width:50px;text-align: center;font-size:24px;" data-type="email" data-id="<%=store.resp.data.types.order[i]%>"><i class="icon-check-empty uncheckedicon"></i><i class="icon-check checkedicon"></i></div>
+	                    <div class="tcell x_toggle <%if(store.resp.data.current&&store.resp.data.current.push&&store.resp.data.current.push[store.resp.data.types.order[i]]&&store.resp.data.current.push[store.resp.data.types.order[i]]=="0"){%>unchecked<%}else{%>checked<%}%>" style="width:50px;text-align: center;font-size:24px;" action="click:toggle" data-type="push" data-id="<%=store.resp.data.types.order[i]%>"><i class="icon-check-empty uncheckedicon"></i><i class="icon-check checkedicon"></i></div>
+	                </div>
+	            <%}%>
+	            <div style="height: 80px"></div>
+	            <%}else{%>
+	            <%}%>
+
+	        </div>
+		</div>
+		<div style="position: absolute;bottom:50px;left:0;right:0;height:50px;text-align: center;z-index: 2;border-top:1px solid #ccc;background:white" class="table frostedbg x_save l-corner-bottom">
+            <div class="tcell addsubmit"><i class="icon-floppy"></i> Update Settings</div>
+        </div>
+	</div>
+</div>

@@ -1,0 +1,44 @@
+.wrappedcontent .fulltext{
+	display: none;
+}
+.wrappedcontent.showtext .fulltext{
+	display: block;
+}
+.wrappedcontent.showtext .truncatedtext{
+	display: none;
+}
+.readmore:not(.truncatedtext){
+	color:#888;
+	font-weight: bold;
+}
+.showless{
+	color:#888;
+	font-weight: bold;
+}
+.apppage{
+	top:65px !important;
+}
+.isPhoneGap .apppage{
+	top:85px !important;
+}
+.isPhoneGap.hasNotch .apppage{
+	top:95px !important;
+}
+.rainbowtext, .apptexteditor .locinfo,.apptexteditor .locinfo p,.apptexteditor .locinfo h1,.apptexteditor .locinfo h2,.apptexteditor .locinfo h3,.apptexteditor .locinfo h4,.apptexteditor .locinfo li{
+    background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%;
+}
+
+@keyframes rainbow_animation {
+    0%,100% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 100% 0;
+    }
+}

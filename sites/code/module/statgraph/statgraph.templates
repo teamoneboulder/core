@@ -1,0 +1,19 @@
+@@@statgraph@@@
+<div>
+	<div>
+		<div class="itable">
+			<div class="tcell">
+			<%for (var i = 0; i < graphs.order.length; i++) {
+				var graph=graphs.list[graphs.order[i]];%>
+				<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:2px;" data-graph="<%=graphs.order[i]%>" class="x_toggles l-corner-all" action="click:setPage"><%=graph.name%></div>
+			<%}%>
+			</div>
+			<div class="tcell" style="width:250px;text-align: right;display: none;">
+				<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:2px;" data-type="daily" class="x_typetoggle l-corner-all" action="click:setType">Daily</div>
+				<div style="padding:5px;border:1px solid #ccc;display: inline-block;margin:2px;" data-type="time" class="x_typetoggle l-corner-all" action="click:setType">Time Of Day</div>
+			</div>
+		</div>
+	</div>
+	<div class="infoarea"></div>
+	<div style="height:60vh;position: relative;" class="grapharea"></div>
+</div>

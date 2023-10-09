@@ -1,0 +1,217 @@
+@@@modules_search_list@@@
+<div data-<%=template%>="<%=_tid%>" style="<%if(minHeight){%>min-height:<%=minHeight%><%}%>;background:white" class="feeditems">
+	<%if(this.data&&data.order&&data.order.length){
+		var exact=false;
+		%>
+		<%for (var i = 0; i < data.order.length; i++) {
+			if(data.order[i]==id) exact=true;
+		}%>
+		<%if(!exact&&allowAdd){
+			id=id.replace(/#/g,'');
+		%>
+		<%=$.fn.render({template:render_template,data:{opts:opts,data:{id:id,name:name},id:id,exclude:exclude,search:true},uid:id,returntemplate:true})%>
+		<%}%>
+		<%for (var i = 0; i < data.order.length; i++) {
+			var tdata=data.list[data.order[i]];
+			%>
+			<%=$.fn.render({template:render_template,data:{opts:opts,data:tdata,id:data.order[i],exclude:exclude,search:true},uid:data.order[i],returntemplate:true})%>
+		<%};%>
+	<%}else if(data.error){%>
+		<div style="padding:10px;text-align: center;font-size:18px">
+			Error loading...retry
+		</div>
+	<%}else if(id==''){%>
+		<div style="padding:10px;text-align: center;font-size:18px">
+			Search for tags!
+		</div>
+	<%}else if(allowAdd){
+		id=id.replace(/#/g,'');
+	%>
+	<%=$.fn.render({template:render_template,data:{data:{id:id,name:name},search:true,id:id,exclude:exclude},uid:id,returntemplate:true})%>
+	<%}else{%>
+		<div style="padding:10px;text-align: center;font-size:18px">
+			No Results
+		</div>
+	<%}%>
+</div>
+@@@search_inline@@@
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;background:white;<%if(width){%>width:<%=width%>;<%}else{%>width:300px;<%}%>border:1px solid #ccc;overflow:hidden;z-index: 50000" class="s-corner-all">
+	
+</div>
+@@@modules_search_loading@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:15px;text-align:center;font-size:20px;color:black;background:white;" class="feeditems truebox">
+	<i class="icon-refresh animate-spin"></i> Loading...
+</div>
+@@@modules_search_item@@@
+<div data-<%=template%>="<%=_tid%>" style="color:black;display: inline-block;margin:5px;padding:5px;font-size:18px" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	#<%=data.id%>
+</div>
+@@@modules_search_tag@@@
+<div data-<%=template%>="<%=_tid%>" style="color:black;display: inline-block;margin:5px;padding:5px;font-size:18px" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	<%=data.name%>
+</div>
+@@@modules_search_superpower@@@
+<div data-<%=template%>="<%=_tid%>" style="color:#555;padding:8px;font-size:20px;border-bottom:1px solid #ccc;text-align: left" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	<%=data.name%>
+</div>
+@@@modules_search_skills@@@
+<div data-<%=template%>="<%=_tid%>" style="color:#555;padding:8px;font-size:20px;border-bottom:1px solid #ccc;text-align: left" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	<%=data.name%>
+</div>
+@@@modules_search_user_event@@@
+<div data-<%=template%>="<%=_tid%>" style="color:black;margin:5px;padding:5px;font-size:18px" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0||data.invite||data.rsvp){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	<table style="width:100%">
+		<tr>
+			<td style="width:40px;text-align: center;">
+				<div style="width:35px;height:35px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>);display:inline-block;vertical-align:middle" class="coverimg s-corner-all"></div>
+			</td>
+			<td style="padding-left:5px">
+				<div style="font-size:18px;"><%=data.name%></div>
+				<div style="font-size:14px;padding-left:5px">
+					<%if(data.rspv){%>
+					rsvp'd <%=data.rsvp%>
+					<%}else if(data.invite){%>
+					already invited
+					<%}%>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@modules_search_user_more@@@
+<div data-<%=template%>="<%=_tid%>" style="color:black;margin:5px;padding:5px;font-size:18px" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	<table style="width:100%;font-size:14px">
+		<tr>
+			<td style="width:35px;">
+				<div style="width:35px;height:35px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>);display:inline-block;vertical-align:middle" class="coverimg s-corner-all"></div>
+			</td>
+			<td style="padding-left:10px;">
+				<div><%=data.name%></div>
+				<div style="font-size:12px"><%=modules.feed_global.getSearchType(data._type)%></div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@modules_search_user@@@
+<div data-<%=template%>="<%=_tid%>" style="color:black;margin:5px;padding:5px;font-size:18px" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	<div style="width:35px;height:35px;background-image:url(<%=modules.tools.getImg(data.pic,'square')%>);display:inline-block;vertical-align:middle" class="coverimg s-corner-all"></div> <%=data.name%>
+	<%if(this.canRemove){%>
+	<i class="icon-cancel remove" style="padding:5px;float:right"></i>
+	<%}%>
+</div>
+@@@modules_search_chat@@@
+<div data-<%=template%>="<%=_tid%>" style="color:#555;" class="tagitem" data-id="<%=data.id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:80px;text-align: center;">
+				<div style="display: block;position: relative;width:80px;height:80px;">
+					<div style="position: absolute;top:2px;right:2px;text-align:center;z-index:10;color:white;<%if(!data.unread||!data.unread){%>display:none;<%}%>" class="circle chatnotification noticetheme" id="chat_<%=id%>">
+						<table style="width:100%;height:100%;text-align: center;color:white;font-weight: bold;">
+							<tr>
+								<td class="unread"><%if(data.unread){%><%=data.unread%><%}%></td>
+							</tr>
+						</table>
+					</div>
+				<%
+				var valid=modules.chat_global.getValidPeople(data);
+				switch(true){
+					case (valid.order.length==1):
+					%>
+					<div style="width:80px;height:80px;display:block;position:relative;" class="coverimg truebox rowitem revicon" data-id="<%=data.id%>">
+						<%if(valid.list[valid.order[0]].online){%>
+						<div style="position: absolute;top:2px;left:2px;background: #32CD32;width:10px;height:10px;text-align:center;z-index:10;color:white;" class="circle" id="chat_<%=id%>">
+						</div>
+						<%}%>
+						<div style="position: absolute;top:0;left:0;bottom:0;right:0;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[0]].pic,'small')%>)" class="coverimg">
+						</div>
+					</div>
+					<%break;
+					case (valid.order.length==2):%>
+					<div style="width:80px;height:80px;display:block;position:relative;overflow:hidden;" class="truebox rowitem revicon" data-id="<%=id%>">
+						<div style="z-index:1;position: absolute;top:0;width:50%;left:0;bottom:0;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[0]].pic,'small')%>)" class="coverimg"></div>
+						<div style="z-index:1;position: absolute;top:0;width:50%;left:50%;bottom:0;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[1]].pic,'small')%>)" class="coverimg"></div>
+					</div>
+					<%break;
+					case (valid.order.length==3):%>
+					<div style="width:80px;height:80px;display:block;position:relative;overflow:hidden;" class="truebox rowitem revicon" data-id="<%=id%>">
+						<div style="z-index:1;position: absolute;top:0;width:50%;left:0;bottom:0;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[0]].pic,'small')%>)" class="coverimg"></div>
+						<div style="z-index:1;position: absolute;top:0;width:50%;left:50%;height:50%;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[1]].pic,'small')%>)" class="coverimg"></div>
+						<div style="z-index:1;position: absolute;top:50%;width:50%;left:50%;height:50%;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[2]].pic,'small')%>)" class="coverimg"></div>
+					</div>
+					<%break;
+					case 4:
+					case (valid.order.length>=4):
+					%>
+					<div style="width:80px;height:80px;display:block;position:relative;overflow:hidden;" class="truebox rowitem revicon" data-id="<%=id%>">
+						<div style="z-index:1;position: absolute;top:0;width:50%;left:0;height:50%;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[0]].pic,'small')%>)" class="coverimg"></div>
+						<div style="z-index:1;position: absolute;top:50%;width:50%;left:0;height:50%;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[1]].pic,'small')%>)" class="coverimg"></div>
+						<div style="z-index:1;position: absolute;top:0;width:50%;left:50%;height:50%;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[2]].pic,'small')%>)" class="coverimg"></div>
+						<div style="z-index:1;position: absolute;top:50%;width:50%;left:50%;height:50%;background-image:url(<%=modules.tools.getImg(valid.list[valid.order[3]].pic,'small')%>)" class="coverimg"></div>
+						<%if(valid.order.length>4){%>
+						<div style="position: absolute;z-index: 2;bottom:0;right:0;background: rgba(55,55,55,.4);color:white;padding:2px 4px;font-size:11px" class="s-corner-all bold">+<%=(valid.order.length-4)%> more</div>
+						<%}%>
+						<div></div>
+					</div>
+					<%break;
+				}%>
+				</div>
+			</td>
+			<td style="vertical-align: top;">
+				<div style="max-height:80px;overflow: hidden">
+					<div style="padding-top:5px;padding-left:5px;font-size:18px;padding-right:10px;" class="rowcontent">
+						<%if(data.status&&data.status=='pending'){%>
+						<i class="icon-hourglass"></i>
+						<%}%>
+						<%if(data.name){%>
+						<%if(data.page&&data.thread){%>
+						<div class="bold nobreak"><%if(data.page_info){%><%=data.page_info.name%><%}else{%>Unknown Page<%}%></div>
+						<div style="padding-top:2px" class="highlighttext2">~<%=data.name%></div>
+						<%}else{%>
+						<div>
+							<%=data.name%>
+						</div>
+						<%}%>
+						<%}else if(valid.list&&valid.list[valid.order[0]]){%>
+						<%=data.people_list[data.people[0]].name%>
+						<%}else{%>
+						Chat with deleted user
+						<%}%>
+					</div>
+					<%if(data.last&&data.last.content){%>
+					<div style="padding-top:5px;padding-left:15px"><%if(data.last.by==app.user.profile.id){%>Me: <%}else if(data.last.user){%><%=data.last.user.name.firstName()%>: <%}%><%=data.last.content.limitlength(80)%></div>
+					<%}%>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@modules_search_multi@@@
+<div data-<%=template%>="<%=_tid%>" style="color:#555;padding:5px;font-size:16px" class="tagitem <%if(exclude&&exclude.indexOf(data.id)>=0){%>tag_exclude<%}%>" data-id="<%=data.id%>">
+	<table>
+		<tr>
+			<td style="vertical-align: top;">
+				<div style="width:30px;height:30px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>);display:inline-block;vertical-align:middle" class="coverimg s-corner-all"></div>
+			</td>
+			<td style="padding-left:5px;vertical-align: top">
+				<div class="bold"><%=data.name%></div>
+				<div style="font-size:11px;padding-top:-2px;padding-left:2px">
+					<%
+						var type='';
+						switch(data._type){
+							case 'people':
+								type='Person';
+							break;
+							case 'event':
+								type='Event';
+							break;
+							case 'page':
+								type='Page';
+							break;
+						}
+					%>
+					<%=type%>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>

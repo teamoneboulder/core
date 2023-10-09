@@ -1,0 +1,27 @@
+@@@mobilepage@@@
+<div class="sfit mobilepagemaincontainer" data-<%=template%>="<%=_tid%>" style="overflow:hidden;z-index:<%=zIndex%>;">
+	<div class="sfit mobilepagecontainer"  style="z-index: 2;">
+		<div class="<%if(animation=='splash'){%>splashpagemain<%}%> mobilepagemain truebox" style="<%if(!animation||animation=='splash'){%>top:<%=headerheight%>;<%}%><%if(animation=='splash'){%>display:none;<%}%><%if(animation=='fade'){%>top:0;<%}%>">
+			<div style="position: absolute;top:0;left:0;height:100%;width:100%">
+			<%if(animation=='splash'){%>
+			<div class="sfit coverimg splashimg" style="z-index:3;"></div>
+			<div class="sfit appcontent" style="z-index:2;overflow:hidden"></div>
+			<%}else{%>
+			<%if(this.header){%>
+			<div style="height:50px;"></div>
+			<div style="position:absolute;top:50px;left:0;right:0;bottom:0;z-index:2;overflow:hidden">
+				<%=content%>
+			</div>
+			<%}else{%>
+			<div class="sfit" style="overflow:hidden">
+			<%=content%>
+			</div>
+			<%}%>
+			<%}%>
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 1;background:#555;opacity: 0;" class="mobilepagesplash"></div>
+</div>
+@@@subpage_cover@@@
+<div class="sfit coverpage" data-<%=template%>="<%=_tid%>" data-childpage="<%=child%>" style="z-index:<%=child+1%>;opacity:0;background:rgba(55,55,55,.9);transform:translate(<%=left%>%,0%)"></div>

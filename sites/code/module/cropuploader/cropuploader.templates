@@ -1,0 +1,132 @@
+@@@cropuploader_mobile@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit appview" style="background:white;">
+	<%=$.fn.render({template:'app_header',data:{
+			data:{
+				page:true,
+				name:data.title,
+				subtitle:' ',
+				back:'<i class="icon-cancel"></i>',
+				backClass:'x_cancel',
+				submit:" "
+			}
+		},returntemplate:true})%>
+	<div class="apppage sfit mobileapppage">
+		<div class="apppageview">
+			<div class="sfit" style="bottom:51px;<%if(data.webpage){%>top:45px;<%}%>border-top:1px solid #ccc">
+				<div style="text-align: center;height:100%" class="x_upload initial">
+					<table style="width:100%;height:100%;text-align: center">
+						<tr>
+							<td>
+								<div>
+									<i class="icon-upload" style="font-size:30px;"></i>
+								</div>
+								<div style="padding-top:10px;">Upload Photo</div>
+								<%if(data.suggested){%>
+								<div style="padding-top:10px;font-size:10px;color:#888">Suggested Size: <%=data.suggested%></div>
+								<%}%>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="text-align: center;display: none;height:100%;" class="croparea">
+					<img src="<%=app.idot%>" style="max-width:100%;max-height:100%;" class="cropimg">
+				</div>
+			</div>
+			<div style="position:absolute;bottom:0;left:0;right:0;height:50px;border-top:1px solid #ccc">
+				<table style="width:100%;height:100%">
+					<tr>
+						<td style="width:50%;text-align: left;">
+							<div class="changebar" style="padding-left:10px;">
+								<div class="nbtn_plain x_upload" style="margin:0;display: inline-block;background:#eee;margin:0;color:#555"><i class="icon-pencil"></i> Change</div>
+							</div>
+							<div class="progbar" style="display: none">
+								<div style="padding:5px;font-size:11px">Uploading...</div>
+								<div>
+									<div class=" m-corner-all" style="padding:2px;border:1px solid #ccc;margin:3px;">
+										<div class="prog m-corner-all highlightbackground fasttransition" style="height:6px;width:0;"></div>
+									</div>
+								</div>
+							</div>
+						</td>
+						<td style="padding-left:10px;font-size:16px;text-align: right;width:250px;">
+							<div class="stepbuttons">
+								<div class="nbtn_plain x_back" style="margin:0;color:#555;display: inline-block;background:#eee;margin: 2px 5px">Back</div>
+								<div class="button bold bluebtn x_next" style="margin:0;display: inline-block;background:#eee;margin:2px 5px">Next</div>
+							</div>
+							<div class="finishbuttons">
+								<%if(data.crops.length>1){%>
+								<div class="button pinkbutton x_back" style="margin:0;color:#555;display: inline-block;background:#eee;margin-right:5px;color:#555;">Back</div>
+								<%}%>
+								<div class="bold button bluebtn x_save" style="margin:0 5px 0px 0px;display: inline-block;">Save</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+@@@cropuploader@@@
+<div data-<%=template%>="<%=_tid%>" style="">
+	<div style="height:40px;background:#ededed" class="s-corner-top">
+		<table style="width:100%;height:100%">
+			<tr>
+				<td style="padding-left:10px;font-size:16px;text-align: left" class="bold title"><%if(data.title){%><%=data.title%><%}else{%>Upload a Picture<%}%></td>
+				<td style="width:40px;text-align: center;">
+					<i class="icon-cancel x_cancel" style="font-size:14px;padding:5px;"></i>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="text-align: center">
+		<div style="margin:20px;border:1px solid #ccc;text-align: center;width:<%=availWidth%>px;height:<%=(availWidth/ar)%>px;display: inline-block;color:#888" class="x_upload initial s-corner-all truebox coverimg">
+			<table style="width:100%;height:100%;text-align: center;" class="uploadbox">
+				<tr>
+					<td>
+						<div>
+							<i class="icon-upload" style="font-size:30px;"></i>
+						</div>
+						<div style="padding-top:10px;">Upload Photo</div>
+						<%if(data.suggested){%>
+						<div style="padding-top:10px;font-size:10px;color:#888">Suggested Size: <%=data.suggested%></div>
+						<%}%>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="text-align: center;display: none;" class="croparea">
+		<img src="<%=app.idot%>" style="max-width:90%;max-height:400px;" class="cropimg">
+	</div>
+	<div style="height:60px;border-top:1px solid #ccc">
+		<table style="width:100%;height:100%">
+			<tr>
+				<td style="width:50%;text-align: left;padding:5px;">
+					<div class="changebar" style="padding-left:10px;">
+						<div class="nbtn_plain x_upload" style="margin:0;display: inline-block;background:#eee;margin-right:5px;color:#555"><i class="icon-pencil"></i> Change Image</div>
+					</div>
+					<div class="progbar" style="display: none">
+						<div style="padding:5px;font-size:11px">Uploading...</div>
+						<div>
+							<div class=" m-corner-all" style="padding:2px;border:1px solid #ccc;margin:5px;">
+								<div class="prog m-corner-all highlightbackground fasttransition" style="height:6px;width:0;"></div>
+							</div>
+						</div>
+					</div>
+				</td>
+				<td style="padding-left:10px;font-size:16px;text-align: right;padding:5px">
+					<div class="stepbuttons">
+						<div class="nbtn_plain x_back" style="color:#555;margin:0;display: inline-block;background:#eee;margin-right:5px">Back</div>
+						<div class="nbtn_plain bold x_next" style="margin:0;display: inline-block;background:#eee;margin-right:5px">Next</div>
+					</div>
+					<div class="finishbuttons">
+						<%if(data.crops.length>1){%>
+						<div class="nbtn_plain x_back" style="margin:0;color:#555;display: inline-block;background:#eee;margin-right:5px">Back</div>
+						<%}%>
+						<div class="bold nbtn_plain x_save" style="margin:0;display: inline-block;">Save</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

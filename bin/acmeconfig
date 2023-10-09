@@ -1,0 +1,6 @@
+#!/bin/bash
+sudo rm /etc/lighttpd/lighttpd.conf --force
+service lighttpd stop
+/usr/bin/php ${ROOT}/classes/admin_cli.php processfile ${ROOT}/_manage/conf/acme.conf acme.conf
+sudo cp ${HOME}/conf/acme.conf /etc/lighttpd/lighttpd.conf
+service lighttpd start

@@ -1,0 +1,207 @@
+@@@admin_logs@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:4">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Logs</b> 
+                <i class="icon-refresh" id="refreshlogs" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;">
+                    <div style="padding:5px;text-align:right" class="navselect" data-filter="bookmark"><i class="icon-bookmark"></i> Bookmarked</div>
+                </div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="all">All Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="links">Links</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="php">PHP Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="jserror">JS Error Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="node">Node Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="cron">Cron logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="stripe">Stripe Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="other">Other Logs</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+    </div>
+    <div style="position: absolute;top:0;left:0;right:0;height:40px;z-index: 3">
+        <div style="padding-left:210px;width:800px;margin:auto;">
+            <table style="width:100%;height:100%">
+                <tr>
+                    <td style="position: relative;width:160px;">
+                        <div class="usersearcharea"></div>
+                         <div class="usersearch l-corner-all shadow_br" style="position: absolute;top:100%;left:0;width:200px;max-height:300px;background:white;display: none;border:1px solid #ccc;">
+                            <div class="usersearchcontent" style="padding:10px 0px"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="position: relative;width:200px">
+                            <input type="text" id="logcontent" class="s-corner-all" style="border:1px solid #aaa;padding:3px;width:200px" placeholder="Search Log Text">
+                            <i class="icon-cancel" id="clearsearch" style="display:none;color:#888;padding:5px;position: absolute;top:-3px;right:-5px;"></i>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="sfit scroller" style="z-index:2;overflow-y:auto;top:40px;">
+        <div style="padding-left:210px;width:800px;margin:auto;" id="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_logitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;position:relative;" class="truebox m-corner-all logitem selectable">
+<i style="position:absolute;top:-2px;right:8px;" data-id="<%=data._id%>" class="icon-bookmark bookmarkicon <%if(data.bookmark){%>selected<%}%>"></i>
+<div style="font-size:12px;"><%if(typeof data.msg=='object'){%><%=JSON.stringify(data.msg).wrapJson()%><%}else{%><%=data.msg.wrapJson()%><%}%></div>
+<%if(data.stack){%>
+<div style="margin:5px;padding:5px;border:1px solid #ccc;font-size:11px;position: relative;" class="s-corner-all">
+    <%=data.stack.parseStack(data.build_version)%>
+</div>
+<%}%>
+<%if(data.trace){%>
+<div style="margin:5px;padding:5px;border:1px solid #ccc;font-size:11px;position: relative;" class="s-corner-all">
+    <%=data.trace.wrapJson()%>
+</div>
+<%}%>
+<%if(data.url){%>
+<div style="margin:5px;padding:5px;border:1px solid #ccc;font-size:11px;position: relative;" class="s-corner-all">
+    URL: <%=data.url%>
+</div>
+<%}%>
+<%if(data.device){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    <div style="font-size:14px;padding-bottom:2px"><b>Device Info</b></div>
+    <div>
+        <table>
+            <tr>
+                <td style="vertical-align:top">
+                    <div style="font-size:11px;padding-bottom:10px;padding-left:8px">
+                        <table style="font-size:11px">
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Platform</b></td>
+                                <td><%=data.device.p%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Version</b></td>
+                                <td><%=data.device.v%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Model</b></td>
+                                <td><%=data.device.m%></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<%}%>
+<%if(data.ua_info){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    <div style="font-size:14px;padding-bottom:2px"><b>User Agent Info</b></div>
+    <div>
+        <table>
+            <tr>
+                <td style="vertical-align:top">
+                    <div style="font-size:11px;padding-bottom:10px;padding-left:8px">
+                        <table style="font-size:11px">
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Platform</b></td>
+                                <td><%=data.ua_info.p%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Browser</b></td>
+                                <td><%=data.ua_info.n%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Version</b></td>
+                                <td><%=data.ua_info.v%></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<%}%>
+<%if(data.user_info){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    <div style="font-size:14px;padding-bottom:2px"><b>User</b></div>
+    <div>
+        <table>
+            <tr>
+                <td style="width:30px;"><img src="<%=modules.tools.getImg(data.user_info.pic,'square')%>" style="width:25px;height:25px;" class="circle"></td>
+                <td style="vertical-align:top;padding-left:5px">
+                    <%=data.user_info.name%>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<%}%>
+<%if(data.did){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    Device: <%=data.did%>
+</div>
+<%}%>
+<%if(data.server){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    Server: <%=data.server%>
+</div>
+<%}%>
+<div style="font-size:12px;color:#aaa;padding-top:5px"><i class="icon-warning-sign"></i> <span class="reltime" data-time="<%=data._id%>"><%=data._id.formatTime(false,1)%></span></div>
+</div>
+@@@admin_logs_usersearcharea@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(user){%>
+    <div style="padding:5px;font-size:14px">
+        <table>
+            <tr>
+                <td style="width:30px;text-align: center;">
+                    <div style="display:inline-block;width:20px;height:20px;background-image:url(<%=modules.tools.getImg(user.pic,'small')%>)" class="coverimg circle"></div>
+                </td>
+                <td style="padding-left:5px;">
+                    <%=user.name%>
+                </td>
+                <td style="width:50px;text-align: center;" class="x_clear">
+                    <i class="icon-cancel" style="font-size:14px"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <%}else{%>
+    <input type="text" style="border:1px solid #aaa;padding:3px;width:150px;" class="s-corner-all x_user" placeholder="Search By User">
+    <%}%>
+</div>
+@@@admin_logs_searchloading@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100px;">
+    <table style="width:100%;height:100%;text-align: center;color:#888">
+        <tr>
+            <td>
+                <i class="icon-refresh animate-spin"></i> Loading...
+            </td>
+        </tr>
+    </table>
+</div>
+@@@admin_logs_searchusers@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(users){%>
+    <%for (var i = 0; i < users.order.length; i++) {
+        var item=users.list[users.order[i]];%>
+        <div class="item" data-id="<%=users.order[i]%>" style="padding:5px;font-size:14px">
+            <table style="width:100%">
+                <tr>
+                    <td style="width:50px;text-align: center;">
+                        <div style="display:inline-block;width:35px;height:35px;background-image:url(<%=modules.tools.getImg(item.pic,'small')%>)" class="coverimg"></div>
+                    </td>
+                    <td style="padding-left:5px;">
+                        <%=item.name%>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    <% }%>
+    <%}else{%>
+    No results
+    <%}%>
+</div>

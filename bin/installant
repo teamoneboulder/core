@@ -1,0 +1,7 @@
+#!/bin/bash
+cd ~
+sudo add-apt-repository ppa:openjdk-r/ppa
+wget https://github.com/ant-media/Ant-Media-Server/releases/download/ams-v1.5.2/ant-media-server-community-1.5.2-181116_1126.zip
+wget https://raw.githubusercontent.com/ant-media/Scripts/master/install_ant-media-server.sh
+chmod 755 install_ant-media-server.sh
+sudo ./install_ant-media-server.sh ant-media-server-community-1.5.2-181116_1126.zip

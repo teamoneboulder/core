@@ -1,0 +1,203 @@
+@@@rtccall@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:3000;background: white;">
+	<div class="sfit" id="videoloading" style="z-index:2;background:white;<%if(app.device=='iOS'&&false){%>bottom:50px<%}%>">
+		<div style="position:absolute;top:00px;left:0;right:0;bottom:0">
+			<table style="width:100%;height:100%">
+				<tr>
+					<td style="text-align:center">
+						<div style="font-size:30px;text-align:center">
+							<%if(this.calling){%>
+							Calling
+							<%}else{%>
+							Connecting
+							<%}%>
+						</div>
+						<div style="text-align:center;margin-top:50px;">
+							<div style="width:100px;height:100px;background-image:url(<%=_.getImg(pic,'square')%>);display:inline-block" class="coverimg circle"></div>
+						</div>
+						<div style="font-size:20px;margin-top:50px;"><%=name%></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="sfit" id="videocontainer" style="z-index:1;">
+		<div id="publisher" class="videos" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: -1"></div>
+		<div id="subscriber" class="videos" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: -2"></div>
+		<%if(app.device!='iOS'||true){%>
+		<div style="position:absolute;bottom:0;left:0;right:0;z-index:6;text-align:center;" class="upgradient bottomcontrols transition">
+			<div class="circle rotate_60 x_endcall" style="background:red;display:inline-block;width:70px;height:70px;margin-bottom:5px" class="truebox">
+				<table style="width:100%;height:100%;text-align:center">
+					<tr>
+						<td>
+							<i class="icon-phone" style="color:white;padding:0;margin:0;font-size:40px;"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<%}else{%>
+		<div style="position:absolute;bottom:0;left:0;right:0;z-index:6;text-align:center;height:50px;" class="themecolor transition">
+			<div class="circle rotate_60 x_endcall" style="background:red;display:inline-block;width:40px;height:40px;margin-bottom:5px" class="truebox">
+				<table style="width:100%;height:100%;text-align:center">
+					<tr>
+						<td>
+							<i class="icon-phone" style="color:white;padding:0;margin:0;font-size:30px;"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@rtccall_web@@@
+<div data-<%=template%>="<%=_tid%>" style="z-index:3000;background: white;width:300px;height:400px;overflow:hidden;">
+	<div class="sfit" style="z-index: 2;">
+		<div style="position: absolute;top:25px;left:0;right:0;bottom:120px;">
+			<table style="width:100%;height:100%;color:white;text-align: center;">
+				<tr>
+					<td>
+						<div>
+							<div style="display:inline-block;width:120px;height:120px;background-image: url(<%=_.getImg(user.pic,'small')%>)" class="circle coverimg"></div>
+						</div>
+						<div style="padding-top:20px;font-size:24px;" class="bold">
+							<%=user.name%>
+						</div>
+						<div style="padding-top:20px;font-size:18px;">
+							is calling you...
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="position: absolute;bottom:0;left:0;right:0;">
+			<table style="width:100%;position: absolute;bottom:0;left:0;right:0;">
+				<tr>
+					<td style="width:50%;;text-align: center;">
+						<div class="circle x_decline" style="background:#ff0022;display:inline-block;width:60px;height:60px;margin-bottom:5px" class="truebox">
+							<table style="width:100%;height:100%;text-align:center;color:white;">
+								<tr>
+									<td>
+										<div>
+											<i class="icon-cancel" style="color:white;padding:0;margin:0;font-size:22px;"></i>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="padding:5px 5px 10px 5px;font-size:20px;color:#555;" class="bold">DECLINE</div>
+					</td>
+					<td style="width:50%;text-align: center;">
+						<div class="circle x_accept" style="background:green;display:inline-block;width:60px;height:60px;margin-bottom:5px" class="truebox">
+							<table style="width:100%;height:100%;text-align:center;color:white;">
+								<tr>
+									<td>
+										<div>
+											<i class="icon-phone" style="color:white;padding:0;margin:0;font-size:32px;"></i>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="padding:5px 5px 10px 5px;font-size:20px;color:#555;" class="bold">ANSWER</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+@@@rtccall_android@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:3000;background: white;">
+	<div class="sfit" style="z-index: 2;background: rgba(55,55,55,.6)">
+		<div style="position: absolute;top:25px;left:0;right:0;bottom:120px;">
+			<table style="width:100%;height:100%;color:white;text-align: center;">
+				<tr>
+					<td>
+						<div>
+							<div style="display:inline-block;width:120px;height:120px;background-image: url(<%=_.getImg(user.pic,'small')%>)" class="circle coverimg"></div>
+						</div>
+						<div style="padding-top:20px;font-size:24px;" class="bold">
+							<%=user.name%>
+						</div>
+						<div style="padding-top:20px;font-size:18px;">
+							is calling you...
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="position: absolute;bottom:0;left:0;right:0;">
+			<table style="width:100%;position: absolute;bottom:0;left:0;right:0;">
+				<tr>
+					<td style="width:50%;;text-align: center;">
+						<div class="circle x_decline" style="background:#ff0022;display:inline-block;width:70px;height:70px;margin-bottom:5px" class="truebox">
+							<table style="width:100%;height:100%;text-align:center;color:white;">
+								<tr>
+									<td>
+										<div>
+											<i class="icon-cancel" style="color:white;padding:0;margin:0;font-size:26px;"></i>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="padding:5px 5px 10px 5px;font-size:20px;color:white;" class="bold">DECLINE</div>
+					</td>
+					<td style="width:50%;text-align: center;">
+						<div class="circle x_accept" style="background:green;display:inline-block;width:70px;height:70px;margin-bottom:5px" class="truebox">
+							<table style="width:100%;height:100%;text-align:center;color:white;">
+								<tr>
+									<td>
+										<div>
+											<i class="icon-phone" style="color:white;padding:0;margin:0;font-size:36px;"></i>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<div style="padding:5px 5px 10px 5px;font-size:20px;color:white;" class="bold">ANSWER</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="coverimg sfit frosted" style="top:-10px;left:-10px;right:-10px;bottom:-10px;z-index: 1;background-image:url(<%=_.getImg(user.pic,'small')%>);"></div>
+</div>
+@@@rtccall_audio@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:3000;background: white;">
+	<div class="sfit" id="audioloading" style="z-index:2;background:white;">
+		<div style="position:absolute;top:00px;left:0;right:0;bottom:0">
+			<table style="width:100%;height:100%">
+				<tr>
+					<td style="text-align:center">
+						<div style="font-size:30px;text-align:center">
+							<%if(this.calling){%>
+							Calling
+							<%}else{%>
+							Connecting
+							<%}%>
+						</div>
+						<div style="text-align:center;margin-top:50px;">
+							<div style="width:100px;height:100px;background-image:url(<%=_.getImg(pic,'square')%>);display:inline-block" class="coverimg circle"></div>
+						</div>
+						<div style="font-size:20px;margin-top:50px;"><%=name%></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="sfit" id="audiocontainer" style="z-index:1;">
+		<div style="position:absolute;bottom:0;left:0;right:0;z-index:6;text-align:center;" class="upgradient bottomcontrols transition">
+			<div class="circle rotate_60 x_endcall" style="background:red;display:inline-block;width:70px;height:70px;margin-bottom:5px" class="truebox">
+				<table style="width:100%;height:100%;text-align:center">
+					<tr>
+						<td>
+							<i class="icon-phone" style="color:white;padding:0;margin:0;font-size:40px;"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,22 @@
+.scroll100{
+	width:60px;
+	height:40px;
+	overflow: hidden
+}
+.scroll100 .mbsc-fr-w,.scroll100 .mbsc-fr-c,.scroll100 .mbsc-sc-whl-l{
+  width:100px;
+}
+.scroll100 * {
+  height:100%;
+  border:0px !important;
+  background: transparent !important;
+}
+.scroll100 .mbsc-sc-whl-3d{
+  display: none;
+}
+.scroll100 .mbsc-sc-whl-o{
+  display: none !important;
+}
+.scroll100 .mbsc-sc-whl-sc{
+  width:80px;
+}

@@ -1,0 +1,82 @@
+@@@qrcode@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:150%;left:150%;visibility:none" id="qrcode"></div>
+@@@qrcode_scan@@@
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 100000">
+	<div style="width:100vw;height:100vw;background:black">
+		<video class="preview" playsinline webkit-playsinline></video>
+	</div>
+</div>
+@@@qrcode_scanner@@@
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 100000">
+	<div style="position: absolute;top:0;left:0;right:0;height:20px;background: rgba(55,55,55,.4);z-index: 1" class="statusbarcover"></div>
+	<div style="position: absolute;top:20px;left:0;right:0;background: rgba(55,55,55,.4);height:40px;">
+		<table style="width:100%;height:100%;">
+			<tr>
+				<td style="width:40px;text-align: center;color:white;">
+					<i class="icon-search" style="font-size:18px;"></i>
+				</td>
+				<td>
+					<input type="text" class="whiteinput searchbar" style="width:70vw;background: transparent;border:0;font-size:18px;color:white;" placeholder="Search tickets">
+				</td>
+				<td style="width:40px;text-align: center;">
+					<i class="icon-cancel x_cancel" style="font-size:18px;color:white;display: none"></i>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="position: absolute;top:60px;left:0;right:0;bottom:0;z-index: 5;display: none;background: white;" class="ticketsearch"></div>
+	<div style="position: absolute;top:0;left:0;right:0;bottom:50px;background:white;z-index: 2;" id="scanoverlay">
+		<table style="width:100%;height:100%;text-align: center;">
+			<tr>
+				<td>
+					<div>
+						<i class="icon-metadrop" style="font-size:100px;"></i>
+					</div>
+					<div style="font-size:20px;padding-top:20px;">QR Event Ticket Scanner</div>
+					<div style="padding-top:60px;">
+						<div class="highlightbutton2 x_start" style="display: inline-block;padding:8px 20px;font-size:20px">
+							Start Scanning!
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="position: absolute;left:0;right:0;bottom:50px;z-index: 4;" class="successarea">
+	</div>
+	<div style="display:none;position: absolute;top:0;left:0;right:0;bottom:50px;border-bottom:1px solid #ccc;background:white;z-index: 3;background: white" class="history">
+		<%=$.fn.render({template:'app_header',data:{
+			data:{
+				name:'Scanner History',
+				back:' ',
+				page:1,
+				submit:" "
+			}
+		},returntemplate:true})%>
+		<div class="apppage sfit" style="top:65px;border-top:1px solid #ccc;">
+			<div class="content"></div>
+		</div>
+	</div>
+	<div style="position: absolute;bottom:0;left:0;right:0;height:50px;" class="themebg bottom">
+		<table style="width:100%;height:100%;color:#888;font-size:12px;">
+			<tr>
+				<td style="vertical-align:bottom;padding-bottom:2px;text-align: center" class="x_scan nav" data-nav="scan">
+					<div><i class="icon-qrcode" style="font-size:20px;"></i></div>
+					<div style="padding-top:3px;">Scan</div>
+				</td>
+				<td style="vertical-align:bottom;padding-bottom:2px;text-align: center" class="x_history nav" data-nav="history">
+					<div><i class="icon-history"  style="font-size:20px;"></i></div>
+					<div style="padding-top:3px;">History</div>
+				</td>
+				<td style="vertical-align:bottom;padding-bottom:2px;text-align: center" class="x_light">
+					<div><i class="icon-flashlight" style="font-size:20px;"></i></div>
+					<div style="padding-top:3px;" style="font-size:20px;">Light</div>
+				</td>
+				<td style="vertical-align:bottom;padding-bottom:2px;text-align: center;padding-top:3px" class="x_close">
+					<div><i class="icon-cancel" style="font-size:16px;"></i></div>
+					<div style="padding-top:5px;">Close</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

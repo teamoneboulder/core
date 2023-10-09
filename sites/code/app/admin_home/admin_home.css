@@ -1,0 +1,18 @@
+.x_nav.selected{
+	color:#013bd4;
+}
+.highlightnav,.gender .toggler.selected,.friendpicker .toggler.selected,.x_filter.toggler.selected{
+	background:#62bfdb;
+	color:white;
+}
+.highlightbutton2,.highlightbutton2 table{
+	background: #0193be !important;
+	color:white;
+}
+html,body{
+	font-family: "Roboto","sans-serif" !important;
+}
+input,textarea{
+	font-family: "Roboto","sans-serif" !important;
+	-webkit-user-select: auto !important; 
+}

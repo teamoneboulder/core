@@ -1,0 +1,88 @@
+@@@alert@@@
+<div data-<%=template%>="<%=_tid%>" class="modalalert sfit" style="z-index:<%=zIndex%>;<%if(this.fixed&&fixed){%>position:fixed;<%}%>" data-id="<%=id%>">
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;padding-top:50px;padding-bottom:20px;z-index:2" class="truebox relativealert">
+        <div style="min-height:100%;">
+            <div class="s-corner-all alertcontent <%if(!animate){%>showmodal<%}else{%>alerttransition<%}%> <%if(modalClass){%><%=modalClass%><%}%> shadow_br <%if(this.animatedmodal){%>normalfastanimated<%}%>" style="width:<%=width%>px;z-index:2;margin:auto;background:<%=background%>;position:relative;max-width:95%" data-id="alertscroll">
+                <div>
+                    <div style="position:absolute;top:5px;right:0px;z-index:1000"><i class="icon-cancel themenavicon x_closer alertcloser menuicon" style="font-size:15px;padding:10px 5px;<%if(title){%>color:white;<%}else{%>color:black;<%}%>cursor:pointer;<%if(!closer||close_above){%>display:none;<%}%>"></i></div>
+                    <%if(close_above){%>
+                    <div style="position:absolute;top:-40px;right:0px;z-index:1000"><i class="icon-cancel themenavicon x_closer alertcloser menuicon" style="font-size:24px;padding:10px 5px;color:black;cursor:pointer;"></i></div>
+                    <%}%>
+                    <%if(title){%>
+                    <div style="height:30px;<%if(titleColor){%>background:<%=titleColor%><%}%>" class="s-corner-top <%if(!titleColor){%>highlightbutton2<%}%>">
+                        <table style="width:100%;height:100%;color:white" class="s-corner-top">
+                            <tr>
+                                <td style="font-size:18px;text-align: left;padding-left:10px;"><%=title%></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <%}%>
+                    <%if(icon){%>
+                    <div style="text-align:center;padding:20px 5px;margin:0px 10px" class="titlebox calcheight <%if(hideonkeyboard){%>hideonkeyboard<%}%>">
+                        <i class="<%=icon%> alerticon" style="font-size:<%=iconsize%>px;color:#555;background:white;padding:10px"></i>
+                    </div>
+                    <%}else if(image){%>
+                    <div>
+                        <%=image%>
+                    </div>
+                    <%}%>
+                    <div style="font-size:<%=textsize%>px;<%if(maxHeight){%>height:100%;<%}%><%if(!rendered){%>padding-bottom:20px;<%}%><%if(!this.nopadding){%>padding:10px<%}%>" class="modalcontent <%if(!rendered){%>calcheight<%}%>;"><%=content%></div>
+                    <%if(buttons){%>
+                    <div style="padding-top:15px;padding-bottom:15px;text-align:center" class="alertbuttons">
+                        <%for (var i = buttons.length - 1; i >= 0; i--) {
+                            var btn=buttons[i];
+                            %>
+                            <span class="<%=btn.bclass%>" <%if(btn.id){%>data-id="<%=btn.id%>"<%}%> <%if(btn.bid){%>id="<%=btn.bid%>"<%}%> <%if(i>=1){%>style="margin-right:12px;"<%}%>><%=btn.btext%></span>
+                        <%};%>
+                    </div>
+                    <%}%>
+                    <%if(this.smallButtons&&smallButtons){%>
+                    <div style="padding-top:15px;padding-bottom:5px;text-align:center">
+                        <%for (var i = smallButtons.length - 1; i >= 0; i--) {
+                            var btn=smallButtons[i];
+                            %>
+                            <span class="<%=btn.bclass%>" <%if(btn.id){%>data-id="<%=btn.id%>"<%}%> <%if(btn.bid){%>id="<%=btn.bid%>"<%}%> style="font-size:12px"><%=btn.btext%></span>
+                        <%};%>
+                    </div>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sfit clickclose" style="z-index:1;background:rgba(0,0,0,.4);opacity: 0;"></div>
+</div>
+@@@alert2@@@
+<div data-<%=template%>="<%=_tid%>" class="modalalert sfit scrollY" style="z-index:<%=zIndex%>" data-id="<%=id%>">
+    <div style="padding-top:50px;padding-bottom:20px;z-index:2" class="truebox">
+        <div style="min-height:100%;">
+            <div class="s-corner-all alertcontent normalfastanimated <%if(modalClass){%><%=modalClass%><%}%> shadow_br" style="width:<%=width%>px;z-index:2;margin:auto;background:<%=background%>;position:relative;color:<%=color%>">
+                <div style="position: relative;">
+                    <div style="height:30px;background: rgba(255, 0, 153,.5);padding-top:5px;margin-bottom:20px;position: absolute;top:0;left:0;right:0;z-index: 2;" class="s-corner-top truebox">
+                        <div style="position:absolute;top:5px;right:0px;z-index:1000"><i class="icon-cancel x_closer alertcloser menuicon" style="font-size:18px;padding:10px 5px;color:<%=closerColor%>;cursor:pointer;<%if(!closer){%>display:none;<%}%>"></i></div>
+                        <%if(icon){%>
+                        <i class="<%=icon%> alerticon" style="font-size:<%=iconsize%>px;padding-top:5px;color:<%=iconcolor%>;"></i>
+                        <%}%>
+                    </div>
+                    <div style="position:absolute;top:30px;left:0;right:0;height:30px;overflow: hidden">
+                        <div style="width:50px;height:50px;background: rgba(255, 0, 153,.5);position: absolute;top:-25px;left:50%;margin-left:-25px;z-index:1" class="circle"></div>
+                    </div>
+                    <div style="padding:60px 15px 15px 15px;font-size:<%=textsize%>px;" class="modalcontent"><%=content%></div>
+                    <%if(buttons){%>
+                    <div style="padding-top:15px;padding-bottom:15px;text-align:center" class="alertbuttons">
+                        <%for (var i = buttons.length - 1; i >= 0; i--) {
+                            var btn=buttons[i];
+                            %>
+                            <%if(buttons.length==1){%>
+                            <div class="alertbtn s-corner-all <%=btn.bclass%>" <%if(btn.bid){%>id="<%=btn.bid%>"<%}%> style="margin:0px 10px;"><%=btn.btext%></div>
+                            <%}else{%>
+                            <span class="alertbtn s-corner-all <%=btn.bclass%>" <%if(btn.bid){%>id="<%=btn.bid%>"<%}%> <%if(i>=1){%>style="margin-right:8px;"<%}%>><%=btn.btext%></span>
+                            <%}%>
+                        <%};%>
+                    </div>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sfit clickclose" style="z-index:1;background:rgba(255,255,255,.1);"></div>
+</div>

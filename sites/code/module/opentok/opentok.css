@@ -1,0 +1,3 @@
+.OT_fit-mode-cover .OT_video-element{
+	object-fit: contain !important;
+}

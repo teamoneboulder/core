@@ -1,0 +1,15 @@
+{
+  "socketURL": "/",
+  "dirPath": "",
+  "homePage": "/demos/index.html",
+  "socketMessageEvent": "RTCMultiConnection-Message",
+  "socketCustomEvent": "RTCMultiConnection-Custom-Message",
+  "port": "3338",
+  "enableLogs": "false",
+  "autoRebootServerOnFailure": "false",
+  "isUseHTTPs": "false",
+  "sslKey": "/var/www/priv/api.phijs.earth/fullchain.pem",
+  "sslCert": "/var/www/priv/api.phijs.earth/comb.pem",
+  "sslCabundle": "",
+  "enableAdmin": "false"
+}

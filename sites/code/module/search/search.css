@@ -1,0 +1,6 @@
+.tag_exclude{
+	opacity: .6;
+}
+.tagitem.hovering{
+	background:#eee;
+}

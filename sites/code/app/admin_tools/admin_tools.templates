@@ -1,0 +1,89 @@
+@@@admin_tools@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page">
+    <div style="padding-left:100px;padding-top:50px">
+        <div style="font-size:16px;padding-top:10px;padding-bottom:3px;color:#555"><b>Actions</b></div>
+        <div>
+            <div style="padding:5px;margin:5px;float:left">
+                <span style="width:100px;" class="specialaction btn" data-action="user_stat_csv" data-self="1">
+                    <div style="padding:10px;"><i class="icon-users" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td> User Stat CSV</td></tr></table></div>
+                </span>
+            </div>
+            <div style="padding:5px;margin:5px;float:left">
+                <span style="width:100px;" class="specialaction btn" data-action="user_csv" data-self="1">
+                    <div style="padding:10px;"><i class="icon-users" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td> Download User CSV</td></tr></table></div>
+                </span>
+            </div>
+            <div style="padding:5px;margin:5px;float:left">
+                <span style="width:100px;" class="specialaction btn" data-action="anon_ticket_csv" data-self="1">
+                    <div style="padding:10px;"><i class="icon-users" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td> Download Anon Ticket CSV</td></tr></table></div>
+                </span>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+</div>
+@@@admin_tools_testnotice@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:20px;text-align:left">
+    <div style="font-size:20px;padding-bottom:10px;">Notice Testing</div>
+    <div>
+        <%for (var i = 0; i < notices.length; i++) {
+            var notice=notices[i];%>
+            <div style="margin:2px;padding:2px;border:1px solid #ccc;width:220px;float:left;" class="s-corner-all truebox x_selector" data-id="<%=notice.id%>">
+                <table>
+                    <tr>
+                        <td style="width:25px">
+                            <i class="icon-bell" style="font-size:20px;"></i>
+                        </td>
+                        <td>
+                            <div><%=notice.name%></div>
+                            <div style="padding-top:3px;font-size:11px;color:#888"><%=notice.subtitle%></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        <%};%>
+        <div class="clearfloat"></div>
+    </div>
+</div>
+@@@admin_tools_selectcollection@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:20px;">
+    <div style="font-size:20px;padding-bottom:15px">Sync Collection</div>
+    <%
+        var list=app.loadData.collections;
+        list.sort()
+    %>
+    <select id="collselect">
+    <option value="">---Select Collection---</option>
+    <%for (var i = 0; i < list.length; i++) {
+        var item=list[i]%>
+        <option valu="<%=item%>"><%=item%></option>
+    <%}%>
+    </select>
+</div>
+@@@admin_tools_massemail@@@
+<div style="text-align:left;padding:20px;">
+    <div style="padding-bottom:15px;font-size:18px;color:#888">Mass Email</div>
+    <div style="font-size:14px"><b>Segment/Filter</b></div>
+    <div style="padding-bottom:15px;">
+        <div class="segment"></div>
+    </div>
+    <div style="font-size:14px"><b>Subject</b></div>
+    <div style="padding-top:3px;padding-bottom:10px">
+        <input type="text" style="width:400px;padding:5px;border:1px solid #ccc;" id="subject" class="m-corner-all" value="<%=subject%>">
+    </div>
+    <div style="font-size:14px"><b>Campaign</b> (internal)</div>
+    <div style="padding-top:3px;padding-bottom:10px">
+        <input type="text" style="width:400px;padding:5px;border:1px solid #ccc;" id="campaign" class="m-corner-all" value="<%=campaign%>">
+    </div>
+    <div style="font-size:14px;margin-bottom:10px"><b>Send Preview To</b>
+        <select class="previewid" style="margin-left:5px">
+            <option value="UC9QP6XFW">Tom</option>
+            <option value="U9LASX1KG">Eros</option>
+        </select>
+    </div>
+    <div style="font-size:14px;padding-bottom:3px"><b>Message</b></div>
+    <div style="min-height:80px;padding:5px;max-height:40vh;border:1px solid #ccc" class="truebox redactorbox s-corner-all" id="emailbox"><%=html%></div>
+</div>

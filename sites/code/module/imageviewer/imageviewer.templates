@@ -1,0 +1,76 @@
+@@@imageviewer_page@@@
+<div data-<%=template%>="<%=_tid%>"  class="sfit" data-index="<%=index%>" style="overflow:hidden;text-align:center;background:black;position:absolute;top:0;left:<%=left%>%;width:100%;height:100%">
+	<div style="width:100%;height:100%;position: relative;" class="imgcard">
+		<div class="sfit fitimg mainimg" style="background-image:url(<%=modules.tools.getImg(img.pic,'small')%>);z-index:1"></div>
+		<%=$.fn.render({template:'imageviewer_actions',data:{index:index},returnhtml:true})%>
+	</div>
+</div>
+@@@imageviewer@@@
+<div data-<%=template%>="<%=_tid%>" class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+    </div>
+    <div style="position: absolute;top:5px;right:5px;background:rgba(55,55,55,.4);color:white;z-index:2;padding:5px" class="m-corner-all x_closer">
+		<i class="icon-cancel" style="font-size:24px"></i>
+	</div>
+	<%if(!isPhoneGap()){%>
+	<div style="position: absolute;top:50%;left:5px;margin-top:-40px;background:rgba(0,0,0,.4);color:white;font-size:40px;z-index: 100;" class="s-corner-all x_left">
+		<i class="icon-left-open"></i>
+	</div>
+	<div style="position: absolute;top:50%;right:5px;margin-top:-40px;background:rgba(0,0,0,.4);color:white;font-size:40px;z-index: 100" class="s-corner-all x_right">
+		<i class="icon-right-open"></i>
+	</div>
+	<%}%>
+	<div style="position: absolute;bottom:5px;right:5px;background:rgba(0,0,0,.4);color:white;font-size:20px;padding:5px;z-index: 100" class="s-corner-all x_more">
+		<i class="icon-dot-3"></i>
+	</div>
+</div>
+@@@imageviewer2@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:1000">
+	<div class="sfit" style="z-index:1;background:black">
+		<div class="sfit mainele" style="background:rgba(0,0,0,.2);z-index:1">
+			<div class="animatedimage" style="position:absolute;top:<%=page.top%>px;left:<%=page.left%>px;width:<%=page.width%>px;height:<%=page.height%>px;overflow:hidden;text-align:center;z-index:1" data-index="<%=index%>">
+				<div style="width:100%;height:100%;position: relative;" class="imgcard">
+					<!-- <img src="<%=app.idot%>" style="height:100%;vertical-align:middle;display:inline-block;width:1px;margin-left:-1px">
+					<img src="<%if(spin){%><%=app.idot%><%}else{%><%=modules.tools.getImg(img.pic,'small')%><%}%>" style="max-width:100%;max-height:100%;vertical-align:middle" <%if(img.full){%>data-fullimg="<%=img.full%>"<%}else{%>data-fullimg="<%=modules.tools.getImg(img.pic,'full')%>"<%}%> class="mainimg"> -->
+					<div class="sfit fitimg mainimg" style="background-image:url(<%=modules.tools.getImg(img.pic,'small')%>);z-index:1"></div>
+					<%=$.fn.render({template:'imageviewer_actions',data:{index:index},returnhtml:true})%>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;top:5px;right:5px;background:rgba(55,55,55,.4);color:white;z-index:2;padding:5px" class="m-corner-all x_closer">
+		<i class="icon-cancel" style="font-size:24px"></i>
+	</div>
+	<%if(!isPhoneGap()){%>
+	<div style="position: absolute;top:50%;left:5px;margin-top:-40px;background:rgba(0,0,0,.4);color:white;font-size:40px;z-index: 100;" class="s-corner-all x_left">
+		<i class="icon-left-open"></i>
+	</div>
+	<div style="position: absolute;top:50%;right:5px;margin-top:-40px;background:rgba(0,0,0,.4);color:white;font-size:40px;z-index: 100" class="s-corner-all x_right">
+		<i class="icon-right-open"></i>
+	</div>
+	<%}%>
+	<div style="position: absolute;bottom:5px;right:5px;background:rgba(0,0,0,.4);color:white;font-size:20px;padding:5px;z-index: 100" class="s-corner-all x_more">
+		<i class="icon-dot-3"></i>
+	</div>
+</div>
+@@@imageviewer_actions@@@
+<div data-<%=template%>="<%=_tid%>" style="display:none;position: absolute;bottom:0;left:0;right:0;padding:10px;color:white;text-align:right" class="upgradient actionbar" data-aindex="<%=index%>">
+	<i class="x_download icon-download" style="font-size:18px;padding:5px;display: none;"></i>
+	<i class="x_share icon-share" style="font-size:18px;padding:5px;"></i>
+</div>

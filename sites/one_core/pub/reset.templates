@@ -1,0 +1,61 @@
+@@@home@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg">
+	<div style="width:100%;height:100%;">
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;">
+			<div style="position:absolute;top:100px;left:0;right:0;padding:5px;z-index:1" class="loginform">
+				<div style="text-align:center;margin-top:-40px;padding-bottom:20px;">
+					<img src="<%=img%>" style="height:120px">
+				</div>
+				<div class="topbox" data-page="login">
+					<div style="padding:10px 5px;max-width:320px;width:100%;margin:auto;position:relative;" class="truebox l-corner-top glossybg2">
+						<div class="prettyinput">
+							<label>
+							  <input type="password" required id="password"/>
+							  <div class="label-text">New Password</div>
+							</label>
+						</div>
+						<div class="prettyinput">
+							<label>
+							  <input type="password" required id="cpassword"/>
+							  <div class="label-text">Confirm Password</div>
+							</label>
+						</div>
+					</div>
+					<div id="response" style="padding:20px;text-align:center;display:none;font-size:11px;color:white"></div>
+					<div style="max-width:320px;margin:auto;">
+						<div class="truebox">
+							<div style="display:inline-block;width:100%;text-align:center;padding:10px;color:white" id="reset" class="x_loginbtn l-corner-br truebox glossybg4">
+								<b>Reset Password</b>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@success@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<table style="width:100%;height:100%;color:white">
+		<tr>
+			<td>
+				<div style="text-align:center;color:white;font-size:20px;">Successfully Reset Password!</div>
+				<a href="<%=app_link%>" target="_self" style="text-decoration: none;color:white;font-weight: bold">
+					<div style="margin-top:20px;text-align: center;font-size:24px;" class="x_goto">
+						<i class="icon-logout"></i> Go to the app!
+					</div>
+				</a>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@invalid@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg">
+	<table style="width:100%;height:100%">
+		<tr>
+			<td>
+				<div style="text-align:center;color:white;font-size:20px;">Invalid Reset Link</div>
+			</td>
+		</tr>
+	</table>
+</div>

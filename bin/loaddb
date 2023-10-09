@@ -1,0 +1,4 @@
+#!/bin/bash
+project=$(jq '.project' ${HOME}/priv/config.json) | tr -d '"'
+nodejs ${ROOT}/node/loaddb.js
+php ${ROOT}/_manage/db2/loaddb.php $1

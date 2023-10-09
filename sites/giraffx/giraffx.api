@@ -1,0 +1,2505 @@
+<?php
+	class GIRAFFX{
+		public static function handleRequest($r){
+			switch ($r['path'][2]) {
+				case "search":
+					switch ($r['path'][3]) {
+						case 'tags':
+							$out=self::searchTags($r);
+						break;
+						case 'players':
+							$out=self::searchPlayers($r);
+						break;
+					}
+				break;
+				case "processhook"://user
+					$out=self::processHook($r);
+				break;
+				case "iplocation"://public
+					$out=self::getIpLocation($r);
+				break;
+				case "updates"://public
+					$out=self::updates($r);
+				break;
+				case "stats":
+					switch ($r['path'][3]) {
+						case 'dashboard':
+							$out=self::statDashboard($r);
+						break;
+					}
+				break;
+				case "user":
+					switch ($r['path'][3]) {
+						case 'feed':
+							$out=self::userFeed($r);
+						break;
+						case 'savestat':
+							$out=self::saveStat($r);
+						break;
+						case 'page':
+							$out=self::page($r);
+						break;
+						case 'hasaccount':
+							$out=self::hasAccount($r);
+						break;
+						case 'gamehook':
+							$out=self::gameHook($r);
+						break;
+						case 'updateprofile':
+							$out=self::updateProfile($r);
+						break;
+						case 'gameonboard':
+							$out=self::gameOnboard($r);
+						break;
+						case 'syncrotimer':
+							$out=self::syncroTimer($r);
+						break;
+						case 'shortcuts':
+							$out=self::shortcuts($r);
+						break;
+						case 'updatenotifications':
+							$out=self::updateNotifications($r);
+						break;
+						case 'loadnotificationsettings':
+							$out=self::loadNotificationSettings($r);
+						break;
+						case 'login'://public
+							$out=self::login($r);
+						break;
+						case 'emailbounce':
+							$out=self::emailBounce($r);
+						break;
+						case 'securelink'://public
+							$out=self::secureLink($r);
+						break;
+						case 'updatepw'://check
+							$out=self::updatePassword($r);
+						break;
+						case 'setpw'://check
+							$out=self::setPW($r);
+						break;
+						case 'update'://check
+							$out=self::updateUser($r);
+						break;
+						case 'save'://check
+							$out=self::saveUserData($r);
+						break;
+						case 'delete'://check
+							$out=self::deleteUserAccount($r);
+						break;
+						case 'accounttoken'://check
+							$out=self::accountToken($r);
+						break;
+						case 'isactive'://check
+							$out=self::isUserActive($r);
+						break;
+						case 'sethistory'://check
+							$out=self::setHistory($r);
+						break;
+						case 'loadhistory'://check
+							$out=self::loadHistory($r);
+						break;
+						case 'badge'://check
+							$out=self::getBadge($r);
+						break;
+						case 'directory'://check
+							$out=self::getDirectory($r);
+						break;
+						case 'logout'://check
+							$out=self::logout($r);
+						break;
+						case 'reset'://public
+							$out=self::reset($r);
+						break;
+						case 'checkcode'://public
+							$out=self::checkCode($r);
+						break;
+						case 'resetpw'://public
+							$out=self::resetpw($r);
+						break;
+						case 'create'://public
+							$out=self::create($r);
+						break;
+						case 'ping'://parital
+							$out=self::ping($r);
+						break;
+						case 'emailcheck'://public
+							$out=self::emailCheck($r);
+						break;
+						case 'confirmemail'://public
+							$out=self::confirmEmail($r);
+						break;
+						case 'push'://check
+							if($r['auth']){
+					    		include(phi::$conf['root'].'/api/push.php');
+					    		$out=push::handleRequest($r);
+					    	}else{
+					    		$out=array('error'=>'invalid_perms');
+					    	}
+						break;
+						case 'call'://check
+							if($r['auth']){
+					    		include(phi::$conf['root'].'/api/call.php');
+					    		$out=call::handleRequest($r);
+					    	}else{
+					    		$out=array('error'=>'invalid_perms');
+					    	}
+						break;
+					}
+				break;
+			}
+			if(!isset($out)) $out=array('error'=>'invalid_method');
+			return $out;
+		}
+		public static function syncroTimer($r){
+			$settings=db2::findOne(DB,'user_settings',['id'=>$r['auth']['uid']],['projection'=>['syncrotimer'=>1]]);
+			$data['settings']=(isset($settings['syncrotimer']))?$settings['syncrotimer']:false;
+			return ['success'=>true,'data'=>$data];
+		}
+		public static function statDashboard($r){
+			$d=phi::ensure($r,['link_id','action']);
+			$statpipeline[]=[
+				'$match'=>[
+					'link.id'=>$d['link_id'],
+					'action'=>$d['action']
+				]
+			];
+			$statpipeline[]=array(
+				'$group'=>array(
+					'_id'=>array( 
+				        "day"=>array('$dayOfYear'=>array('$toDate'=>'$_id')),
+				        "month"=>array('$month'=>array('$toDate'=>'$_id')),
+				        "year"=>array('$year'=>array('$toDate'=>'$_id')),
+				        "dayOfMonth"=>array('$dayOfMonth'=>array('$toDate'=>'$_id'))
+					),
+					'count'=>array(
+						'$sum'=>1
+					)
+				)
+			);
+			$statpipeline[]=array(
+				'$sort'=>array('_id.year'=>1,'_id.day'=>1)
+			);
+			// die(json_encode($statpipeline));
+			$statgraph=self::getAggregateGraph('stat',$statpipeline);
+			$graphs[]=array(
+				'data'=>$statgraph,
+				'name'=>'Timeline'
+			);
+			$stats=false;
+			return ['success'=>true,'data'=>array(
+				'stats'=>$stats,
+				'graphs'=>$graphs,
+				'data'=>(isset($data))?$data:false
+			)];
+			return ['success'=>true];
+		}
+		public static function getIdFromTime($ts,$id){
+			foreach ($id as $k => $v) {
+				switch($k){
+					case 'day':
+						$out[$k]=(int) date('z',$ts)+1;
+					break;
+					case 'dayOfMonth':
+						$out[$k]=(int) date('j',$ts);
+					break;
+					case 'month':
+						$out[$k]=(int) date('m',$ts);
+					break;
+					case 'year':
+						$out[$k]=(int) date('Y',$ts);
+					break;
+					case 'hour':
+						$out[$k]=(int) date('G',$ts);
+					break;
+					case 'minute':
+						$out[$k]=(int) date('i',$ts);
+					break;
+				}
+			}
+			$out['composit']=true;
+			return $out;
+		}
+		public static function getTimeFilterInfo2($range){
+			$diff=$range['end']-$range['start'];
+			$expected=60*60*24;//one every 1 day
+			$data_key=array('$toDate'=>'$_id');
+			$id=array( 
+		        "day"=>array('$dayOfYear'=>$data_key),
+		        "month"=>array('$month'=>$data_key),
+		        "year"=>array('$year'=>$data_key),
+		        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			);
+			return array(
+				'start'=>$range['start'],
+				'end'=>$range['end'],
+				'range'=>$diff,
+				'expected'=>$expected,
+				'id'=>$id
+			);
+		}
+		public static function getTimeFromId($_id){
+			$datetime = new DateTime(); 
+			$datetime->setDate($_id['year'], $_id['month'], $_id['dayOfMonth']); 
+			if(isset($_id['hour'])){
+				$m=(isset($_id['minute']))?$_id['minute']:0;
+				$datetime->setTime($_id['hour'],$m);
+			}else{
+				$datetime->setTime(12,0);//set to noon or otherwise tz shifting may shift to another day!
+			}
+			return (int) $datetime->format('U');
+		}
+		public static function getAggregateGraph($table,$pipeline,$key='count'){
+			$out=false;
+			$resp=db2::aggregate(phi::$conf['dbname'],$table,$pipeline);
+			if($resp){
+				$start=self::getTimeFromId($resp[0]['_id']);
+				$end=self::getTimeFromId($resp[sizeof($resp)-1]['_id'])+(60*60*24);
+				if($end==$start) $end=time();
+				$info=self::getTimeFilterInfo2([
+					'start'=>$start,
+					'end'=>$end
+				]);
+				$start=self::getTimeFromId(self::getIdFromTime($info['start'],$info['id']));
+				$end=$info['end'];
+				$interval=$info['expected'];
+				$ct=$start;
+				$ci=0;
+				while($ct<$end){
+					if(isset($resp[$ci])) $currentTs=self::getTimeFromId($resp[$ci]['_id']);
+					else $currentTs=false;
+					//die($currentTs. ' a '.$ct);
+					if($currentTs==$ct){
+						$out[]=$resp[$ci];
+						$ci++;
+					}else{
+						$out[]=array(
+							'_id'=>self::getIdFromTime($ct,$info['id']),
+							$key=>0
+						);
+					}
+					$ct+=$interval;
+				}
+			}
+			return $out;
+		}
+		public static function updates($r){
+			include_once(ROOT.'/api/class/formbuilder.php');
+			if(isset($r['auth']['uid'])) $u=db2::findOne(DB,'user',array('id'=>$r['auth']['uid']));
+			else $u=[
+				'level'=>'explorer',
+				'id'=>'anon'
+			];
+			if($u['level']=='steward'){
+				$q=[];//show everything
+			}else{
+				$pages=db2::toOrderedList(db2::find(DB,'page',['hidden'=>['$exists'=>false],'admins'=>['$in'=>[$u['id']]]],['projection'=>['id'=>1,'name'=>1,'pic'=>1]]));
+				if($pages){
+					$ids=$pages['order'];
+					$q=[
+						'$or'=>[
+							['approved'=>1],
+							['from.id'=>['$in'=>$ids]]
+						]
+					];
+				}else{
+					$q=['approved'=>1];
+				}
+			}
+			$qs=array(
+				'schema'=>'update',
+				'max'=>10
+			);
+			if(isset($r['qs']['last'])){
+				$qs['last']=$r['qs']['last'];
+			}
+			return formbuilder::feed(array(
+				'auth'=>$r['auth'],
+				'qs'=>$qs
+			),$q,array(
+				'sort'=>array('_id'=>-1)
+			),'_id');
+		}
+		public static function getIpLocation($r){
+			$exp=strtotime('1 month ago');
+			$ip=phi::getIp();
+			$c=db2::findOne(DB,'ip_location',array('id'=>$ip));
+			$url='http://api.ipstack.com/'.$ip.'?access_key='.phi::$conf['ipstack']['access_token'];
+			if(!$c||($c&&($c['ts']<$exp))||isset($r['qs']['force'])){
+				$resp=phi::curl($url);
+				if(isset($resp['ip'])){
+					$save=array(
+						'id'=>$resp['ip'],
+						'data'=>array(
+							'lng'=>$resp['longitude'],
+							'lat'=>$resp['latitude']
+						),
+						'ts'=>time()
+					);
+					$data=$save['data'];
+					db2::update(DB,'ip_location',array('id'=>$save['id']),array('$set'=>$save),array('upsert'=>true));
+				}else{
+					phi::log('error fetching ip info for ['.$ip.']');
+					$data=false;
+				}
+			}else{
+				$data=$c['data'];
+				$data['cache']=true;
+			}
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function page($r){
+			$data=db2::findOne(DB,'app_text',['id'=>$r['qs']['page']]);
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function hasAccount($r){
+			include_once(phi::$conf['root'].'/api/oauth2.php');
+			$d=phi::ensure($r,['type']);
+			$a=db2::findOne(DB,'user_account',['id'=>$r['auth']['uid']]);
+			if(isset($a[$d['type']])&&!isset($a[$d['type']]['pending'])){
+				return array('success'=>true,'hasaccount'=>true,'cache'=>true);
+			}
+			if(!$a) return ['success'=>true,'hasaccount'=>false];
+			switch($d['type']){
+				case 'cobot':
+					if(!isset($a['cobot']['id'])) return ['success'=>true,'hasaccount'=>false];
+					$res=OAUTH2::get(array(
+						'app'=>'one',
+						'uid'=>'admin',
+						'app_id'=>'cobot',
+						'type'=>'GET',
+						'url'=>'https://XXXX.cobot.me/api/memberships/'.$a['cobot']['id'],
+						'force_app_token'=>true
+					));
+					if($res['user']){
+						db2::update(DB,'user_account',['id'=>$r['auth']['uid']],['$unset'=>['cobot.pending'=>true]]);
+						return ['success'=>true,'hasaccount'=>true];
+					}else{
+						return ['success'=>true,'hasaccount'=>false];
+					}
+					die(json_encode($res));
+				break;
+			}	
+			return ['success'=>true,'hasaccount'=>false];
+		}
+		public static function getRandomSplash($type=flase){
+			if(!$type) return false;
+	    	$list=db2::toOrderedList(db2::aggregate(DB, 'wallpaper',array(array('$match'=>array('type'=>$type)),array('$sample'=>array('size'=>1)))));
+	    	return $list['list'][$list['order'][0]];
+	    }
+		public static function gameHook($r){
+			if(phi::$conf['prod']){
+				phi::log('point game disabled in prod');
+				return ['success'=>true];
+			}
+			$d=phi::ensure($r,array('hook'));
+			$ret=self::emitGameHook($r,$d['hook']);
+			return array('success'=>true);
+		}
+		public static function sendPoints($r,$page,$opts){
+			if(phi::$conf['prod']){
+				phi::log('points disabled in prod');
+				return true;
+			}
+			include_once(ROOT.'/api/class/formbuilder.php');
+			if(isset($opts['unique_id'])){
+				if(db2::findOne(DB,'exchange',array('unique_id'=>$opts['unique_id']))){
+					phi::log('points already issued for this action ['.$opts['unique_id'].']');
+					return false;
+				}
+			}else{
+				phi::log('sendPoints:unique id not set! '.json_encode($opts));
+			}
+			$current=array(
+				'from'=>array(
+					'id'=>'one_boulder',
+					'type'=>'page'
+				),
+				'to'=>$page,
+				'seed'=>1,
+				'amount'=>$opts['points'],
+				'message'=>$opts['message']
+			);
+			if(isset($opts['unique_id'])){
+				$current['unique_id']=$opts['unique_id'];
+			}
+			#phi::log('send game points!!! '.json_encode($current));
+			formbuilder::save(array(
+				'auth'=>array(
+					'uid'=>'internal'//allows for sending on behalf of a page without admin permissions
+				),
+				'qs'=>array(
+					'appid'=>$r['qs']['appid'],
+					'schema'=>'exchange',
+					'current'=>$current
+				)
+			));
+			return true;
+		}
+		public static function emitGameHook($r,$game_type){
+			if(phi::$conf['prod']){
+				phi::log('points game disabled in prod');
+				return true;
+			}
+			$game=db2::findOne(DB,'games',array('id'=>$game_type));
+			if(!$game){
+				phi::log('Invalid game type ['.$game_type.']');
+				return false;
+			}
+			$id=$r['auth']['uid'].'_'.$game_type;
+			if(db2::findOne(DB,'awards',array('id'=>$r['auth']['uid'].'_'.$game_type))){
+				if(phi::$conf['prod']){
+					phi::log('Game ['.$game_type.'] already claimed by ['.$r['auth']['uid'].']!');
+					return false;
+				}else{
+					$id.='_'.time();
+					phi::log('[ALLOW DEV] Game ['.$game_type.'] already claimed by ['.$r['auth']['uid'].']!');
+
+				}
+			}
+			$save=array(
+				'id'=>$id,
+				'page'=>array(
+					'type'=>'user',
+					'id'=>$r['auth']['uid']
+				),
+				'game'=>$game_type,
+				'points'=>$game['points']
+			);
+			include_once(ROOT.'/api/class/formbuilder.php');
+			$data=formbuilder::save(array(
+				'auth'=>array(
+					'uid'=>$r['auth']['uid']
+				),
+				'qs'=>array(
+					'appid'=>$r['qs']['appid'],
+					'schema'=>'awards',
+					'current'=>$save
+				)
+			));
+			#die(json_encode($data));
+			//self::save('awards',$save);
+		}
+		// public static function loadData($r){
+		// 	$schema=json_decode(file_get_contents(ROOT.'/_manage/schema.json'),1);
+		// 	$keep=array('exchange','chat_group','user');
+		// 	$data['schema']=phi::keepFields($schema,$keep);
+		// 	return $data;
+		// }
+		public static function gameOnboard($r){
+			include_once(ROOT.'/api/class/formbuilder.php');
+			$u=db2::findOne(DB,'user',array('id'=>$r['auth']['uid']));
+			$uq=db2::findOne(DB,'user_questions',array('id'=>$r['auth']['uid']));
+			$schema=ONE_CORE::getSchema('user_questions');
+			$answered=0;
+			foreach ($schema['order'] as $k => $v) {
+				if($v!='id'&&isset($uq[$v])&&$uq[$v]){
+					$answered++;
+				}
+			}
+			$status=array(
+				'profile_pic'=>(isset($u['pic'])&&$u['pic']['path']!='/static/blank_user')?1:0,
+				'profile_skills'=>(isset($u['skills'])&&sizeof($u['skills']))?1:0,
+				'profile_questions'=>array(
+					'answered'=>$answered,
+					'total'=>sizeof($schema['order'])-1
+				),
+				//'attend_an_event'=>(db2::findOne(DB,'checkin',array('user'=>$r['auth']['uid'])))?1:0,
+				'send_a_gift'=>(db2::findOne(DB,'exchange',array('from.id'=>$r['auth']['uid'])))?1:0
+			);
+			//$awarded=db2::toOrderedList(db2::find(DB,'awards',array('page.id'=>$r['auth']['uid']),array('sort'=>array('_id'=>-1))));
+			$awarded=formbuilder::feed(array(
+				'auth'=>$r['auth'],
+				'qs'=>array(
+					'schema'=>'awards',
+					'max'=>1000
+				)
+			),array(
+				'page.id'=>$r['auth']['uid']
+			),array(
+				'sort'=>array('_id'=>-1)
+			),'id');
+			return array('success'=>true,'data'=>array(
+				'awarded'=>$awarded['data'],
+				'games'=>db2::toOrderedList(db2::find(DB,'games',array(),array('sort'=>array('order'=>1)))),
+				'status'=>$status
+			));
+		}
+		public static function shortcuts($r){
+			$data=array();
+			//become a player
+			$u=false;
+			if(isset($r['auth']['uid'])) $u=db2::findOne(DB,'user',array('id'=>$r['auth']['uid']));
+			$roles=self::getUserRoles(false,$u);
+			//check cobot!
+			$a=db2::findOne(DB,'user_account',['id'=>$r['auth']['uid']]);
+			if(isset($a['cobot']['pending'])){
+				$data['banners'][]=array(
+					'icon'=>'icon-airplane_hub',
+					'name'=>'Connect your ONE|Riverside Cobot Account',
+					'classes'=>'button2',
+					'link'=>$a['cobot']['invite_url']
+				);
+			}
+			if($u&&$u['level']=='explorer'&&(!isset($u['storeTester'])||!$u['storeTester'])){
+				$data['banners'][]=array(
+					'icon'=>'icon-hero',
+					'name'=>'Become a Player: Save money and start sending points!',
+					'classes'=>'button2',
+					'link'=>'/onboard_player'
+				);
+			}else if(phi::$conf['prod']&&in_array('steward', $roles)){
+				$data['banners'][]=array(
+					'icon'=>'icon-hero',
+					'name'=>'(STEWARD ONLY) Become a Player: Save money and start sending points!',
+					'classes'=>'button2',
+					'link'=>'/onboard_player'
+				);
+			}
+			if($u){
+				if(!phi::$conf['prod']){
+					$data['banners'][]=array(
+						'icon'=>'icon-hero',
+						'name'=>'(DEV) Dive deeper into the game and receive points!',
+						'classes'=>'button2',
+						'link'=>'/onboard_game'
+					);
+				}else if(in_array('steward', $roles)){
+					$data['banners'][]=array(
+						'icon'=>'icon-hero',
+						'name'=>'(STEWARD ONLY) Dive deeper into the game and receive points!',
+						'classes'=>'button2',
+						'link'=>'/onboard_game'
+					);
+				}
+			}
+			$schema=ONE_CORE::getSchema('music_stream');
+			$stream=db2::findOne(DB,'music_stream',array('start'=>array('$lte'=>time()),'end'=>array('$gte'=>time())));
+			if($stream){
+				$data['order'][]='stream';
+				$data['list']['stream']=array(
+					'icon'=>'icon-music',
+					'name'=>'Live Stream',
+					'classes'=>'pulse',
+					'link'=>'/music_stream'
+				);
+			}
+			$data['list']['about']=array(
+				'icon'=>'icon-info-circled-alt',
+				'name'=>'About',
+				'link'=>'/game_about'
+			);
+			$data['order'][]='about';
+			$data['list']['directory']=array(
+				'icon'=>'icon-users',
+				'name'=>'Directory',
+				'link'=>'/directory'
+			);
+			$data['order'][]='directory';
+			if(!phi::$conf['prod']){
+				$data['list']['deals']=array(
+					'icon'=>'icon-offers',
+					'name'=>'Deals',
+					'link'=>'/deals'
+				);
+				$data['order'][]='deals';
+			}
+			if($u&&(!isset($u['storeTester'])||!$u['storeTester'])){
+				$data['list']['donate']=array(
+					'icon'=>'icon-money',
+					'name'=>'Donate',
+					'link'=>'https://venmo.com/code?user_id=3216755325403136507'
+				);
+				$data['order'][]='donate';
+			}
+			$data['list']['clouds']=array(
+				'icon'=>'icon-hash-cloud',
+				'name'=>'Explore!',
+				'link'=>'/clouds'
+			);
+			$data['order'][]='clouds';
+			$data['list']['services']=array(
+				'icon'=>'icon-family',
+				'name'=>'Services',
+				'link'=>'/services'
+			);
+			$data['order'][]='services';
+			$data['list']['news']=array(
+				'icon'=>'icon-newspaper-folded',
+				'name'=>'News',
+				'link'=>'/newslist'
+			);
+			$data['order'][]='news';
+			$data['list']['music']=array(
+				'icon'=>'icon-music',
+				'name'=>'Music',
+				'link'=>'/music_library'
+			);
+			$data['order'][]='music';
+			$data['list']['podcast']=array(
+				'icon'=>'icon-mic',
+				'name'=>'Podcasts',
+				'link'=>'/podcast_library'
+			);
+			$data['order'][]='podcast';
+			$data['order'][]='qr';
+			$data['list']['qr']=array(
+				'icon'=>'icon-qrcode',
+				'name'=>'QR',
+				'link'=>'/qrcode'
+			);
+			// if(!phi::$conf['prod']){
+			// 	$data['list']['about']=array(
+			// 		'icon'=>'icon-info',
+			// 		'name'=>'About the Game',
+			// 		'link'=>'/game_about'
+			// 	);
+			// 	$data['order'][]='about';
+			// }
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function updateProfile($r){
+			phi::log('SAVE '.json_encode($r['qs']));
+			return array('success'=>true);
+		}
+		public static function loadNotificationSettings($r){
+			return array('success'=>true,'data'=>array(
+				'types'=>db2::toOrderedList(db2::find(DB,'notification_types',array(),array('sort'=>array('priority'=>1)))),
+				'current'=>db2::findOne(DB,'user_settings',array('id'=>$r['auth']['uid']))
+				)
+			);
+		}
+		public static function updateNotifications($r){
+			$d=phi::ensure($r,array('current'));
+			if(isset($r['qs']['force_id'])&&$r['qs']['force_token']){
+				if(phi::getEmailToken($r['qs']['force_id'])==$r['qs']['force_token']){
+					$r['auth']['uid']=$r['qs']['force_id'];
+				}
+			}
+			self::update('user_settings',array('id'=>$r['auth']['uid']),$d['current']);
+			return array('success'=>true);
+		}
+		public static function searchPlayers($r){
+			$d=phi::ensure($r,['search']);
+			if(strlen($d['search'])<2) return array('error'=>'No Results');
+			$regex = new MongoDB\BSON\Regex('^'.$d['search'],'i');
+			$q=array('name'=>$regex,'level'=>array('$in'=>array('steward','producer','player','explorer')));
+			$opts=array('limit'=>10,'projection'=>array('name'=>1,'id'=>1,'pic'=>1,'sort'=>array('_id'=>1)));
+			$data=db2::toOrderedList(db2::find(DB,'user',$q,$opts));
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function getDirectory($r){
+			$d=phi::ensure($r,array('type'));
+			include_once(ROOT.'/api/class/formbuilder.php');
+			$qs=array(
+				'schema'=>'user'
+			);
+			if(isset($r['qs']['last'])){
+				$qs['last']=$r['qs']['last'];
+				#die(json_encode($qs));
+			}
+			if(isset($r['qs']['after'])){
+				$qs['after']=$r['qs']['after'];
+				#die(json_encode($qs));
+			}
+			switch($d['type']){
+				case 'all':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array(
+						'level'=>array('$in'=>array('explorer','player','producer','steward'))
+						// '$and'=>array(
+						// 	array('pic'=>array('$exists'=>true)),
+						// 	array('pic.path'=>array('$ne'=>'/static/blank_user')),
+						// )
+					),array(
+						'sort'=>array('score'=>-1,'_id'=>-1),
+						'skip'=>(isset($r['qs']['last']))?(int) $r['qs']['last']:0
+					),'id');
+				break;
+				case 'producers':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array(
+						'level'=>'producer'
+					),array(
+						'sort'=>array('score'=>-1,'_id'=>-1),
+						'skip'=>(isset($r['qs']['last']))?(int) $r['qs']['last']:0
+					),'id');
+				break;
+				case 'explorers':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array(
+						'level'=>'explorer'
+					),array(
+						'sort'=>array('score'=>-1,'_id'=>-1),
+						'skip'=>(isset($r['qs']['last']))?(int) $r['qs']['last']:0
+					),'id');
+				break;
+				case 'stewards':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array(
+						'level'=>'steward'
+					),array(
+						'sort'=>array('score'=>-1,'_id'=>-1),
+						'skip'=>(isset($r['qs']['last']))?(int) $r['qs']['last']:0
+					),'id');
+				break;
+				case 'players':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array(
+						'level'=>'player'
+					),array(
+						'sort'=>array('score'=>-1,'_id'=>-1),
+						'skip'=>(isset($r['qs']['last']))?(int) $r['qs']['last']:0
+					),'id');
+				break;
+				case 'newplayers':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array(
+						'$and'=>array(
+							array('pic'=>array('$exists'=>true)),
+							array('pic.path'=>array('$ne'=>'/static/blank_user')),
+						)
+					),false,'id');
+				break;
+				case 'topplayers':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array('score'=>array('$exists'=>true)),array(
+						'sort'=>array('score'=>-1)
+					),'id');
+				break;
+				case 'hotplayers':
+					$res=formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>$qs
+					),array('score_hot'=>array('$exists'=>true)),array(
+						'sort'=>array('score_hot'=>-1)
+					),'id');
+				break;
+				default:
+					$res=array('error'=>'invald_type');
+				break;
+			}
+			return $res;
+		}
+		public static function processMediaData($r,$d,$key,$opts){
+			$data=$d['current'][$key];
+			if(isset($data['order'])){
+				#phi::log('data: '.json_encode($data));
+				foreach ($data['order'] as $k => $iv) {//ensure order.!
+					$v=$data['list'][$iv];
+					if(isset($v['process'])){//if type isnt here, we have already saved it!
+						if(!isset($v['force_id'])){
+							$id=db2::getId($v);
+						}else{
+							$id=$v['force_id'];
+							unset($v['force_id']);
+						}
+						$ids[]=$id;
+						$type=$v['type'];
+						unset($v['type']);
+						$set=array('id'=>$id,'data'=>$v,'type'=>$type);
+						$set['by']=[
+							'type'=>'user',
+							'id'=>$r['auth']['uid']
+						];
+						$save[]=$set;
+						//$res=db2::update(DB,'media',array('id'=>$id),array('$set'=>$set),array('upsert'=>true));
+					}else{
+						$ids[]=$iv;
+					}
+				}
+				if(isset($save)){
+					#phi::log('save: '.json_encode($save));
+					db2::bulkInsert(DB,'media',$save);
+				}
+				$d['current'][$key]=$ids;
+			}
+			return $d;
+		}
+		public static function ensurePlace($obj,$force=false){
+			if(isset($obj['location'])){
+				///$set['id']=$obj['location'];
+				$set=$obj['location_info'];
+				if(!db2::findOne(DB,'place',array('id'=>$obj['location']))||$force){
+					//also add 
+					db2::update(DB,'place',array('id'=>$obj['location']),array('$set'=>$set),array('upsert'=>true));
+				}
+				return array('coords'=>array((float) $set['geometry']['coordinates'][0],(float) $set['geometry']['coordinates'][1]));
+			}
+			return false;
+		}
+		public static function ensureLocation($r,$d,$key,$opts){
+			if(isset($d['current'][$key]['data'])){
+				$ret=self::ensurePlace(array(
+					'location'=>$d['current'][$key]['id'],
+					'location_info'=>$d['current'][$key]['data'],
+				),1);//also caches place
+				if($ret&&isset($ret['coords'])){
+					$lockey=(isset($opts['key']))?$opts['key']:'point';
+					$d['current'][$lockey]=array(
+						"type"=>"Point",
+						"coordinates"=>$ret['coords']
+					);
+				}
+			}else{
+				phi::log('no place data to save');
+				phi::log('request');
+			}
+			return $d;
+		}
+		public static function create($r){
+			$user=$r['qs']['data'];
+			//$user['email'].=time();//testing!
+			#die(json_encode($user));
+			include_once(ROOT.'/api/class/formbuilder.php');
+			//if an account exists from an invite, just upate it!
+			$c=db2::findOne(DB,'user',array('email'=>$user['email']));
+			if($c&&isset($c['source'])&&$c['source']=='invited'&&!isset($c['pass'])){
+				$user['id']=$c['id'];//does an update as opposed to a create
+			}
+			$data=formbuilder::save(array(
+				'auth'=>array(
+					'uid'=>'internal'
+				),
+				'qs'=>array(
+					'appid'=>$r['qs']['appid'],
+					'schema'=>'user',
+					'current'=>$user
+				)
+			));
+			if(isset($data['error'])) return $data;
+			return self::login(array(
+				'qs'=>array(
+					'appid'=>$r['qs']['appid']
+				),
+				'auth'=>false
+			),$data['data']['id']);
+		}
+		public static function ensureTags($r,$data,$collection){
+			if(!$data) return true;
+			$current=db2::toOrderedList(db2::find(phi::$conf['dbname'],$collection,array(
+				'id'=>array('$in'=>array_keys($data))
+			)));
+			if(!$current) $current['order']=array();
+			$diff=array_diff(array_keys($data), $current['order']);
+			if(sizeof($diff)){//these are the new inserts!!!
+				phi::log('Insert ['.sizeof($diff).'] new tags to ['.$collection.']');
+				foreach ($diff as $k => $v) {
+					if(isset($data[$v]['name'])) $data[$v]['name']=ucwords($data[$v]['name']);//make uppercase, more professional
+					$save[]=$data[$v];
+				}
+				self::bulkSave($collection,$save);
+			}
+			
+		}
+		public static function bulkSave($table,$data,$generateIds=false){
+			if($generateIds){
+				$schema=self::getSchema($table);
+				$conf=$schema['fields']['id'];
+				$guids=db2::niceGUIDBulk($conf['create'],sizeof($data));
+				foreach ($data as $k => $v) {
+					$data[$k]['id']=$guids[$k];
+				}
+			}
+			foreach ($data as $k => $v) {
+				$data[$k]=self::validateData($table,$v);
+			}
+			$res=db2::bulkInsert(phi::$conf['dbname'],$table,$data);
+			// $result=self::validateData($table,$data,$bulk);
+			// if(isset($result['error'])) phi::log($result['error']);
+			// else{
+			// 	$wtable=($write_table)?$write_table:$table;
+			// 	$saved=db2::save(phi::$conf['dbname'],$wtable,$result);
+			// 	$result['_id']=(string) $saved->getInsertedId();
+			// }
+			return $data;
+		}
+		public static function save($table,$data,$bulk=false,$write_table=false,$partial=false,$formbuilder=false){
+			include_once(ROOT.'/api/class/formbuilder.php');
+			if(!$partial) $result=self::validateData($table,$data,$bulk);
+			else $result=self::validateData($table,$data,$bulk,1);//use directly, but only do this if validate data was called previously
+			if($result){
+				if(isset($result['error'])){
+					if($bulk!=2) phi::log($result['error']);
+				}else{
+					$wtable=($write_table)?$write_table:$table;
+					$saved=db2::save(phi::$conf['dbname'],$wtable,$result);
+					$result['_id']=(string) $saved->getInsertedId();
+					if(!$formbuilder) formbuilder::runHooks('onCreate',$wtable,[
+						'current'=>$result
+					]);
+				}
+			}
+			return $result;
+		}
+		public static function saveUserData($r){
+			$d=phi::ensure($r,array('data','collection'));
+			if(isset($d['data']['_update'])){
+				//TODO
+				//saveToMongo
+				$data=phi::saveToMongo($d['data']['_update']);
+				//phi::log('update: '.json_encode($data));
+				$res=db2::update(DB,$d['collection'],array('id'=>$r['auth']['uid']),$data);
+			}else{
+				$d['data']['id']=$r['auth']['uid'];
+				//send through formbuilder!!!
+				include_once(ROOT.'/api/class/formbuilder.php');
+				$data=formbuilder::save(array(
+					'auth'=>array(
+						'uid'=>$r['auth']['uid']
+					),
+					'qs'=>array(
+						'appid'=>$r['qs']['appid'],
+						'schema'=>$d['collection'],
+						'current'=>$d['data']
+					)
+				));
+			}
+			return array('success'=>true);
+		}
+		public static function updateUser($r){
+			self::update('user',array('id'=>$r['auth']['uid']),$r['qs']['data']);
+			return array('success'=>true);
+		}
+		public static function update($table,$search,$data,$bulk=false,$write_table=false,$unset=false,$dont_allow_system_updates=false){
+			if($data) $result=self::validateData($table,$data,$bulk,1);//will allow partial updates!
+			$wtable=($write_table)?$write_table:$table;
+			if(isset($result['error'])){
+				phi::log($result['error']);
+				return false;
+			}else{
+				if($result) $update=array('$set'=>$result);
+				if($unset) $update['$unset']=$unset;
+				if(!isset($update)){
+					if(!$bulk){
+						if(class_exists('API')){
+							API::toHeaders(array('error'=>'invalid_update'));
+						}else{
+							phi::clog('invalid_update',1);
+						}
+					}else{
+						phi::clog('error updating, no $update',1);
+					}
+				}else{
+					$rr=db2::update(phi::$conf['dbname'],$wtable,$search,$update,array('upsert'=>true));
+					return $result;
+				}
+			}
+		}
+		public static function getSchema($model){
+			$sconf=json_decode(file_get_contents(ROOT.'/_manage/schema.json'),1);
+			#die(json_encode($sconf));
+			$s=(isset($sconf[$model]))?$sconf[$model]:false;
+			if($s) $s['id']=$model;
+			return $s;
+		}
+		public static function validateData($model,$data,$bulk=false,$update=false,$dont_allow_system_updates=false){
+			include_once(ROOT.'/classes/validator.php');
+			$conf=self::getSchema($model);
+			if(!$conf){
+				if(class_exists('API')) API::toHeaders(array('error'=>'invalid_schema_object','schema'=>$model));
+				else phi::clog(json_encode(array('error'=>'invalid_schema_object','schema'=>$model)),1);
+			}
+			$resp=VALIDATOR::validate($data,$conf,$update,$dont_allow_system_updates);
+			if(isset($resp['error'])){
+				if(!$bulk){
+					if(class_exists('API')){
+						API::toHeaders($resp);//dont pass go, write here!
+					}else{
+						phi::clog(json_encode($resp),1);
+						die();
+					}
+				}else return $resp;
+			}else{
+				return $resp;
+			}
+		}
+		public static function setHistory($r){
+			$d=phi::ensure($r,array('id','type'),true,array('self::write::history'));
+			$ukey=$r['auth']['uid'].'_'.$d['id'].'_'.$d['type'];
+			if(!(isset($d['weight_only'])&&$d['weight_only'])){
+				if(db2::findOne(DB,'history',array('id'=>$ukey))){
+					db2::update(DB,'history',array('id'=>$ukey),array('$set'=>array('tsu'=>db2::tsToTime(time()))));
+				}else{
+					$save=array(
+						'id'=>$ukey,
+						'uid'=>$r['auth']['uid'],
+						'object'=>array(
+							'type'=>$d['type'],
+							'id'=>$d['id']
+						),
+						'tsu'=>db2::tsToTime(time())
+					);
+					db2::save(DB,'history',$save);
+				}
+			}
+			if(isset($d['weight'])&&$d['weight']){
+				$save2=array(
+					'uid'=>$r['auth']['uid'],
+					'object'=>array(
+						'type'=>$d['type'],
+						'id'=>$d['id']
+					),
+					'weight'=>(int) $d['weight']
+				);
+				#phi::log($save2);
+				db2::save(DB,'search_weight',$save2);
+			}
+			//return with history!
+			$uh=self::getUserHistory($r);
+			//broadcast update! might have both phone and computer going!
+			phi::push($r['auth']['uid'],'relay',array('type'=>'updatehistory','data'=>$uh));
+			return array('success'=>true,'data'=>$uh);
+		}
+		public static function loadHistory($r){
+			$d=phi::ensure($r,array(),1,array('self::read::history'));
+			$d=self::getUserHistory($r);
+			return array('success'=>true,'data'=>$d);
+		}
+		public static function getUserHistory($r){
+			if(!isset($r['auth'])||!$r['auth']) return false;
+			$q=array('uid'=>$r['auth']['uid']);
+			if(isset($r['qs']['last'])&&$r['qs']['last']){
+				$q['tsu']=array('$lt'=>db2::tsToTime($r['qs']['last']));
+			}
+			if(isset($r['qs']['after'])&&$r['qs']['after']){
+				$q['tsu']=array('$gt'=>db2::tsToTime($r['qs']['after']));
+			}
+			if(isset($r['qs']['filter'])&&$r['qs']['filter']!='all'){
+				$q['object.type']=$r['qs']['filter'];
+			}
+			$d=db2::toOrderedList(db2::find(DB,'history',$q,array('sort'=>array('tsu'=>-1),'limit'=>12)),false,true,'_id','tsu');
+			$d=db2::graph(DB,$d,array(
+				'object'=>array(
+					'coll'=>array(
+						'field'=>'object.type',
+						'id'=>'object.id'
+					),
+					'to'=>'object.data',
+					'opts'=>array(
+						'page'=>array(
+							'coll'=>'page',
+							'match'=>'id',
+							'clearOnNull'=>true
+						),
+						'user'=>array(
+							'coll'=>'user',
+							'match'=>'id',
+							'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+						),
+						'need'=>array(
+							'coll'=>'need',
+							'match'=>'id',
+							'graph'=>array(
+								'from'=>array(
+									'coll'=>array(
+										'field'=>'from.type',
+										'id'=>'from.id'
+									),
+									'to'=>'from.data',
+									'opts'=>array(
+										'user'=>array(
+											'coll'=>'user',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										),
+										'page'=>array(
+											'coll'=>'page',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										)
+									)
+								)
+							)
+						),
+						'offer'=>array(
+							'coll'=>'offer',
+							'match'=>'id',
+							'graph'=>array(
+								'from'=>array(
+									'coll'=>array(
+										'field'=>'from.type',
+										'id'=>'from.id'
+									),
+									'to'=>'from.data',
+									'opts'=>array(
+										'user'=>array(
+											'coll'=>'user',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										),
+										'page'=>array(
+											'coll'=>'page',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										)
+									)
+								)
+							)
+						),
+						'service'=>array(
+							'coll'=>'service',
+							'match'=>'id',
+							'graph'=>array(
+								'page.id'=>array(
+									'coll'=>array(
+										'field'=>'page.type',
+										'id'=>'page.id'
+									),
+									'to'=>'page.data',
+									'opts'=>array(
+										'user'=>array(
+											'coll'=>'user',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										),
+										'page'=>array(
+											'coll'=>'page',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										)
+									)
+								)
+							)
+						),
+						'exchange'=>array(
+							'coll'=>'exchange',
+							'match'=>'id',
+							'graph'=>array(
+								'from'=>array(
+									'coll'=>array(
+										'field'=>'from.type',
+										'id'=>'from.id'
+									),
+									'to'=>'from.data',
+									'opts'=>array(
+										'user'=>array(
+											'coll'=>'user',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										),
+										'page'=>array(
+											'coll'=>'page',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										)
+									)
+								)
+							)
+						),
+						'update'=>array(
+							'coll'=>'update',
+							'match'=>'id',
+							'graph'=>array(
+								'from'=>array(
+									'coll'=>array(
+										'field'=>'from.type',
+										'id'=>'from.id'
+									),
+									'to'=>'from.data',
+									'opts'=>array(
+										'user'=>array(
+											'coll'=>'user',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										),
+										'page'=>array(
+											'coll'=>'page',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										)
+									)
+								)
+							)
+						),
+						'feedback'=>array(
+							'coll'=>'feedback',
+							'match'=>'id',
+							'graph'=>array(
+								'from'=>array(
+									'coll'=>array(
+										'field'=>'from.type',
+										'id'=>'from.id'
+									),
+									'to'=>'from.data',
+									'opts'=>array(
+										'user'=>array(
+											'coll'=>'user',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										),
+										'page'=>array(
+											'coll'=>'page',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										)
+									)
+								),
+								'to'=>array(
+									'coll'=>array(
+										'field'=>'to.type',
+										'id'=>'to.id'
+									),
+									'to'=>'to.data',
+									'opts'=>array(
+										'user'=>array(
+											'coll'=>'user',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										),
+										'page'=>array(
+											'coll'=>'page',
+											'match'=>'id',
+											'fields'=>array('name'=>1,'pic'=>1,'id'=>1)
+										)
+									)
+								)
+							)
+						),
+						'event'=>array(
+							'coll'=>'event',
+							'match'=>'id',
+							'clearOnNull'=>true
+						)
+					)
+				)
+			));
+			return $d;
+		}
+		public static function ping($r){
+	    	$splash=false;
+	    	if(isset($r['qs']['bootloader'])){
+	    		if($r['qs']['bootloader']>=3){
+			    	if(isset($r['qs']['loadSplash'])&&$r['qs']['loadSplash']){
+			    		$splash=self::getRandomSplash('phone');//only really available in mobile
+			    		#phi::log('load splash!');
+			    	}
+			    }
+			}
+	    	//logged in only
+	    	if($r['auth']){
+		    	self::setLastActive($r['auth']['uid']);
+		    	if(isset($r['qs']['token'])) self::setLastActiveToken($r['qs']['token']);
+		    	if(isset($r['qs']['page'])&&$r['qs']['page']) self::setLastActivePage($r['auth']['uid'],$r['qs']['page']);
+		    	
+		    	if(isset($r['qs']['stats'])){
+		    		//build stat update query
+		    		if(isset($r['qs']['stats']['pageinfo'])&&sizeof($r['qs']['stats']['pageinfo'])){
+		    			foreach ($r['qs']['stats']['pageinfo'] as $k => $v) {
+		    				$save['page'][$k]=(float) $v;
+		    			}
+		    		}
+		    		if(isset($r['qs']['stats']['countinfo'])&&sizeof($r['qs']['stats']['countinfo'])){
+		    			foreach ($r['qs']['stats']['countinfo'] as $k => $v) {
+		    				$save['count'][$k]=(int) $v;
+		    			}
+		    		}
+		    		if(isset($r['qs']['stats']['time'])&&$r['qs']['stats']['time']){
+		    			$save['time']=(float) $r['qs']['stats']['time'];
+		    		}
+		    		if(isset($save)&&isset($save['time'])){
+		    			if($save['time']<60){
+			    			$save['id']=$r['auth']['uid'];
+			    			db2::save(phi::$conf['dbname'],'user_stat',$save);
+			    		}else{
+			    			phi::log('invalid stats time save ['.$save['time'].']');
+			    		}
+		    		}
+		    	}
+		    	if(isset($r['qs']['timezone'])){//ensure valid timezone
+		    		//todo:
+		    		db2::update(phi::$conf['dbname'],'user',array('id'=>$r['auth']['uid']),array('$set'=>array('timezone'=>$r['qs']['timezone'])));
+		    	}
+		    }
+	    	$force=true;
+	    	if(isset($r['qs']['bootloader'])){
+	    		if($r['qs']['bootloader']>=2){
+	    			$vi=db2::findOne(phi::$conf['dbname'],'versions',array('_id'=>(isset($r['qs']['app']))?$r['qs']['app']:'one'));
+		    		$ci=db2::findOne(phi::$conf['dbname'],'versions',array('_id'=>'one_boulder_core'));
+		    		$li=db2::findOne(phi::$conf['dbname'],'versions',array('_id'=>'one_boulder_libraries'));
+		    		if($vi&&$ci&&$li){
+			    		if($r['qs']['bootloader']==2){
+			    			$version=$ci['boot']['hash'].'_'.$vi['conf']['hash'].'_'.$li['boot']['hash'];
+			    		}else if($r['qs']['bootloader']==3){
+			    			$version=$ci['boot']['hash'].'_'.$vi['conf']['hash'];
+			    		}
+		    		}else{
+		    			$version='[files_havent_been_combined]';
+		    		}
+	    		}else{
+		    		$vi=db2::findOne(phi::$conf['dbname'],'versions',array('_id'=>'one'));
+		    		$ci=db2::findOne(phi::$conf['dbname'],'versions',array('_id'=>'one_core'));
+		    		$version=$ci['boot']['hash'].'_'.$vi['conf']['hash'];
+		    	}
+	    	}else{
+	    		phi::log('request');
+	    		phi::log('non-bootloading pings not supported');
+	    		$version=false;
+	    	}
+	    	return array('success'=>true,'splash'=>$splash,'version'=>$version);//'forceupdate'=>$force
+	    }
+		public static function searchTags($r){
+			if($r['qs']['search']){
+				$sp=explode(' ', $r['qs']['search']);
+				$lasttag=$sp[sizeof($sp)-1];
+				$regex = new MongoDB\BSON\Regex('^'.$lasttag,'i');
+				$regex2 = new MongoDB\BSON\Regex($lasttag,'i');
+				//first do start with!
+				$q=array('name'=>$regex);
+				$q2=array('name'=>$regex2);
+				$coll='tags';
+				if(isset($r['qs']['collection'])){
+					$coll=$r['qs']['collection'];
+				}
+				$data=db2::toOrderedList(db2::find(phi::$conf['dbname'],$coll,$q,array('limit'=>20)));
+				$data2=db2::toOrderedList(db2::find(phi::$conf['dbname'],$coll,$q2,array('limit'=>20)));
+				if($data2){
+					if(!$data) $data['order']=array();//ensure in_array works
+					foreach ($data2['order'] as $k => $v) {
+						if(!in_array($v, $data['order'])){
+							$data['order'][]=$v;
+							$data['list'][$v]=$data2['list'][$v];
+						}
+					}
+				}
+			}else{
+				$data=false;
+			}
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function schema(){
+			$data=self::loadData();
+			return array('success'=>true,'data'=>$data['schema']);
+		}
+		public static function getVer($r){
+			return 1;
+		}
+		public static function updatePassword($r){
+			$d=phi::ensure($r,array('current'),true,array('self::write::account'));
+			$cu=db2::findOne(phi::$conf['dbname'],'user',array('id'=>$r['auth']['uid']));
+			if(isset($cu['pass'])){
+				if(!isset($d['current']['old'])||!isset($d['current']['new1'])||!isset($d['current']['new2'])||!$d['current']['old']||!$d['current']['new1']||!$d['current']['new2']){
+					return array('error'=>'Missing Data, please fill in all fields');
+				}
+				$user=array('pass'=>md5($d['current']['old'].AUTH_SALT),'id'=>$r['auth']['uid']);
+			}else{
+				if(!isset($d['current']['new1'])||!isset($d['current']['new2'])||!$d['current']['new1']||!$d['current']['new2']){
+					return array('error'=>'Missing Data, please fill in all fields');
+				}
+				$user=array('id'=>$r['auth']['uid']);
+			}
+			//check old pw
+			$ch=db2::findOne(phi::$conf['dbname'],'user',$user);
+			if(!$ch) return array('error'=>'Old password incorrect, please try again');
+			if($d['current']['new1']==$d['current']['new2']){
+				db2::update(phi::$conf['dbname'],'user',array('id'=>$r['auth']['uid']),array('$set'=>array('pass'=>md5($d['current']['new1'].AUTH_SALT))));
+			}else{
+				return array('error'=>'Passwords must match');
+			}
+			//login!
+			return array('success'=>true);
+		}
+		public static function setPW($r){
+			$cu=db2::findOne(phi::$conf['dbname'],'user',array('email'=>$r['qs']['email']));
+			if(!$cu) return array('error'=>'invalid_user');
+			if(isset($cu['pass'])){
+				return array('error'=>'cannot set password, password already set');
+			}
+			if(!$r['qs']['p1']){
+				return array('error'=>'Passwords must be set');
+			}
+			if($r['qs']['p1']==$r['qs']['p2']){
+				$set=array('pass'=>md5($r['qs']['p1'].AUTH_SALT));
+				if(isset($r['qs']['pic'])){
+					$set['pic']=$r['qs']['pic'];
+				}
+				db2::update(phi::$conf['dbname'],'user',array('email'=>$r['qs']['email']),array('$set'=>$set));
+			}else{
+				return array('error'=>'Passwords must match');
+			}
+			return self::login(array(
+				'qs'=>array(
+					'appid'=>$r['qs']['appid']
+				)
+			),$cu['id']);
+		}
+		public static function resetpw($r){
+			include_once(ROOT.'/api/app.php');
+			$c=db2::findOne(phi::$conf['dbname'],'reset',array('id'=>$r['qs']['id']));
+			if(!$c) return array('error'=>'Invalid Code');
+			$pw=md5($r['qs']['pw'].AUTH_SALT);
+			db2::update(phi::$conf['dbname'],'user',array('id'=>$c['uid']),array('$set'=>array('pass'=>$pw)));
+			db2::remove(phi::$conf['dbname'],'reset',array('id'=>$r['qs']['id']));
+			//assume login
+			$token=phi::registerToApp($c['uid'],$r['qs']['appid']);
+			$scheme=APP::getScheme(APP::getAppByAppID($r['qs']['appid']));
+			$link=$scheme.'://login/'.$token['id'];
+			return array('success'=>true,'token'=>$token['id'],'redirect'=>$c['redirect'],'app_link'=>$link);
+		}
+		public static function processHookData($process,$data){
+			foreach ($process as $k => $v) {
+				switch ($k) {
+					case 'checkOverwriteSettings':
+						$settings=db2::findOne(DB,$v['collection'],['id'=>phi::dotGet($v['id'],$data)]);
+						if($settings){
+							if(isset($settings['email_subject'])&&$settings['email_subject']) $data['_override']['email_subject']=$settings['email_subject'];
+							if(isset($settings['email'])&&$settings['email']) $data['_override']['email_message']=$settings['email'];
+							if(isset($settings['email_header'])&&$settings['email_header']) $data['_override']['email_header']=$settings['email_header'];
+						}
+					break;
+					case 'addspaces':
+						if(isset($v['fields'])){
+							foreach ($v['fields'] as $tk => $tv) {
+								if(phi::dotGet($tv,$data)) $data=phi::dotSet($tv,$data,phi::fixContent(phi::dotGet($tv,$data)));
+							}
+						}
+					break;
+					case 'processPictures':
+						if(isset($v['fields'])){
+							foreach ($v['fields'] as $tk => $tv) {
+								if(phi::dotGet($tk,$data)) $data=phi::dotSet($tk,$data,phi::getImg(phi::dotGet($tk,$data),$tv));
+							}
+						}
+					break;
+					case 'formatmoney':
+						if(isset($v['fields'])){
+							foreach ($v['fields'] as $tk => $tv) {
+								if(phi::dotGet($tv,$data)) $data=phi::dotSet($tv,$data,phi::formatMoney(phi::dotGet($tv,$data)));
+							}
+						}
+					break;
+					case 'formatTime':
+						if(isset($v['fields'])){
+							foreach ($v['fields'] as $tk => $tv) {
+								if(phi::dotGet($tv['key'],$data)) $data=phi::dotSet($tk,$data,phi::formatTime(phi::dotGet($tv['key'],$data),$tv['format']));
+							}
+						}
+						#die(json_encode($data['event']));
+					break;
+					case 'event_pretty_time':
+						if(isset($data['event'])&&!is_string($data['event'])){
+							$data['event']['pretty_time']=phi::formatTime($data['event']['start'],'event',(isset($data['event']['end']))?$data['event']['end']:false);
+						}else{
+							phi::log('invalid event_pretty_time data');
+						}
+					break;
+					default:
+						phi::log('invalid processHookData['.$v.']');
+					break;
+				}
+			}
+			return $data;
+		}
+		public static function getViewUrl($conf,$data,$payload){
+			$url='https://app.'.phi::$conf['domain'];
+			if($payload){
+				$url.='/view/'.base64_encode(json_encode($payload));
+				return $url;
+			}else{
+				switch ($conf['id']) {
+					case 'comment_on_post':
+						$url.='/view/'.base64_encode(json_encode(array(
+							'page'=>array('module'=>'post','data'=>array('post_id'=>$data['post']['id'],'comment_id'=>$data['chat']['_id']))
+						)));
+					break;
+					case 'reply_to_comment':
+					case 'comment_mention':
+						$url.='/view/'.base64_encode(json_encode(array(
+							'page'=>array('module'=>'post','data'=>array('post_id'=>$data['post']['id'],'comment_id'=>$data['chat']['_id']))
+						)));
+					break;
+					case 'event_invite':
+						$url.='/view/'.base64_encode(json_encode(array(
+							'page'=>array('module'=>'event','data'=>array('id'=>$data['event']['id']))
+						)));
+					break;
+					case 'post_with':
+					case 'post_mention':
+						$url.='/view/'.base64_encode(json_encode(array(
+							'page'=>array('module'=>'post','data'=>array('post_id'=>$data['post']['id']))
+						)));
+					break;
+					case 'new_message':
+						include_once(phi::$conf['root'].'/sites/code/app/chat/chat.php');
+						$url.='/view/'.base64_encode(json_encode(array(
+							'page'=>array('module'=>'chat','data'=>chat::loadPreviewChat($data['chat']['room'],$data['user']['id']))
+						)));
+					break;
+				}
+				return $url;
+			}
+		}
+		public static function fakeSystemHookData($conf){
+			if(isset($conf['template'])){
+				foreach ($conf['template'] as $k => $v) {
+					switch ($v) {
+						case 'int':
+							$out[$k]=rand (1, 50);
+						break;
+						default:
+							if(is_string($v)){
+								$tp=explode('.', $v);
+							}else{
+								$tp=explode('.', $v[$v['_key']]);
+							}
+							$pipeline[]=array(
+								'$sample'=>array('size'=>1)
+							);
+							$d=db2::aggregate(phi::$conf['dbname'],$tp[0],$pipeline);
+							#phi::log('d-'.json_encode($d));
+							if(isset($d[0][$tp[1]])){
+								if($tp[1]=='_id'){
+									$d=json_decode(MongoDB\BSON\toJSON(MongoDB\BSON\fromPHP($d)),1);
+									$td=(string) $d[0][$tp[1]]['$oid'];
+								}else{
+									$td=$d[0][$tp[1]];
+								}
+								if(is_string($v)){
+									$out[$k]=$td;
+								}else{
+									if(isset($sd)) unset($sd);
+									$sd[$v['_key']]=$td;
+									$td=array_merge($v,$sd);
+									if(isset($td['_key'])) unset($td['_key']);
+									$out[$k]=$td;
+								}
+							}
+						break;
+					}
+				}
+				if(isset($out['chat'])){
+					//$out['chat']='5b807e77904a6b4b7f7802be';//chat with images
+					//$out['chat']='5dc9ed5c17c7df0ddf423848';//video
+					//$out['chat']='5dcb4f9817c7df0caa02aace';//audio
+					//$out['chat']='5ddeb1949b6273066638f605';//mentions and links
+				}
+				#die(json_encode($out));
+				if(isset($out)) return $out;
+				return false;
+			}else return false;
+		}
+		public static function getLocalData($collection,$id){
+			$conf=file_get_contents(ROOT.'/_manage/db2/'.phi::$conf['dbname'].'/'.$collection.'.json');
+			if(!$conf) return false;
+			$json=json_decode($conf,1);
+			$return=false;
+			foreach ($json as $k => $v) {
+				if($v['id']==$id) $return=$v;
+			}
+			return $return;
+		}
+		public static function getNotification($notice){
+			$conf=self::getLocalData('system_hooks',$notice['notice_id']);
+			if(!$conf) return false;
+			//get most recent live hook / better caching todo::
+			$notification=db2::findOne(phi::$conf['dbname'],'admin_notification',array('system_id'=>$notice['notice_id'],'live'=>1));
+			if(!$notification){
+				phi::log('couldnt find a live notification for ['.$notice['notice_id'].']');
+				$notification=db2::findOne(phi::$conf['dbname'],'admin_notification',array('system_id'=>$notice['notice_id']));
+			}
+			if(!$notification){
+				return false;
+			}
+			//use this to graph data!!!
+			if(isset($conf['graph'])){
+				if(isset($conf['graph']['to.id'])){
+					$conf['graph']['to.id']['fields']['email_invalid']=1;
+				}
+				$notice['data']=db2::graphOne(phi::$conf['dbname'],$notice['data'],$conf['graph']);
+			}
+			#die(json_encode($notice['data']));
+			if(isset($conf['graph2'])){
+				$notice['data']=db2::graphOne(phi::$conf['dbname'],$notice['data'],$conf['graph2']);
+			}
+			if(isset($conf['process'])){
+				$notice['data']=self::processHookData($conf['process'],$notice['data']);
+			}
+			foreach ($notice['data'] as $tk => $tv) {
+				if($tk=='to'||$tk=='from') $notice['data'][$tk]['data']['firstname']=phi::getFirstName(phi::dotGet('data.name',$tv));
+			}
+			$notice['message']=phi::renderRedactorContent($notification['app_message'],$notice['data']);
+			$notice['icon']=$notification['app_icon'];
+			//add route!
+			if(isset($conf['route'])&&$conf['route']){
+				$notice['route']=phi::parseString($conf['route'],$notice['data']);//
+				//testing
+				// include_once(ROOT.'/api/app.php');
+				// if(isset($notice['data']['app_id'])){
+				// 	$scheme=APP::getScheme($notice['data']['app_id']);
+				// 	$notice['link']='https://app.'.phi::$conf['domain'].'/link?scheme='.$scheme.'&path='.$data['route'];
+				// }else{
+				// 	phi::log('missing appid for scheduled_job ['.$d['id'].']');
+				// }
+			}
+			if(isset($notification['app_pic'])){
+				$notice['pic']=phi::parseString($notification['app_pic'],$notice['data']);//
+				if(strpos($notice['pic'], '[')!==false&&$notice['pic']==$notification['app_pic']){
+					$notice['pic']='https://one-light.s3.amazonaws.com/static/blank_user.jpg';//couldnt fill in pic
+				}
+				//die(json_encode0$notice['pic']);
+			}
+			if(!isset($notice['icon_color'])) $notice['icon_color']='blue';
+			//if(isset($notice['data'])) unset($notice['data']);
+			return $notice;
+		}
+		public static function processMedia($r,$post){
+			if(isset($post['media']['type'])&&isset($post['media']['data'])&&$post['media']['data']){
+				$data=$post['media']['data'];
+				if(isset($data['order'])){
+					//save items..batch would be ideal here [performance]
+					foreach ($data['order'] as $k => $iv) {//ensure order.!
+						$v=$data['list'][$iv];
+						if(!isset($v['force_id'])){
+							$id=db2::getId($v,$post['media']['type']);
+						}else{
+							$id=$v['force_id'];
+							unset($v['force_id']);
+						}
+						$ids[]=$id;
+						$set=array('id'=>$id,'data'=>$v,'type'=>$post['media']['type']);
+						if($post['media']['type']=='images'){//include by
+							if(isset($post['uid'])){//supporting connection post, chat
+								$set['by']=$post['uid'];
+							}else{
+								$set['by']=$post['by']['id'];
+							}
+							if(isset($post['page'])){
+								$set['page']=$post['page']['id'];	
+							}
+						}
+						$res=db2::update(DB,'media',array('id'=>$id),array('$set'=>$set),array('upsert'=>true));
+					}
+					$post['media']['data']=$ids;
+				}else{
+					if(!isset($post['media']['force_id'])){
+						$id=db2::getId($data,$post['media']['type']);
+					}else{
+						$id=$post['media']['force_id'];
+						unset($post['media']['force_id']);
+					}
+					$set=array('id'=>$id,'data'=>$data,'type'=>$post['media']['type']);
+					if($post['media']['type']=='images'){//include by
+						if(isset($post['uid'])){//supporting connection post
+							$set['by']=$post['uid'];
+						}else{
+							$set['by']=$post['by']['id'];
+						}
+					}
+					db2::update(DB,'media',array('id'=>$id),array('$set'=>$set),array('upsert'=>true));
+					$post['media']['data']=$id;
+				}
+			}
+			#phi::log($post);
+			return $post;
+		}
+		public static function getSystemStats($data){
+			//caching!
+			$current=db2::findOne(phi::$conf['dbname'],'cache',array('id'=>'systemstats','invalid_ts'=>array('$gte'=>time())));
+			if($current&&phi::$conf['prod']){//no caching in dev
+				#phi::log('fromchace');
+				$tdata=$current['data'];
+			}else{
+				#phi::log('rebuild system stats');
+				$tdata=array(
+					'members'=>phi::formatNumber(db2::count(phi::$conf['dbname'],'user',array())),
+					'events'=>phi::formatNumber(db2::count(phi::$conf['dbname'],'event',array())),
+					'gifts'=>phi::formatNumber(db2::count(phi::$conf['dbname'],'exchange',array())),
+					'needs'=>phi::formatNumber(db2::count(phi::$conf['dbname'],'need',array())),
+					'offers'=>phi::formatNumber(db2::count(phi::$conf['dbname'],'offer',array()))
+				);
+				db2::update(phi::$conf['dbname'],'cache',array('id'=>'systemstats'),array('$set'=>array('id'=>'systemstats','invalid_ts'=>strtotime('+10 minutes'),'data'=>$tdata)),array('upsert'=>true));
+			}
+			return array('success'=>true,'data'=>$tdata,'url'=>'https://app.'.phi::$conf['domain'].'/emailsettings/'.(isset($data['email_token'])?$data['email_token']:''));
+		}
+		public static function processModuleData($data,$conf,$preview_opts=false){
+			include_once(ROOT.$conf['modulePath'].'/renderer.php');
+			foreach ($conf['module'] as $k => $v){
+				if(isset($v['path'])){
+					$path=ROOT.$v['path'];
+					if(!isset($apis[$v['class']])){
+						if(is_file($path)){
+							include_once($path);
+							$apim=strtoupper($v['class']);
+							$apis[$v['class']]=new $apim();
+						}else{
+							phi::log('invalid class path processHook');
+						}
+					}
+					if(isset($tdata)) unset($tdata);
+					if(isset($apis[$v['class']])){
+						if(method_exists($v['class'],$v['method'])){
+							if($preview_opts) $data['_preview']=1;
+							$method=$v['method'];
+							$tdata=$apis[$v['class']]->$method($data);
+							if(isset($conf['returnData'])&&$conf['returnData']){
+								$data['module'][$k]=$tdata;
+							}else{
+								if(isset($v['render2'])){
+									if($tdata) $data['module'][$k]=emailTemplateRenderer::render2($k,$tdata);
+								}else{
+									$data['module'][$k]=emailTemplateRenderer::render($k,$tdata);
+								}
+							}
+						}else{
+							phi::log('invalid method path processHook');
+						}
+					}
+				}else{//use template data directly!
+					if(isset($v['render2'])){
+						$data['module'][$k]=emailTemplateRenderer::render2($k,$data);
+					}else{
+						$data['module'][$k]=emailTemplateRenderer::render($k,$data);
+					}
+				}
+				//phi::log('data '.json_encode($tdata).' '.$v['preventHookOnNullOrError']);
+				if((!isset($tdata)||!$tdata||isset($tdata['error']))&&isset($v['preventHookOnNullOrError'])){
+					//phi::log('prevent hook!');
+					return array('error'=>'prevent_hook','hook'=>$v);
+				}
+				if(!isset($data['module'][$k])) $data['module'][$k]='';
+			}
+			#die(json_encode($data));
+			return $data;
+		}
+		public static function getBadge($r){
+			$d=phi::ensure($r,array(),1,array('self::read::badge'));
+			$badges=db2::toList(db2::find(phi::$conf['dbname'],'badgecount',array('uid'=>$r['auth']['uid'])));
+			if($badges){
+				foreach ($badges as $k => $v) {
+					if(isset($badge)) unset($badge);
+					$badge['total']=0;
+					if(isset($v['notification'])){
+						$badge['total']+=$v['notification'];
+						$badge['notification']=$v['notification'];
+					}else{
+						$badge['notification']=0;
+					}
+					if(isset($v['chat_count'])){
+						$badge['total']+=$v['chat_count'];
+						$badge['chat_count']=$v['chat_count'];
+					}else{
+						$badge['chat_count']=0;
+					}
+					if(isset($v['chat'])&&sizeof($v['chat'])) $badge['chat']=$v['chat'];
+					$data[$v['id']]=$badge;
+				}
+			}else{
+				$data=false;
+			}
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function load($r,$id,$schema){
+			include_once(ROOT.'/api/class/formbuilder.php');
+			$res=formbuilder::load(array(
+				'auth'=>$r['auth'],
+				'qs'=>array(
+					'id'=>$id,
+					'schema'=>$schema
+				)
+			));
+			if(isset($res['error'])) return $res;
+			return $res['current'];
+		}
+		public static function processHook($r,$preview_opts=false){
+			if($preview_opts){
+				$conf=db2::findOne(phi::$conf['dbname'],'system_hooks',array('id'=>$preview_opts['id']));
+				if(!$conf) return array('error'=>'invalid_system_hook');
+				$odata=$data=self::fakeSystemHookData($conf);
+				if(!$data) return array('error'=>'nodata:fakeSystemHookData');
+				$q=array('system_id'=>$conf['id']);
+				$payload=false;
+			}else{
+				$d=phi::ensure($r,array('id'),true,array('internal'));
+				$item=db2::findOne(phi::$conf['dbname'],'scheduled_jobs',array('id'=>$d['id']));
+				if(!$item) return array('error'=>'invalid_item');
+				$odata=$data=$item['opts']['data'];
+				$conf=db2::findOne(phi::$conf['dbname'],'system_hooks',array('id'=>$item['opts']['id']));
+				$q=array('system_id'=>$conf['id'],'live'=>1);
+				$payload=(isset($item['payload'])&&$item['payload'])?$item['payload']:false;
+			}
+			if(!$conf) return array('error'=>'invalid_system_hook');
+			if(isset($conf['graph'])){
+				if(isset($conf['graph']['to.id'])){
+					$conf['graph']['to.id']['fields']['email_invalid']=1;
+				}
+				$data=db2::graphOne(phi::$conf['dbname'],$data,$conf['graph']);
+				if($data&&isset($conf['graph']['to>id'])){
+					$data=phi::dotSet('to.data.firstname',$data,phi::getFirstName(phi::dotGet('to.data.name',$data)));
+				}
+				if($data&&isset($conf['graph']['from>id'])){
+					$data=phi::dotSet('from.data.firstname',$data,phi::getFirstName(phi::dotGet('from.data.name',$data)));
+				}
+			}
+			#phi::log($data);
+			if(isset($conf['graph2'])){
+				$data=db2::graphOne(phi::$conf['dbname'],$data,$conf['graph2']);
+			}
+			if(isset($preview_opts['user'])){
+				if(isset($conf['tofield'])){
+					$data=phi::dotSet($conf['tofield'],$data,$preview_opts['user']);
+				}else{
+					$data['to']['data']=$preview_opts['user'];
+				}
+				//phi::log($data);
+			}
+			if(isset($conf['tofield'])){
+				$to=phi::dotGet($conf['tofield'],$data);
+				$data['email_token']=$to['id'].'/'.phi::getEmailToken($to['id']);
+			}
+			#phi::log($data);
+			if(isset($conf['module'])){
+				$data=self::processModuleData($data,$conf,$preview_opts);
+				if(isset($data['error'])) return $data;
+			}
+			if(isset($conf['process'])){
+				$data=self::processHookData($conf['process'],$data);
+			}
+			//add in view URL info!
+			if((isset($conf['view'])&&$conf['view'])||$payload){
+				$data['view_url']=self::getViewUrl($conf,$data,$payload);
+			}
+			if(isset($conf['no_header'])&&$conf['no_header']){
+				$data['display_header']='display:none;';
+			}
+			// if(!isset($data['to']['data']['id'])||!$data['to']['data']['id']){
+			// 	phi::log('invalid email for user for hook ['.$d['id'].']');
+			// 	return array('error'=>'invalid_user');
+			// }
+			if(isset($conf['route'])&&$conf['route']){
+				$data['route']=phi::parseString($conf['route'],$data);//
+			}
+			if(isset($r['qs']['debug'])) API::toHeaders(json_encode(['success'=>true,'data'=>$data],JSON_UNESCAPED_UNICODE));
+			#die(json_encode($data));
+			//add in link info!
+			if(isset($conf['route'])){
+				//phi::log('add link info for ['.$data['app_id'].']!');
+				include_once(ROOT.'/api/app.php');
+				if(isset($data['app_id'])){
+					$data['link']='https://app.'.phi::$conf['domain'].'/link?app='.$data['app_id'].'&path='.$data['route'];
+					//phi::log($data['link']);
+				}else{
+					phi::log('missing appid for scheduled_job ['.$d['id'].']');
+				}
+			}
+			$data['download_link']='https://app.'.phi::$conf['domain'].'/download';
+			#phi::log($conf);
+			//get users
+			#die(json_encode($data));
+			#phi::log('DATA: '.json_encode($data));
+			#die(json_encode($data));
+			// //admin email
+			$notification=db2::findOne(phi::$conf['dbname'],'admin_notification',$q);
+			if(!$notification){
+				phi::log('invalid notification '.json_encode($q));
+				return false;
+			}
+			if(isset($notification['app_pic'])){
+				$data['pic']=phi::parseString($notification['app_pic'],$data);//
+			}
+			if(!isset($conf['tofield'])){
+				return phi::log('invalid tofield for hook ['.$conf['id'].']');
+			}
+			$touser=phi::dotGet($conf['tofield'],$data);
+			$cu_settings=db2::findOne(phi::$conf['dbname'],'user_settings',array('id'=>$touser['id']));
+			if(!isset($notification['notification_type'])) $notification['notification_type']='general';
+			if($notification['email_enabled']){
+				if(isset($data['_override']['email_subject'])){
+					$notification['email_subject']=$data['_override']['email_subject'];
+				}
+				if(!isset($data['to']['data']['email_invalid'])||!isset($data['to']['data']['email'])){
+					//phi::log('send admin email!');
+					//die(json_encode($data));
+					if(!isset($notification['email_subject'])||!$notification['email_subject']){
+						phi::log('notification ['.$notification['id'].'] missing email_subject');
+					}else if(!isset($notification['email_message'])||!$notification['email_message']){
+						phi::log('notification ['.$notification['id'].'] missing email_message');
+					}else{
+						$data['api']='https://api.'.phi::$conf['domain'];
+						if(isset($data['_override']['email_subject'])){
+							$data['htmlcontent']=$data['_override']['email_message'];
+						}else{
+							$data['htmlcontent']=$notification['email_message'];
+						}
+						if(isset($conf['include_footer'])){
+							$data['footer']=$data['module']['footer'];
+						}
+						//compare user prefs
+						if(isset($cu_settings['email'][$notification['notification_type']])&&!(int) $cu_settings['email'][$notification['notification_type']]&&!phi::$previewEmail){
+							//phi::log('user ['.$data['user']['id'].'] disabled email type ['.$data['email_type'].']');
+							//return array('success'=>true,'message'=>'email supressed');
+							#phi::log('user ['.$data['to']['data']['id'].'] disabled email ['.$notification['notification_type'].']');
+						}else if(isset($cu_settings['email']['all'])&&!(int) $cu_settings['email']['all']){
+							#phi::log('user ['.$data['to']['data']['id'].'] disabled email [all]');
+							return array('success'=>true,'message'=>'email supressed');
+						}else{
+							if(isset($conf['reply_to'])&&phi::dotGet($conf['reply_to'],$data)){
+								$replyTo=phi::dotGet($conf['reply_to'],$data);
+							}
+							$sendinfo=array(
+								'to'=>array($touser['email']),
+								'subject'=>phi::renderRedactorContent($notification['email_subject'],$data),
+								'from'=>phi::$conf['no_reply'],
+								'replyTo'=>phi::$conf['no_reply']
+							);
+							if(isset($conf['attach'])){//dont do attachments until ics figured out!
+								foreach ($conf['attach'] as $k => $v) {
+									if($v=='event_invite') continue;//disable invite until timexone figured out
+									switch($v){
+										case 'event_tickets':
+											$out='/tmp/'.md5(time().$data['receipt']['id']).'.pdf';
+											$tdata=array(
+												'url'=>'https://render.'.phi::$conf['domain'].'/ticket/'.$data['receipt']['id'].'?token='.phi::$conf['admin_token'],
+												'out'=>$out
+											);
+											#phi::log($data);
+											if(!phi::$debugEmail) $res=phi::execNode2('/usr/bin/node '.ROOT.'/node/pdf.js [data]',$tdata);
+											if(is_file($out)) $attachments[]=array('file'=>$out,'name'=>'tickets.pdf');
+											if(isset($attachments)) $sendinfo['attachments']=$attachments;
+										break;
+										case 'event_invite':
+											include_once(ROOT.'/classes/ics.php');
+											$key=md5(time().$data['event']['id'].$touser['email']);
+											$outics='/tmp/'.$key.'.ics';
+											$icsd=array(
+												'id'=>$data['event']['id'],
+												'title'=>$data['event']['name'],
+												'start'=>$data['event']['start'],
+												'end'=>(isset($data['event']['end']))?$data['event']['end']:'',
+												'location'=>'',
+												'description'=>$data['event']['description'],
+												'link'=>'https://app.'.phi::$conf['domain'].'/event/'.$data['event']['id'],
+												'filename'=>$outics
+											);
+											#phi::log($icsd);
+											$ics=ICS::saveEvent($icsd);
+											if(is_file($outics)) $attachments[]=array('file'=>$outics,'name'=>'event.ics');
+											if(isset($attachments)) $sendinfo['attachments']=$attachments;
+										break;
+										default:
+											phi::log('invalid attachment ['.$v.']');
+										break;
+									}
+								}
+							}
+							if(isset($data['_override']['email_header'])){
+								$data['header_img']=phi::getImg($data['_override']['email_header'],'header');
+							}
+							phi::mail(phi::$conf['dbname'],$notification['id'],array(
+								'sitepath'=>phi::$conf['root'].'/sites/one_core',
+								'template'=>'massemail.txt',
+								'vars'=>$data
+							),$sendinfo);
+						}
+					}
+				}else{
+					if(!isset($data['to']['data']['email'])){
+						phi::log($data['to']['data']['name'].' doesnt have an email associated');
+					}else{
+						phi::log('Disabled email ['.$data['to']['data']['email'].'] because email_invalid from bounce');
+					}
+				}
+			}
+			if($notification['app_enabled']){
+				//generate message/title!
+				$user_notice=array(
+					'to'=>$data['to']['data']['id'],
+					'notice_id'=>$notification['system_id'],
+					'data'=>$odata
+				);
+				if(isset($notification['unique_key'])){
+					$user_notice['unique_key']=phi::renderRedactorContent($notification['unique_key'],$data);
+				}
+				//get user devices and send push!
+				if(isset($cu_settings['app'][$notification['notification_type']])&&!(int) $cu_settings['app'][$notification['notification_type']]&&!phi::$previewEmail){
+					#phi::log('user ['.$data['to']['data']['id'].'] disabled app ['.$notification['notification_type'].']');
+						//phi::log('user ['.$data['user']['id'].'] disabled email type ['.$data['email_type'].']');
+						//return array('success'=>true,'message'=>'email supressed');
+				}else{
+					//add app notification
+					self::save('notification',$user_notice);
+				}
+
+				//send push notification if we can
+				if(isset($cu_settings['push'][$notification['notification_type']])&&!(int) $cu_settings['push'][$notification['notification_type']]&&!phi::$previewEmail){
+					#phi::log('user ['.$data['to']['data']['id'].'] disabled push ['.$notification['notification_type'].']');
+						//phi::log('user ['.$data['user']['id'].'] disabled email type ['.$data['email_type'].']');
+						//return array('success'=>true,'message'=>'email supressed');
+				}else{
+					if(!isset($notification['push_title'])||!$notification['push_title']){
+						phi::log('notification ['.$notification['id'].'] missing push_title');
+					}else if(!isset($notification['push_message'])||!$notification['push_message']){
+						phi::log('notification ['.$notification['id'].'] missing push_message');
+					}else{
+						//send it!
+						//get devices
+						$devices=db2::toList(db2::find(phi::$conf['dbname'],'device',array('uid'=>$data['to']['data']['id'])));
+						// if(isset($notice['channel'])){
+						// 	phi::push('',$notice['channel'],array('update'=>true));
+						// }
+						$count=self::getPushCount($data['to']['data']['id'],array('notification'=>1));//even if there are no devices, the count should incriment!
+						//phi::push($to,'badge',array('type'=>'update','identity'=>$user['id'],'data'=>$count));//utilize web sockets to send update directly!
+						$bc=self::getUserBadgeCount(array($data['to']['data']['id']));
+						$data['payload']=array(
+							'route'=>(isset($data['route']))?$data['route']:'',
+							'pic'=>(isset($notice['pic']))?$notice['pic']:''
+						);
+						phi::sendPush($devices,phi::renderRedactorContent($notification['push_message'],$data),'',$bc[$data['to']['data']['id']],'',phi::renderRedactorContent($notification['push_title'],$data),$data['payload'],$data['to']['data']['id']);
+					
+					}
+				}
+			}
+			//webhooks!
+			//see if anyone else out there is listening!
+			if(phi::$conf['prod']){
+				return array('success'=>true,'message'=>'Successfully sent!');
+			}else{
+				return array('success'=>true,'message'=>'Successfully sent!');
+			}
+		}
+		public static function getUserBadgeCount($uids){
+			#die(json_encode(db2::find(phi::$conf['dbname'],'badgecount',array('uid'=>array('$in'=>$uids)))));
+			$l=db2::toList(db2::find(phi::$conf['dbname'],'badgecount',array('uid'=>array('$in'=>$uids))));
+			foreach ($uids as $k => $v) {
+				$c[$v]=0;
+			}
+			if($l){
+				foreach ($l as $k => $v) {
+					if(isset($v['notification'])) $c[$v['uid']]+=(int) $v['notification'];
+					if(isset($v['chat_count'])) $c[$v['uid']]+=(int) $v['chat_count'];
+				}
+			}
+			if(!isset($c)) $c=array();
+			return $c;
+		}
+		public static function setLastActive($profileid){
+	    	$r=db2::update(phi::$conf['dbname'],'user',array('id'=>$profileid),array('$set'=>array('id'=>$profileid,'la'=>time())));
+	    }
+	    public static function setLastActivePage($profileid,$pageid){
+	    	db2::update(phi::$conf['dbname'],'page_members',array('id'=>$pageid.'_'.$profileid),array('$set'=>array('id'=>$pageid.'_'.$profileid,'la'=>time())),array('upsert'=>true));//create a long table...can be used for data usagge metrics
+	    }
+	    public static function saveStat($r){
+	    	$d=phi::ensure($r,['stat']);
+	    	ONE_CORE::save('stat',$d['stat'],2);//ensure silent fail
+	    	return ['success'=>true];
+	    }
+	    public static function createStat($opts){
+	    	ONE_CORE::save('stat',$opts,2);//ensure silent fail
+	    }
+		public static function pageLoad($r,$page_type,$page_id){
+	    	ONE_CORE::createStat([
+				'page'=>[
+					'type'=>'user',
+					'id'=>(isset($r['auth']['uid']))?$r['auth']['uid']:'anon'
+				],
+				'action'=>'pageload',
+				'link'=>[
+					'type'=>$page_type,
+					'id'=>$page_id
+				]
+			]);
+			if(isset($r['auth']['uid'])){
+				$key='pageload_unique_'.$page_id.'_'.$r['auth']['uid'];
+			}else if(isset($r['qs']['token'])){
+				$key='pageload_unique_'.$page_id.'_'.$r['qs']['token'];//anon token, butwill be unique and stay with browser
+			}
+			if(isset($key)) ONE_CORE::createStat([
+				'page'=>[
+					'type'=>'user',
+					'id'=>(isset($r['auth']['uid']))?$r['auth']['uid']:'anon'
+				],
+				'unique_key'=>$key,
+				'action'=>'pageload_unique',
+				'link'=>[
+					'type'=>$page_type,
+					'id'=>$page_id
+				]
+			]);
+	    }
+		public static function getPushCount($to_uid,$updates=false,$sendpush=1,$admin_uid=false){
+			if($to_uid[0]=='G'){
+				$badge_id=$to_uid.'_'.$admin_uid;
+				$identity=$admin_uid;
+			}else{
+				$badge_id=$to_uid;
+				$identity=$to_uid;
+			}
+			$badge=db2::findOne(phi::$conf['dbname'],'badgecount',array('id'=>$badge_id));
+			if(!isset($badge['notification'])) $badge['notification']=0;
+			if($updates){
+				foreach ($updates as $type => $inc) {
+					if($type=='chat'){//direct setting, not inc
+						foreach ($inc as $k => $v) {
+							if($v==0){
+								$toupdate['$unset']['chat.'.$k]=1;
+								if(isset($badge['chat'][$k])) unset($badge['chat'][$k]);
+							}else{
+								$badge['chat'][$k]=$v;
+								$toupdate['$set']['chat.'.$k]=$v;
+							}
+						}
+					}else{
+						if($inc!=0){
+							$badge[$type]=$badge[$type]+$inc;
+							if($badge[$type]>=0){
+								$toupdate['$inc'][$type]=$inc;
+							}else{//ensure it doesnt go below 0...
+								phi::log('badgecount going less than 0 for ['.$to_uid.'] ['.$type.']');
+								if($badge[$type]!=0){
+									$toupdate['$set'][$type]=0;
+								}
+								$badge[$type]=0;
+							}
+						}else{
+							if($badge[$type]!=0){
+								$badge[$type]=0;
+								$toupdate['$set'][$type]=0;
+							}
+						}
+					}
+				}
+				$chatcount=0;
+				if(isset($badge['chat'])) foreach ($badge['chat'] as $k => $v) {
+					$chatcount+=$v;
+				}
+				$badge['chat_count']=$chatcount;
+				if(isset($toupdate)&&$sendpush){
+					$toupdate['$set']['uid']=$identity;
+					$toupdate['$set']['chat_count']=$badge['chat_count'];
+					#phi::log('badge'.json_encode($badge_id));
+					db2::update(phi::$conf['dbname'],'badgecount',array('id'=>$badge_id),$toupdate,array('upsert'=>true));
+					phi::push($identity,'badge',array('type'=>'update','identity'=>$to_uid,'data'=>$badge));//utilize web sockets to send 	update directly!
+				}	
+				$badge['count']=$badge['chat_count']+$badge['notification'];
+			}else{
+				$chatcount=0;
+				if(isset($badge['chat'])) foreach ($badge['chat'] as $k => $v) {
+					$chatcount+=$v;
+				}
+				$badge['chat_count']=$chatcount;
+			}
+			return $badge;
+		}
+		public static function reset($r){
+			$profile=db2::findOne(phi::$conf['dbname'],'user',array('email'=>strtolower($r['qs']['un'])));
+			if($profile){
+				//send reset email!
+				$profile['name']=phi::getFirstName($profile['name']);
+				$id=phi::niceGUID(array(
+					'len'=>8,
+					'pre'=>'R'
+				));
+				//store it!
+				if(!isset($r['qs']['redirect'])) $r['qs']['redirect']='https://'.phi::$conf['domain'];
+				db2::save(phi::$conf['dbname'],'reset',array('id'=>$id,'ts'=>time(),'uid'=>$profile['id'],'redirect'=>$r['qs']['redirect']));
+				$content=phi::render2(array(
+					'sitepath'=>ROOT.'/sites/one_core',
+					'template'=>'reset_password.txt',
+					'vars'=>array(
+						'user'=>phi::keepFields($profile,array('name','pic')),
+						'link'=>'https://app.'.phi::$conf['domain'].'/reset/'.$id
+					)
+				));
+				$sendto=$profile['email'];
+				$subject='Password Reset';
+				$replyto='One App <app@onebecoming.one>';
+				phi::sendMail(array(
+					'to'=>$sendto,
+					'subject'=>$subject,
+					'message'=>$content,
+					'from'=>$replyto
+				));//send via php emailer
+				return array('success'=>true);
+			}else{
+				return array('error'=>'user_not_found');
+			}
+		}
+		public static function setLastActiveToken($token){
+	    	db2::update(phi::$conf['dbname'],'token',array('id'=>$token),array('$set'=>array('tsu'=>db2::tsToTime(time()))));
+	    }
+		public static function logout($r){
+			if(!$r['auth']) return array('error'=>'invalid_auth');
+			db2::remove(phi::$conf['dbname'],'token',array('id'=>$r['auth']['id']));
+			//dis-associate devices!!!!!!!
+			if(isset($r['qs']['did'])&&$r['qs']['did']){
+				db2::update(phi::$conf['dbname'],'device',array('id'=>$r['qs']['did']),array('$unset'=>array('uid'=>1)));
+			}
+			if(isset($r['qs']['cid'])&&$r['qs']['cid']){
+				db2::update(phi::$conf['dbname'],'call_device',array('id'=>$r['qs']['cid']),array('$unset'=>array('uid'=>1)));
+			}
+			return array('success'=>true);
+		}
+		public static function getUser($uid,$fields=array('name','pic','id'),$force=false){
+			if(!isset($uid)||!$uid) return false;
+			if($uid[0]=='A'){
+				return phi::keepFields(db2::findOne(phi::$conf['dbname'],'ticket_anon',array('id'=>$uid)),array('id','name','pic'));
+			}
+			if($uid[0]=='G'){
+				$p=db2::findOne(phi::$conf['dbname'],'page',array('id'=>$uid),array('projection'=>array('id'=>1,'name'=>1,'pic'=>1)));
+				if(!$p) return false;
+				return phi::keepFields($p,array('id','name','pic'));
+			}
+			if(!isset(phi::$cache[$uid])||$force) phi::$cache[$uid]=phi::keepFields(db2::findOne(phi::$conf['dbname'],'user',array('id'=>$uid)),$fields);
+			//add in current active!
+			if(!isset(phi::$cache[$uid]['pic'])) phi::$cache[$uid]['pic']='https://s3.amazonaws.com/one-light/static/blank_user.jpg';
+			$current=phi::$cache[$uid];
+			//$current['online']=self::isUserOnline($uid);
+			//phi::log($current);
+			return $current;
+		}
+		public static function getUserData($uid,$requestor,$fields,$add=false){
+			//based on $fields, get all collections that are needed!
+			foreach (self::$usermap as $k => $v) {
+				foreach ($v as $tk => $tv) {
+					$field_map[$tv]=$k;
+				}
+			}
+			//build collections needed!
+			foreach ($fields as $k => $v) {
+				if(isset($field_map[$v])){
+					$coll=$field_map[$v];
+					$colls[$coll][]=$v;
+				}else{
+					phi::log('Invalid field/coll for ['.$v.']');
+					API::toHeaders(array('error'=>'invalid_data_object','field'=>$v));
+				}
+			}
+			//awseome, now we have proper mapping to get/return user_data
+			foreach ($colls as $coll => $values) {
+				$d=phi::keepFields(db2::findOne(phi::$conf['dbname'],$coll,array('id'=>$uid)),$values);
+				if($d&&sizeof($d)) foreach ($d as $k => $v) {
+					$data[$k]=$v;//map to output!
+				}
+			}
+			#die(json_encode($data));
+			//ensure any permissions [tag][performance]
+			if(isset($data)){
+				if($uid!=$requestor){
+					phi::time('permmissioncheck');
+					$lists=db2::findOne(phi::$conf['dbname'],'user_friends',array('id'=>$uid));
+					$granted=db2::findOne(phi::$conf['dbname'],'friend',array('id'=>$requestor.'_'.$uid),array('projection'=>array('perms'=>1)));
+					foreach ($data as $k => $v) {
+						if(!self::checkPermission($lists,(isset($data[$k]['perm']))?$data[$k]['perm']:'',$granted,$k,$requestor)){
+							if($k=='birthday'){//keep sign!
+								if(isset($data[$k]['birthday'])) unset($data[$k]['birthday']);
+							}else{
+								unset($data[$k]);
+							}
+						}
+					}
+					phi::time('permmissioncheck',.5);
+				}
+			}
+			//die(json_encode($add));
+			//add in any mapped information
+			if($add&&in_array('location_info', $add)&&isset($data['location'])){
+				$data['location_info']=db2::findOne(phi::$conf['dbname'],'place',array('id'=>$data['location']));
+			}
+			if($add&&in_array('page_info', $add)&&isset($data['pages'])){
+				$data['page_info']=db2::toList(db2::find(phi::$conf['dbname'],'page',array('id'=>array('$in'=>$data['pages'])),array('projection'=>array('id'=>1,'name'=>1,'pic'=>1,'callout'=>1))),false,'id');
+			}
+			if($add&&in_array('intro_video', $add)&&isset($data['intro_video'])){
+				$data['intro_video']=db2::findOne(phi::$conf['dbname'],'media',array('id'=>$data['intro_video']['id']));
+			}
+			if($add&&in_array('address_info', $add)&&isset($data['address'])){
+				$data['address']['info']=db2::findOne(phi::$conf['dbname'],'place',array('id'=>$data['address']['id']));
+			}
+			if($add&&in_array('plan_info', $add)&&isset($data['plan'])){
+				$data['plan_info']=db2::findOne(phi::$conf['dbname'],'products',array('id'=>$data['plan']));
+			}
+			if($add&&in_array('plan_data', $add)){
+				$data['plan_data']=db2::findOne(phi::$conf['dbname'],'plan',array('id'=>$uid));
+			}
+			if($add&&in_array('age', $add)){
+				$data['age']=self::calcAge($uid,$data);
+			}
+			if(isset($data['skills'])){
+				$data['skills_info']=db2::toList(db2::find(phi::$conf['dbname'],'skills',array('id'=>array('$in'=>$data['skills'])),array('projection'=>array('id'=>1,'name'=>1))));
+				$d=db2::findOne(phi::$conf['dbname'],'tagvote_results',array('id'=>$uid.'_skills'));
+				if($d) $data['skills_stats']=$d['results'];
+				$d2=db2::findOne(phi::$conf['dbname'],'tagvote_user',array('id'=>$uid.'_skills_'.$requestor));
+				if($d2) $data['skills_selected']=$d2['tags'];
+			}
+			//if(isset($data['location'])) unset($data['location']);
+			//decrypt any info..
+			if(!isset($data)) $data=false;
+			return $data;
+		}
+		public static function getIdType($id){
+			$type='';
+			switch($id[0]){
+				case 'U':
+					$type='user';
+				break;
+				case 'E':
+					$type='event';
+				break;
+				case 'G':
+					$type='page';
+				break;
+				default:
+					//phi::log('custom id ['.$id.'] assuming page');
+					$type='page';
+				break;
+			}
+			return $type;
+		}
+		public static function deleteUser($uid){
+			db2::remove(DB,'user',array('id'=>$uid));
+			//remove any other info!
+			return array('success'=>true);
+		}
+		public static function isAdmin($r){
+			if($r['auth']['uid']=='UIAMPLAYER1') return true;
+			return false;
+		}
+		public static function getUserRoles($id,$user=false){
+			if($id=='internal') return array('internal');
+			if(!$user){
+				$user=db2::findOne(DB,'user',array('id'=>$id),array('projection'=>array('roles'=>1,'level'=>1)));
+			}
+			if(isset($user['roles'])) $roles=$user['roles'];
+			else $roles=array();
+			if(!in_array('human', $roles)) $roles[]='human';
+			if(isset($user['level'])&&!in_array($user['level'], $roles)) $roles[]=$user['level'];
+			return $roles;
+		}
+		public static function login($r,$force_id=false){
+			$db=phi::$conf['dbname'];
+			if(!isset($r['qs']['appid'])) return array('error'=>'invalid_app');
+			$app=phi::getApp($r['qs']['appid']);
+			if(!$app) return array('error'=>'invalid_app');
+			$login=false;
+			if(isset($r['qs']['preview'])&&$r['qs']['preview']){
+				$user=db2::findOne($db,'user',array('email'=>$r['qs']['un']));
+				if($user){
+					$haspic=(isset($user['pic']['path'])&&$user['pic']['path']!="/static/blank_user")?1:0;
+					if(isset($user['pass'])) return array('success'=>true);
+					return array('error'=>'must_set_password','hasPic'=>$haspic);
+				}
+				return array('error'=>'user_not_found');
+			}
+			if($force_id){
+				$user=array('id'=>$force_id);
+			}else if(isset($r['qs']['uid'])){
+				if(!isset($r['qs']['pw'])) return array('error'=>'Invalid Password');
+				$user=array('pass'=>md5($r['qs']['pw'].AUTH_SALT),'id'=>$r['qs']['uid']);
+				if(!phi::$conf['prod']&&$r['qs']['pw']=='grouplove') unset($user['pass']);
+			}else if(isset($r['qs']['magic'])){
+				$m=db2::findOne($db,'magic',array('id'=>$r['qs']['magic']));
+				if(!$m){
+					return array('error'=>'invalid_login');
+				}
+				if(phi::$conf['prod']) db2::remove($db,'magic',array('id'=>$r['qs']['magic']));//only allow it to be used once!!!
+				$user=array('id'=>$m['uid']);
+			}else if(isset($r['qs']['token'])&&$r['auth']){
+				$user=array('id'=>$r['auth']['uid']);
+			}else if(isset($r['qs']['secret'])){
+				$u=db2::findOne($db,'token',array('id'=>$r['qs']['secret']));
+				$user=array('id'=>$u['uid']);
+			}else{
+				if(!isset($r['qs']['pw'])) return array('error'=>'Invalid Password');
+				if(!isset($r['qs']['un'])) return array('error'=>'Please enter a valid email.');
+				$user=array('pass'=>md5($r['qs']['pw'].AUTH_SALT));
+				if(strpos($r['qs']['un'], '@')!==false) $unf='email';
+				else $unf='aka';//allow login by aka
+				$user[$unf]=trim(strtolower($r['qs']['un']));
+				if(!phi::$conf['prod']&&$r['qs']['pw']=='grouplove') unset($user['pass']);
+				$login=true;
+			}
+	    	$profile=db2::findOne($db,'user',$user);
+	    	if(!$profile&&isset($user['email'])){//look up by email and ensure they just dont have a pw set!
+	    		$tprofile=db2::findOne($db,'user',array('email'=>$user['email']));
+	    		if($tprofile&&!isset($tprofile['pass'])) return array('error'=>'must_set_password');
+	    	}
+	    	if(!$profile){
+	    		$result['error']='user_not_found';
+	    	}else{
+	    		$app=phi::getApp($r['qs']['appid']);
+	    		if(!isset($r['qs']['check'])){
+		    		if(isset($r['auth'])&&$r['auth']&&!$force_id) $token=$r['auth'];
+		    		else $token=phi::registerToApp($profile['id'],$r['qs']['appid']);
+		    		if(!$token){
+		    			return array('error'=>'You do not have access to this page');
+		    		}
+		    		if(isset($r['auth'])&&$r['auth']){
+		    			self::setLastActiveToken($token['id']);
+		    		}
+		    	}else{
+		    		//grab the most recently used token for this user
+		    		$tokens=db2::toOrderedList(db2::find($db,'token',array('uid'=>$profile['id'],'appid'=>$r['qs']['appid']),array('sort'=>array('tsu'=>-1),'limit'=>1)));
+		    		if($tokens){
+		    			$token=$tokens['list'][$tokens['order'][0]];
+		    		}else{//go ahead and register i guess..better to not break?!?
+		    			$token=phi::registerToApp($profile['id'],$r['qs']['appid']);
+		    		}
+
+		    	}
+		    	//add in scope permissions based on role!
+		    	if(!isset($token['scope'])){
+		    		$token['scope']=API::getScopes($profile['id'],$app);
+		    	}
+	    		switch ($r['qs']['appid']) {//return unique info
+	    			case '33ee6d44c844xx9765d9220619ae8c152f':
+	    				$result['profile']=phi::keepFields($profile,array('name','id','pic','roles'));
+						$result['profile']['_id']=$token['id'];
+						$result['profile']['scopes']=$token['scope'];
+						// $schemas=json_decode(file_get_contents(ROOT.'/_manage/schema.json'),1);
+						// $result['profile']['schema']=$schemas;
+	    			break;
+    				default:
+						$result['profile']=phi::keepFields($profile,array('name','id','pic','roles','level','waivers','storeTester','email','founder','health'));
+						$result['profile']['_id']=$token['id'];
+						$result['profile']['scopes']=$token['scope'];
+						$r['auth']['uid']=$result['profile']['id'];
+						$result['profile']['history']=self::getUserHistory($r);
+						$result['profile']['accounts']=db2::findOne(DB,'user_account',['id'=>$r['auth']['uid']]);
+						if($result['profile']['accounts']){
+							unset($result['profile']['accounts']['id']);
+							unset($result['profile']['accounts']['_id']);
+						}
+						$result['profile']['level_info']=db2::findOne(DB,'levels',array('id'=>$result['profile']['level']));
+						$schema=json_decode(file_get_contents(ROOT.'/_manage/schema.json'),1);
+						if(!isset($result['profile']['roles'])) $result['profile']['roles']=array();
+						$result['profile']['roles']=self::getUserRoles($result['profile']['id'],$result['profile']);
+						foreach ($schema as $k => $v) {
+							if(isset($v['roles'])){
+								$int=array_intersect($v['roles'], $result['profile']['roles']);
+
+								if(sizeof($int)){
+									if(((isset($v['dev'])&&!phi::$conf['prod'])||!isset($v['dev']))&&!isset($v['admin_only'])){
+										$v['id']=$k;
+										$schemas[$k]=$v;
+									}
+								}
+							}
+						}
+						if(isset($schemas)) $result['schema']=$schemas;
+					break;
+    			}
+	    		//self::setLastActive($profile['id']);
+	    		$result['success']=true;
+	    	}
+	    	if(isset($result['success'])&&isset($profile['storeTester'])){
+	    		if($login){
+		    		phi::log('Demo account login, token ['.$result['profile']['_id'].']');
+		    		phi::alertAdmin('Demo account login, token ['.$result['profile']['_id'].']');
+		    	}
+	    	}
+	    	return $result;
+	    }	
+	}
+?>

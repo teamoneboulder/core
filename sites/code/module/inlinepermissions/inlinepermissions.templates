@@ -1,0 +1,104 @@
+@@@inlinepermissions_row@@@
+<div style="width:100%;height:100%" class="themebg bottom" data-<%=template%>="<%=_tid%>">
+	<table style="width:100%;height:100%">
+		<tr>
+			<td class="renderto" style="vertical-align: top"></td>
+		</tr>
+	</table>
+</div>
+@@@inlinepermissions_rowview@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100%;">
+	<div class="themebg bottom">
+		<table style="width:100%;height:40px;" class="toprow">
+			<tr>
+				<td style="width:30px">
+					<div class="listicon" style="display: inline-block;"><i class="icon-right-open" style="font-size:20px"></i></div>
+				</td>
+				<td style="text-align: left;font-size:20px" class="currentpermission">
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%=$.fn.render({template:'inlinepermissions_list',data:{data:data,'type':'inline'},returntemplate:true})%>
+</div>
+@@@inlinepermissions_list@@@
+<div style="position: relative;text-align: left;background:white;color:#555" class="permlist">
+	<%if(!data.group_list.noextra){%>
+	<div class="extracontent">
+		<%if(!data.limit||data.limit.indexOf('public')>=0){%>
+		<div style="padding:5px;font-size:20px;" class="defaultitem toggler maintoggler <%if(data.permission&&data.permission.indexOf('public')>=0){%>checked<%}%>" data-type="public">
+			<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle;margin-right:8px">
+				<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+				<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+			</div>
+			<i class="icon-globe"></i> Public
+		</div>
+		<%}%>
+		<%if(!data.limit||data.limit.indexOf('friends')>=0){%>
+		<div style="padding:5px;font-size:20px;" class="defaultitem toggler maintoggler <%if(data.permission&&data.permission.indexOf('friends')>=0){%>checked<%}%>" data-type="friends">
+			<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle;margin-right:8px">
+				<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+				<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+			</div>
+			<i class="icon-friends-nectar"></i> Friends
+		</div>
+		<%}%>
+		<%if(data.limit&&data.limit.indexOf('followers')>=0){%>
+		<div style="padding:5px;font-size:20px;" class="defaultitem toggler maintoggler <%if(data.permission&&data.permission.indexOf('followers')>=0){%>checked<%}%>" data-type="followers">
+			<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle;margin-right:8px">
+				<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+				<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+			</div>
+			<i class="icon-rss"></i> Followers
+		</div>
+		<%}%>
+		<%if(!data.limit||data.limit.indexOf('private')>=0){%>
+		<%if(data.includePrivate){%>
+		<div style="padding:5px;font-size:20px;" class="defaultitem toggler maintoggler <%if(data.permission&&data.permission.indexOf('private')>=0){%>checked<%}%>" data-type="private">
+			<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle;margin-right:8px">
+				<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+				<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+			</div>
+			<i class="icon-lock"></i> Private
+		</div>
+		<%}%>
+		<%}%>
+	</div>
+	<%}%>
+	<%if(!data.limit||data.limit.indexOf('extra')>=0){%>
+	<div class="extralist" style="overflow:hidden;<%if(type=='button'&&false){%>display: none;<%}%>">
+		<div class="extralisttoggle">
+		<%for (var i = 0; i < data.group_list.order.length; i++) {
+			var item=data.group_list.list[data.group_list.order[i]];%>
+			<div style="padding:5px;font-size:20px;" class="toggler <%if(data.group_main){%>maintoggler<%}else{%>listtoggler<%}%> <%if(data.permission&&data.permission.indexOf(data.group_list.order[i])>=0){%>checked<%}%>" data-type="<%if(!data.group_main){%>list<%}else{%><%=data.group_list.order[i]%><%}%>" data-list="<%=data.group_list.order[i]%>">
+				<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle;margin-right:8px">
+					<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+					<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+				</div>
+				<i class="<%=modules.inlinepermissions_global.getIcon([item.id])%>"></i> <%=item.name%>
+			</div>
+		<%}%>
+		</div>
+	</div>
+	<%}%>
+</div>
+@@@inlinepermissions_button_view@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:11111">
+	<div class="sfit" style="z-index: 2">
+		<div style="position:absolute;bottom:100%;left:<%=(left)%>px;top:<%=top%>px;border-bottom:5px solid white;border-right:5px solid transparent;border-left:5px solid transparent;margin-top:-5px" class="arrow"></div>
+		<div style="padding:5px;background:white;position: absolute;top:<%=top%>px;width:250px;" class=" s-corner-all placer">
+			<i class="icon-cancel" style="font-size:20px;padding:12px 8px;position: absolute;top:0;right:0;color:#888" class="x_close"></i>
+			<div style="margin:2px;padding:3px;font-size:20px;border-bottom:1px solid #ccc;"><i class="icon-eye"></i> Who can see this?</div>
+			<div class="permscroller">
+				<div>
+					<%=$.fn.render({template:'inlinepermissions_list',data:{data:data,type:'button'},returntemplate:true})%>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="sfit background <%if(bgclass){%><%=bgclass%><%}%>" style="z-index: 1;background:rgba(55,55,55,.3);"></div>
+</div>
+@@@inlinepermissions_button@@@
+<div data-<%=template%>="<%=_tid%>" style="display: inline-block;margin:3px;padding:2px 4px;font-size:11px;border:1px solid #ccc" class="s-corner-all">
+	<div class="currentpermission" style="display: inline-block;"></div> <i class="icon-down-open"></i>
+</div>

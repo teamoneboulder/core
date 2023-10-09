@@ -1,0 +1,57 @@
+<?php
+	$s=$_SERVER;
+	include_once('../classes/settings.php');
+	include_once(phi::$conf['root'].'/api/api.php');
+	include_once('resizer.php');
+	//parse!
+	$r=API::parseRequest();
+	if(!isset($r['path'][0])){
+		phi::log('request');
+		API::toHeaders(array('error'=>'Invalid Query'));
+	}
+	if(isset($r['path'][1])&&$r['path'][1]=='favicon'){
+		$count=(isset($r['path'][2]))?$r['path'][2]:0;
+		$file='/tmp/favicon_'.$count.'.png';
+		if(is_file($file)&&!isset($r['qs']['nocache'])){
+			ImageResizer::outputToHeaders(array(
+				'src'=>$file,
+				'mime'=>'image/png'
+			));
+		}else{
+			//make image!
+			$src=phi::$conf['s3'].'/static/logo_small.png';
+			$url='https://img.'.phi::$conf['domain'].'/favicon/favicon.php?count='.$count.'&src='.urlencode($src);
+			$opts=array(
+                'url'=>$url,
+                'save'=>$file,
+                'size'=>array('width'=>100,'height'=>100)
+            );
+            $exec="/usr/local/bin/phantomjs --ssl-protocol=any --ignore-ssl-errors=true ".phi::$conf['root']."/node/render/image.js '".json_encode($opts)."'";
+            #die($exec);
+            exec($exec);
+            if(is_file($file)){
+	            ImageResizer::outputToHeaders(array(
+					'src'=>$file,
+					'mime'=>'image/png'
+				));
+	        }else{
+	        	phi::log('error generating favicon');
+	        	ImageResizer::outputToHeaders(array(
+					'url'=>$src,
+					'mime'=>'image/png'
+				));
+	        }
+		}
+	}else{
+		if(!sizeof($r['qs'])){
+			$out=array('error'=>'invalid_url');
+		}else{
+			if(isset($r['path'][1])&&$r['path'][1]=='qr'){
+				$out=ImageResizer::generateQR($r['qs']);
+			}else{
+				$out=ImageResizer::upload($r['qs']);
+			}
+		}
+		API::toHeaders($out);
+	}
+?>

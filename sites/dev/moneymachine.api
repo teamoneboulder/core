@@ -1,0 +1,103 @@
+<?php
+	class MONEYMACHINE{
+		public static function handleRequest($r){
+			switch ($r['path'][2]) {
+				case "feed":
+					$out=self::getList($r);
+				break;
+				case "save":
+					$out=self::save($r);
+				break;
+				case "load":
+					$out=self::load($r);
+				break;
+				case "blacklist":
+					$out=self::blacklist($r);
+				break;
+			}
+			if(!isset($out)) return ['error'=>'invalid_method'];
+			return $out;
+		}
+		public static function load($r){
+			$bl=db2::toOrderedList(db2::find('moneymachine','exchange',['blacklist'=>1]));
+			return ['success'=>true,'data'=>[
+				'blacklist'=>($bl)?$bl['order']:false
+			]];
+		}
+		public static function blacklist($r){
+			$d=phi::ensure($r,['id']);
+			#die(json_encode($d));
+			#die(json_encode(['id'=>$d['id']]));
+			$rr=db2::update('moneymachine','exchange',['id'=>$d['id']],['$set'=>['blacklist'=>1]]);
+			return ['success'=>true];
+		}
+		public static function save($r){
+			#phi::log('request');
+			$d=phi::ensure($r,['data']);
+			if(isset($d['data'])&&sizeof($d['data'])){
+				foreach($d['data'] as $k => $v){
+					$updates[]=[['id'=>$v['id']],['$set'=>$v]];
+					//add in save items for APR history
+					$save[]=[
+						'id'=>$v['id'],
+						'apr'=>$v['apr']['year'],
+						'ts'=>time()
+					];
+					$ud2[]=[
+						['id'=>$v['exchangeDomain']],
+						[
+							'$set'=>[
+								'id'=>$v['exchangeDomain'],
+								'link'=>$v['exchangeLink']
+							]
+						]
+					];
+				}
+				if($updates) db2::bulkUpdate('moneymachine','data',$updates);
+				if($ud2) db2::bulkUpdate('moneymachine','exchange',$ud2);
+				if($save) db2::bulkInsert('moneymachine','apr_data',$save);
+			}
+			return ['success'=>true];
+		}
+		public static function getList($r){
+			include_once(ROOT.'/api/class/formbuilder.php');
+			include_once(ROOT.'/sites/one_core/one_core.api');
+			$qs=array(
+				'schema'=>'data'
+			);
+			if(isset($r['qs']['last'])) $qs['last']=$r['qs']['last'];
+			if(isset($r['qs']['after'])) $qs['after']=$r['qs']['after'];
+			$q=[
+				'volume'=>['$gte'=>10000],
+				'apr.year'=>['$lte'=>20000]
+			];
+			if(isset($r['qs']['volume'])&&(int) $r['qs']['volume']){
+				$q['volume']['$gte']=(int) $r['qs']['volume'];
+			}
+			if(isset($r['qs']['tokens'])&&$r['qs']['tokens']){
+				if(isset($r['qs']['exact'])&&(int)$r['qs']['exact']){
+					$ts=explode(',',strtoupper($r['qs']['tokens']));
+					$q['tokens']['$size']=sizeof($ts);
+					$q['tokens']['$all']=$ts;
+				}else{
+					$q['tokens']['$all']=explode(',',strtoupper($r['qs']['tokens']));
+				}
+			}
+			if(isset($r['qs']['exact'])&&(int)$r['qs']['exact']&&sizeof($r['qs']['tokens'])==1){
+				unset($q['volume']);
+				unset($q['apr.year']);
+			}
+			$d=db2::toOrderedList(db2::find('moneymachine','exchange',['blacklist'=>1]));
+			if($d){
+				$q['exchangeDomain']=['$nin'=>$d['order']];
+			}
+			#die(json_encode($q));
+			return formbuilder::feed(array(
+				'auth'=>$r['auth'],
+				'qs'=>$qs
+			),$q,[
+				'sort'=>['apr.year'=>-1]
+			],'id');
+		}
+	}
+?>

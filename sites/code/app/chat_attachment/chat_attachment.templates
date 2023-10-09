@@ -1,0 +1,226 @@
+@@@chat_attachment_view@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit attachmentpage" style="z-index:10000">
+	<div class="bg sfit" style="z-index:1;background:#000;opacity: 0;"></div>
+	<div style="position:absolute;bottom:0;left:0;right:0;z-index:2;height:90vh;background: white;" class="pane l-corner-top-web">
+		<div style="border-bottom:1px solid #ccc;height:40px;">
+			<table style="width:100%;font-size:18px;height:100%;">
+				<tr>
+					<td style="width:40px;text-align: center;">
+						<div class="x_close" style="padding:5px;display: inline-block;"><i class="icon-cancel"></i></div>
+					</td>
+					<td style="text-align: center;padding:5px;">
+						Message <b><%=to.name.firstName()%></b>
+					</td>
+					<td style="width:40px;text-align: center;">
+						<div class="x_send" style="padding:5px;display: inline-block;"><i class="icon-send"></i></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div class="scroller" style="position: absolute;top:41px;left:0;right:0;bottom:0;">
+			<div>
+				<div>
+					<textarea style="width:100%;min-height:80px;resize:none;border:0px;font-size:20px;padding:10px;" placeholder="Enter message..." class="textarea appinput truebox"></textarea>
+				</div>
+				<div>
+					<%=modules.chat_attachment_global.render(attachment,true,container)%>
+				</div>
+				<div style="height:50vh" class="notonweb"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@chat_attachment_post@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="color:black;<%if(!this.feed){%>margin:5px auto;border-top:1px solid #ccc;border-bottom:1px solid #ccc;<%}%>" class="chatattachmentitem">
+		<div class="x_viewattachment">
+			<table style="width:100%;text-align: left;">
+				<%if(data.by&&data.by.data){%>
+				<tr>
+					<td style="width:50px;vertical-align:top">
+						<div class="coverimg" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(data.by.data.pic,'small')%>)"></div>
+					</td>
+					<td style="vertical-align:top;padding-top:3px">
+						<div style="font-size:14px;font-weight: bold"><%=data.by.data.name%></div>
+						<div style="padding-top:2px;padding-left:2px;font-size:11px"><span data-ts="<%=data._id%>"><%=modules.moment.format(data._id,'ago')%></span> <i class="<%=modules.inlinepermissions_global.getIcon(data.perms)%>"></i></div>
+					</td>
+					<td style="width:40px;text-align: center;vertical-align: middle;">
+						<i class="icon-right-open" style="font-size:20px"></i>
+					</td>
+				</tr>
+				<%}else if(data.page&&data.page.data){%>
+				<tr>
+					<td style="width:50px;vertical-align:top">
+						<div class="coverimg" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(data.page.data.pic,'small')%>)"></div>
+					</td>
+					<td style="vertical-align:top;padding-top:3px">
+						<div style="font-size:14px;font-weight: bold"><%=data.page.data.name%></div>
+						<div style="padding-top:2px;padding-left:2px;font-size:11px"><span data-ts="<%=data._id%>"><%=modules.moment.format(data._id,'ago')%></span></div>
+					</td>
+					<td style="width:40px;text-align: center;vertical-align: middle;">
+						<i class="icon-right-open" style="font-size:20px"></i>
+					</td>
+				</tr>
+				<%}%>
+			</table>
+		</div>
+		<div>
+		<%if(data.message){%>
+		<div class="postcontent ">
+			<%=modules.tools.wrapContent(modules.links_global.fixContent(modules.feed_global.parseMessage(data,false,1)),300)%>
+		</div>
+		<%}%>
+		<%if(data.media&&data.media.type&&data.media.data){%>
+		<div class="x_stopbubble">
+			<%=modules.chat_global.render(data,1)%>
+		</div>
+		<div style="height:6px;"></div>
+		<%}else{%>
+		<div style="padding:5px;" class="x_stopbubble">
+			<%=app.wrapContent(modules.links_global.fixContent(modules.feed_global.parseMessage(data,false,1),{addSpacing:1}),200)%>
+		</div>
+		<%}%>
+		</div>
+	</div>
+</div>
+@@@chat_attachment_page@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="color:black;margin:5px auto;border-top:1px solid #ccc;border-bottom:1px solid #ccc" class="chatattachmentitem">
+		<div class="x_viewattachment">
+			<table style="width:100%">
+				<tr>
+					<td style="width:70px;">
+						<div style="width:70px;height:100px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>)" class="coverimg"></div>
+					</td>
+					<td style="padding-left:10px;text-align: left;">
+						<div style="font-size:18px"><%=data.name%></div>
+						<div style="font-size:14px;padding:2px"><%=data.callout%></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+@@@chat_attachment_event@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="color:black;margin:5px auto;border-top:1px solid #ccc;border-bottom:1px solid #ccc" class="chatattachmentitem">
+		<div>
+			<div class="x_viewattachment">
+				<div style="background-image:url(<%=modules.tools.getImg(data.pic,'background')%>);width:100%;height:<%=modules.tools.getImgHeight(data.pic,{ar:2,units:'ar',container:container})%>px;position: relative;" class="coverimg">
+					<%if(preview){%>
+					<div style="position: absolute;top:3px;right:3px;padding:5px;background:rgba(55,55,55,.6);color:white" class="x_removeattachment s-corner-all">
+						<i class="icon-cancel" style="font-size: 16px;"></i>
+					</div>
+					<%}%>
+				</div>
+				<div style="padding:5px 0px">
+					<table style="width:100%">
+						<tr>
+							<td style="text-align: center;width:40px;">
+								<div style="font-size:20px;"><%=modules.moment.format(data.start,'day',false,1)%></div>
+								<div style="font-size:12px;padding-top:1px;"><%=modules.moment.format(data.start,'month',false,1)%></div>
+							</td>
+							<td style="text-align: left;padding-left:5px">
+								<div style="font-size:14px;font-weight: bold;"><%=data.name.limitlength(30)%></div>
+								<div style="padding-top:2px"><%=modules.moment.format(data.start,'event_full_short',false,1)%></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div style="border-top:1px solid #ccc;" class="x_stopbubble">
+				<table style="width:100%">
+					<tr>
+						<td style="width:50%;padding:8px;text-align:center;font-size:16px;" class="x_rsvp <%if(!preview&&data.rsvp=='interested'){%>selected<%}%>" data-rsvp="interested" data-eventrsvp="<%=data.id%>"><i class="icon-star-empty"></i> Interested</td>
+						<td style="width:50%;padding:8px;text-align: center;font-size:16px;border-left:1px solid #ccc;" class="x_rsvp <%if(!preview&&data.rsvp=='going'){%>selected<%}%>" data-rsvp="going" data-eventrsvp="<%=data.id%>"><i class="icon-ok-circled2"></i> Going</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+@@@chat_attachment_rideshare@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="color:black;margin:5px auto;border-top:1px solid #ccc;border-bottom:1px solid #ccc;" class="chatattachmentitem">
+		<div class="x_viewattachment">
+			<table style="width:100%;text-align: left;">
+				<tr>
+					<td style="width:50px;vertical-align:top">
+						<div class="coverimg" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(data.user_info.pic,'small')%>)"></div>
+					</td>
+					<td style="vertical-align:top;padding-top:3px;font-size:16px">
+						<div>
+							<%if(data.page&&data.page.data){%>
+							<div><b>Rideshare</b> to <b><%=data.page.data.name%></b></div>
+							<%}else if(data.destination&&data.destination.info){%>
+							<b>Rideshare To</b> <%=app.location.getName(data.destination.info,'simple')%>
+							<%}else{%>
+							Rideshare
+							<%}%>
+						</div>
+						<div style="font-size:13px;padding-top:2px;padding-left:5px">
+							Post by <%=data.user_info.name%>
+						</div>
+					</td>
+					<td style="width:40px;text-align: center;vertical-align: middle;display: none;">
+						<i class="icon-right-open" style="font-size:20px"></i>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="padding-top:10px">
+			<div style="padding-left:5px">
+                <div style="padding:3px 0px;font-size:14px"><b>Leaving From:</b> <%=app.location.getName(data.departure_location.info,'simple')%></div>
+                <div style="padding:3px 0px;font-size:14px"><b>Departure Time:</b> <%=modules.moment.format(data.departure_time,'event_full_short',false,1)%></div>
+                <%if(data.vehicle){%>
+                <div style="padding:3px 0px;font-size:14px"><b>Vehicle:</b> <%=data.vehicle%></div>
+                <%}%>
+                <%if(data.smoking){%>
+                <div style="padding:3px 0px;font-size:14px"><b>Smoking:</b> <%=data.smoking%></div>
+                <%}%>
+                <%if(data.cannabis){%>
+                <div style="padding:3px 0px;font-size:14px"><b>Cannabis:</b> <%=data.cannabis%></div>
+                <%}%>
+                <%if(data.ask){%>
+                <div style="padding:3px 0px;font-size:14px"><b>Ask:</b> <%=data.ask%></div>
+                <%}%>
+                <%if(data.notes){%>
+                <div style="padding:3px 0px;font-size:14px"><b>Notes:</b> <%=data.notes%></div>
+                <%}%>
+            </div>
+		</div>
+	</div>
+</div>
+@@@chat_attachment_connection@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="color:black;margin:5px auto;border-top:1px solid #ccc;border-bottom:1px solid #ccc;" class="chatattachmentitem">
+		<div class="x_viewattachment">
+			<table style="width:100%;text-align: left;">
+				<tr>
+					<td style="width:50px;vertical-align:top">
+						<div class="coverimg" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(data.user.pic,'small')%>)"></div>
+					</td>
+					<td style="vertical-align:top;padding-top:3px">
+						<div style="font-size:14px;font-weight: bold"><%=data.user.name%></div>
+						<div style="padding-top:2px;padding-left:2px;font-size:11px"><span class="livetime" data-ts="<%=data._id%>"><%=modules.moment.format(data._id,'ago')%></span> <i class="<%=modules.inlinepermissions_global.getIcon(data.perms)%>"></i></div>
+					</td>
+					<td style="width:40px;text-align: center;vertical-align: middle;">
+						<i class="icon-right-open" style="font-size:20px"></i>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+		<%if(data.media&&data.media.type){%>
+		<div class="x_stopbubble">
+			<%=modules.chat_global.render(data,1)%>
+		</div>
+		<div style="height:6px;"></div>
+		<%}else{%>
+		<div style="padding:5px;" class="x_stopbubble">
+			<%=app.wrapContent(modules.links_global.fixContent(modules.feed_global.parseMessage(data,false,1),{addSpacing:1}),200)%>
+		</div>
+		<%}%>
+		</div>
+	</div>
+</div>

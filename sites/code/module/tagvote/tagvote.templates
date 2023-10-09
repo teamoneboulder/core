@@ -1,0 +1,25 @@
+@@@tagvote_list@@@
+<div data-<%=template%>="<%=_tid%>">
+<%if(data.canAdd){%>
+<div style="display:inline-block;padding:3px 5px;font-weight:bold;border:1px solid #ccc;margin:2px 4px;" class="normalicon addtag s-corner-all" <%if(data.eid){%>data-id="<%=data.eid%>"<%}%>><i class="icon-add-clean"></i> Add Tag</div>
+<%}%>
+<%if(data.tags&&data.tags.length){%>
+<%for (var i = 0; i < data.tags.length; i++) {
+	var tag=data.tags[i];
+	if(data.tag_info&&data.tag_info[tag]){
+		var name=data.tag_info[tag].name;
+	}else var name=tag;%>
+	<%if(data.tagOnly){%>
+	<div style="display:inline-block;padding:3px 5px;border:1px solid #ccc;margin:2px 4px;" class="normalicon tagitem s-corner-all">
+		<div style="display: inline-block;" class="name"><%if(data.hashtag){%>#<%}%><%=name%></div>
+	<%}else{%>
+	<div style="display:inline-block;padding:3px 5px;border:1px solid #ccc;margin:2px 4px;" class="normalicon tagitem s-corner-all <%if(data.selected.indexOf(tag)>=0){%>upvoted<%}%>" data-id="<%=tag%>" <%if(data.eid){%>data-eid="<%=data.eid%>"<%}%>>
+		<div style="display: inline-block;padding-right:5px;" class="name"><%if(data.hashtag){%>#<%}%><%=name%></div>
+		<div style="display: inline-block;border-left:1px solid #ccc;padding-left:5px;" class="number"><%if(data.stats&&data.stats[tag]){%>+<%=data.stats[tag]%><%}else{%>+0<%}%></div>
+	</div>
+	<%}%>
+<%}%>
+<%}else if(this.noDataTemplate){%>
+<%=$.fn.render({template:noDataTemplate,returntemplate:1})%>
+<%}%>
+</div>

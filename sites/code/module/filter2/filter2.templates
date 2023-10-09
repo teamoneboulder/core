@@ -1,0 +1,239 @@
+@@@filter2_feature_filters@@@
+<div data-<%=template%>="<%=_tid%>" style="text-align: left;<%if(placement.mobile){%>background:white;<%}else if(placement.overlay){%>background:white;position: absolute;top:<%=placement.top%>px;right:<%=placement.right%>px;width:<%=placement.width%>px;<%}else if(placement.sidepannel){%>width:<%=placement.width%>px;<%}%>z-index: 5" class="shadow_br filtercoverpage <%if(placement.mobile){%>feeditems<%}%> <%if(inline){%>inlinetray<%}%>">
+	<%if(count){%>
+	<div style="padding:5px;text-align: center;font-size:16px;" class="headercolor filter2_filters_count"><span class="count bolder"></span> Results</div>
+	<%}%>
+	<%if(placement.sidepannel){%>
+	<div class="headercolor" style="height:40px;">
+		<table style="width:100%;height:100%">
+			<tr>
+				<td style="text-align: center;font-size:18px">Filters</td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<div class="feeditems">
+		<div class="x_counts"></div>
+	<%for (var i = 0; i < filters.length; i++) {
+		var filter=filters[i];%>
+		<div class="filter_container" style="border-bottom:1px solid #ccc;position: relative;" data-type="<%=filter.type%>" data-id="<%=filter.id%>"></div>
+	<% }%>
+	<%if(placement.mobile){%>
+	<div style="height:80vh"></div>
+	<%}%>
+	</div>
+</div>
+@@@filter2_button@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100%;">
+	<table style="height:100%">
+		<tr>
+			<td>
+				<i class="icon-sliders"></i> Filter
+			</td>
+		</tr>
+	</table>
+</div>
+@@@filter2_header@@@
+<div style="position:fixed;margin-bottom:1px;left:0;right:0;z-index:100;background:white;" class="headercolor filter2header feeditems" data-<%=template%>="<%=_tid%>">
+	<div class="feeditems">
+		<div style="position: relative;height:36px;font-size:24px;" class="filtercontent">
+			
+		</div>
+		<div class="tray" style="border-top:1px solid #ccc;display: none;position: relative;color:#555"></div>
+	</div>
+</div>
+@@@filter2_feature_distance@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;position: relative;">
+	<div class="location"></div>
+</div>
+@@@filter2_header_inline@@@
+<div style="position:relative;background:white;" class="headercolor feeditems" data-<%=template%>="<%=_tid%>">
+	<%if(count){%>
+	<div style="padding:5px;background: #eee;color:#555">Count!</div>
+	<%}%>
+	<div class="feeditems">
+		<div style="position: relative;height:36px;font-size:24px;" class="filtercontent">
+			
+		</div>
+		<div class="tray" style="border-top:1px solid #ccc;display: none;position: relative;"></div>
+	</div>
+</div>
+@@@filter2_search@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit feeditems" style="display: none;z-index:100;background:white">
+</div>
+@@@filter2_content@@@
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;top:0;left:0;bottom:0;right:0px;" class="xscroller">
+	<div style="position: absolute;top:0;left:0;right:100px;bottom:0">
+		<div class="scrollcontent">
+			<table style="height:100%;font-size:24px;text-align: left;color:#555">
+				<tr>
+					<td>
+					<%if(showHint){%>
+					<div class="filternav <%if(selected=='filters'){%>selected<%}%> mainfilter" style="border-right:1px solid #ccc" data-type="filters">
+						<span class="filters_regview">
+							<i class="icon-sliders"></i> Filters
+						</span>
+						<span class="filters_showing">
+							Apply
+						</span>
+					</div>
+					<%}%>
+			<%for (var i = 0; i < options.conf.order.length; i++) {
+				var f=options.conf.order[i];
+				var item=options.conf.list[f];
+				if(!current[item.id]) continue;
+				%>
+				<div class="filternav <%if(selected==item.id){%>selected<%}%>" data-id="<%=item.id%>" data-type="<%=item.type%>" style="vertical-align: middle">
+					<%=current[f]%>
+				</div>
+			<%}%>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="position:absolute;top:0;right:0;bottom:0;width:60px;font-size:12px" class="x_clearfilters">
+		<div class="table">
+			<div class="tcell">
+				<i class="icon-cancel"></i> Clear
+			</div>
+		</div>
+	</div>
+</div>
+@@@filter2_tagadd@@@
+<div data-<%=template%>="<%=_tid%>" style="padding-top:7px;" class="tagaddbox">
+	<%if(tags&&tags.length){%>
+	<%for (var i = 0; i < tags.length; i++) {
+		var tag=tags[i];
+		var item=tag_info[tag];
+		%>
+		<div style="pointer-events: auto;display:inline-block;padding:3px 5px;font-weight:bold;font-size:14px;margin:2px;<%if(!top){%>opacity:0<%}%>" class="normalicon tagitem s-corner-all" data-tag="<%=item.id%>"><%=item.name%> <i class="icon-cancel x_remove" data-id="<%=item.id%>" style="font-size:13px;"></i></div>
+	<%}%>
+	<%}%>
+	<%if(!top){%>
+	<div class="tagcursor s-corner-all" style="display: inline-block;padding:3px;color:#aaa;margin:2px"><i class="icon-search"></i> <%=content%></div>
+	<%}%>
+</div>
+@@@filter2_feature_tag@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;">
+	<div style="position: relative;min-height:35px;" class="tagbox">
+		<i class="<%=icon%>" style="position: absolute;top:8px;left:5px;z-index: 1;font-size:24px;color:#888"></i>
+		<div style="display:none;font-size:12px;color:white;width:20px;height:20px;position: absolute;top:22px;left:25px;z-index: 2" class="circle highlightnav">
+			<table style="width:100%;height:100%;text-align: center;">
+				<tr>
+					<td>
+						<i class="<%=icon%>" style="color:white;font-size:12px;"></i>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="position: absolute;top:0;left:40px;right:0;z-index: 3;pointer-events: none;" class="tagrender_top"></div>
+		<div style="position: absolute;top:0;left:40px;right:0;z-index: 1" class="tagrender_bottom"></div>
+		<div style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 2">
+			<input type="text" class="normalinput truebox taginput" style="font-size:20px;padding:5px 5px 5px 40px;background:transparent;width:100vw;">
+			<i class="tagcancel icon-cancel" style="display:none;position: absolute;bottom:5px;right:5px;font-size:18px;padding:5px;"></i>
+		</div>
+	</div>
+</div>
+@@@filter2_feature_range@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:10px 0px">
+	<table style="width:100%;color:#555">
+		<tr>
+			<td style="width:40px;text-align: center;font-size:16px" class="x_filtertoggle <%if(this.current&&current){%>selected<%}%>">
+				<%=opts.name%>
+			</td>
+			<td style="width:80px;text-align: left;"><div style="display: inline-block;padding:10px;font-size:16px;" class="value"></div></td>
+			<td>
+				<div class="range-slider inline" style="width:100%;position: relative;">
+					<input value="<%=value[0]%>" min="<%=opts.range[0]%>" max="<%=opts.range[1]%>" step="<%=opts.step%>" type="range" class="rangeslider rangeslider2 slider1"  style="background:transparent;border:0px">
+				  	<input value="<%=value[1]%>" min="<%=opts.range[0]%>" max="<%=opts.range[1]%>" step="<%=opts.step%>" type="range" class="rangeslider rangeslider2 slider2" style="background:transparent;border:0px">
+				  	<div class="rangeslider rangeslider--horizontal normalrangeslider" style="top:12px;">
+				  		<div class="rangeslider__fill highlightnav fillbar"></div>
+				  		<div class="rangeslider__handle handle1" style="margin-left:-21px"></div>
+				  		<div class="rangeslider__handle handle2" style="margin-left:-21px"></div>
+				  	</div>
+				</div>
+			</td>
+			<td style="width:10px"></td>
+		</tr>
+	</table>
+</div>
+@@@filter2_feature_radio@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;text-align: left;padding:10px 0px">
+	<table style="width:100%;color:#555">
+		<tr>
+			<%if(opts.icon){%>
+			<td style="width:40px;text-align: center" class="togglelayer">
+				<i class="<%=opts.icon%>" style="font-size:22px;"></i>
+			</td>
+			<%}%>
+			<td style="text-align:left">
+				<%for (var i = 0; i < types.order.length; i++) {
+					var item=types.list[types.order[i]];%>
+					<div class="x_filter toggler2 <%if(this.value&&value==item.id){%>selected<%}%>" data-filter="<%=item.id%>" style="display:inline-block;margin:3px;padding:5px;font-size:16px"><%=item.name%></div>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@filter2_feature_sort@@@
+<%if(renderTo){%>
+<div class="headercolor" style="height:40px;text-align: center;<%if(placement.sidepannel){%>margin-top:10px;<%}%>">
+	<table style="width:100%;height:100%">
+		<tr>
+			<td style="font-size:18px">Sort</td>
+		</tr>
+	</table>
+</div>
+<%}%>
+<div data-<%=template%>="<%=_tid%>" style="background:white;text-align: left;padding:10px 0px">
+	<table style="width:100%;color:#555">
+		<tr>
+			<td>
+				<%for (var i = 0; i < types.order.length; i++) {
+					var item=types.list[types.order[i]];%>
+					<div class="x_filter toggler2 <%if(this.value&&value==item.id){%>selected<%}%>" data-filter="<%=item.id%>" style="display:inline-block;margin:3px;padding:5px;font-size:16px"><%=item.name%></div>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@filter2_feature_toggle@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;text-align: left;padding:10px 0px">
+	<table style="width:100%">
+		<tr>
+			<td style="width:40px;text-align: center;" class="x_filtertoggle"><i class="<%=opts.icon%>" style="font-size:24px"></i></td>
+			<td>
+				<%for (var i = 0; i < types.order.length; i++) {
+					var item=types.list[types.order[i]];%>
+					<div class="x_filter toggler2 <%if(this.value&&value==item.id){%>selected<%}%>" data-filter="<%=item.id%>" style="display:inline-block;margin:3px;padding:5px;font-size:16px"><%=item.name%></div>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@filter2_feature_togglecheck@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;text-align: left;padding:10px 0px">
+	<table style="width:100%">
+		<tr>
+			<td style="width:40px;text-align: center;" class="x_filtertoggle"><i class="<%=opts.icon%>" style="font-size:24px"></i></td>
+			<td>
+				<%for (var i = 0; i < types.order.length; i++) {
+					var item=types.list[types.order[i]];%>
+					<div class="x_filter toggler2 <%if(this.value&&value.indexOf(item.id)>=0){%>selected<%}%>" data-filter="<%=item.id%>" style="display:inline-block;margin:3px;padding:5px;font-size:16px"><i class="icon-check toggledon"></i><i class="icon-check-empty toggledoff"></i> <%=item.name%></div>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@filter2_feature_onoff@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;text-align: left;padding:10px 0px">
+	<table style="width:100%">
+		<tr>
+			<td style="padding:0px 10px"><%=opts.name%></td>
+			<td style="width:70px;text-align: right;padding-right:5px">
+				<%=_ui.toggle.render({id:button_id,selected:(value)?1:0})%>
+			</td>
+		</tr>
+	</table>
+</div>

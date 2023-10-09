@@ -1,0 +1,4 @@
+#!/bin/bash
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+* * * * * root /usr/local/bin/runcron >>/var/log/groupup/cron.log

@@ -1,0 +1,99 @@
+@@@admin_data@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-600px;width:300px;z-index:3">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;"><b>Collection</b> 
+                <i class="icon-refresh refresh" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <%
+                    var list=app.loadData.collections;
+                    list.sort()
+                %>
+                <select id="datacollselect" style="width:100%">
+                <option value="">---Select---</option>
+                <%for (var i = 0; i < list.length; i++) {
+                    var item=list[i]%>
+                    <option valu="<%=item%>"><%=item%></option>
+                <%}%>
+                </select>
+            </div>
+        </div>
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;text-align: center;display: none;" class="m-corner-all truebox">
+            <div style="font-size:18px;text-align:center;margin:0;padding:5px 15px" class="typebtn button s-corner-all" data-type="raw">
+                Raw
+            </div>
+            <div style="font-size:18px;text-align:center;margin-left:-5px;padding:5px 15px" class="typebtn button s-corner-all" data-type="full">
+                Full
+            </div>
+        </div>
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;text-align: center;" class="m-corner-all truebox">
+            <div style="font-size:18px;text-align:center;margin:0;padding:5px 15px" class="addbtn button s-corner-all">
+                <i class="icon-add-clean"></i> Add to this collection
+            </div>
+        </div>
+        <div class="x_data"></div>
+         <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;">
+                <b>Query</b> 
+            </div>
+            <div class="noquery">
+                <div>
+                    <textarea style="width:100%;height:60px;resize:none" placeholder="Enter JSON Query" id="dataquery"></textarea>
+                </div>
+                <div>
+                    <div id="datasubmitquery" class="button bluebtn s-corner-all" style="display: block;text-align: center"><i class="icon-flight"></i> Submit Query</div>
+                </div>
+            </div>
+            <div class="hasquery" style="display: none;">
+                <div class="query"></div>
+                <div id="clearquery" class="button bluebtn s-corner-all" style="display: block;text-align: center"><i class="icon-cancel"></i> Clear Query</div>
+            </div>
+         </div>
+         <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div>
+                <div class="button bluebtn s-corner-all x_schema" style="display: block;text-align: center"><i class="icon-code"></i> View Schema</div>
+            </div>
+        </div>
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;">
+                <b>Export</b> 
+            </div>
+            <div>
+                <div class="button bluebtn s-corner-all x_exportcsv" style="display: block;text-align: center"><i class="icon-download"></i> Export CSV</div>
+                <div class="button bluebtn s-corner-all x_exportjson" style="display: block;text-align: center"><i class="icon-download"></i> Export JSON</div>
+            </div>
+        </div>
+          <%if(app.isdev){%>
+          <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;">
+                <b>Sync</b> 
+            </div>
+            <div>
+                <div class="button bluebtn s-corner-all x_sync" style="display: block;text-align: center"><i class="icon-refresh"></i> Sync from Production</div>
+            </div>
+        </div>
+        <%}%>
+    </div>
+    <div class="sfit scroller" style="z-index:2;;overflow-y:auto;">
+        <div style="padding-left:210px;width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_data_stats@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(this.data){%>
+    <div style="padding:5px;text-align: center;">
+    <b>Size:</b> <%=data.size%>MB <b>Count:</b> <%=data.count.addCommas()%>
+    </div>
+    <%}%>
+</div>
+@@@admin_data_item@@@
+<div data-<%=template%>="<%=_tid%>" data-id="<%=data._id%>" style="margin:2px;background: white;padding:5px;position:relative" class="selectable">
+    <%if(opts.type=='full'){%>
+    <i class="icon-pencil x_edit" data-iid="<%=data._id%>" style="position:absolute;top:5px;right:5px;padding:5px;cursor:pointer"></i>
+    <%}%>
+    <div><%=JSON.stringify(data).wrapJson()%></div>
+    <div style="font-size:12px;color:#aaa;padding-top:5px"><span class="reltime" data-time="<%=data._id%>"><%=data._id.formatTime(false,1)%></span></div>
+</div>

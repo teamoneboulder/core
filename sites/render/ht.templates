@@ -1,0 +1,19 @@
+@@@page@@@
+<div style="width:1200px;height:600px;position: relative;background-image: url(https://one-light.s3.amazonaws.com/static/ht.jpeg);color:white" class="coverimg shadow_text">
+	<div style="width:500px;position:absolute;top:10px;left:10px;max-height: 90%; overflow:hidden;background: rgba(255,255,255,.4);" class="m-corner-all">
+		<div style="font-size:30px;text-align: center;padding-bottom:10px;padding-top:5px">Upcoming Events</div>
+		<%for (var i = 0; i < events.length; i++) {
+			var event=events[i];%>
+		<div style="padding:5px;border-top:1px solid #ccc;font-size:14px">
+			<div class="itable">
+				<div class="tcell" style="width:100px;text-align: right;vertical-align: top;">
+					<%=modules.moment.format(event.start,'prettydate')%>
+				</div>
+				<div class="tcell" style="text-align: left;padding-left:10px">
+					<div style="font-size:18px"><%=event.name%></div>
+				</div>
+			</div>
+		</div>
+		<%}%>
+	</div>
+</div>

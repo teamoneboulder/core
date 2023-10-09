@@ -1,0 +1,68 @@
+@@@editemail_mobile@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background:white;">
+	<%=$.fn.render({template:'app_header',data:{
+			data:{
+				page:true,
+				name:'Edit Email',
+				nameClass:'title',
+				back:'<i class="icon-cancel"></i>',
+				backClass:'x_cancel',
+				submit:'Next',
+				submitClass:'x_next'
+			}
+		},returntemplate:true})%>
+	<div style="bottom:0px;border-top:1px solid #ccc" class="apppage sfit">
+		<%=$.fn.render({template:'editemail',data:{data:data,mobile:true},returntemplate:1})%>
+	</div>
+</div>
+@@@editemail_buttons@@@
+<div style="padding-top:40px;" >
+	<table style="width:100%;" class="notonmobile">
+		<tr>
+			<td>
+				<div class="onboardback onboardbutton x_back" style="display: none;">Back</div>
+			</td>
+			<td style="text-align: right;">
+				<div class="onboardforward onboardbutton x_next">Next</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@editemail@@@
+<div data-<%=template%>="<%=_tid%>" class="<%if(this.mobile){%>sfit scrollY<%}%>" style="padding-top:20px;<%if(!this.mobile){%>position:relative;<%}%>">
+	<%if(!this.mobile){%>
+	<i class="icon-cancel x_cancel" style="position: absolute;top:0;right:0;padding:5px;font-size:16px;color:#888"></i>
+	<%}%>
+	<div class="emailinput onboardcolor" style="padding:0px 10px">
+		<!-- <div style="font-size:22px;padding-top:15px;padding-bottom:15px">Whats your email?</div> -->
+		<div class="prettyinput3">
+            <label>
+              <input class="truebox onboardwidth" data-id="email" style="width:90vw;font-size:18px;text-transform: lowercase;" value=""/>
+              <div class="label-text">Email</div>
+            </label>
+        </div>
+        <div style="padding:50px">
+			<%=$.fn.render({template:'editemail_buttons',returntemplate:true})%>
+		</div>
+	</div>
+	<div class="emailconfirmbox" style="display: none;padding-top:5px">
+		<div style="font-size:25px;padding:20px;text-align: left;" class="onboardcolor x_hidekeyboard">We sent an email to <span class="curemail" style="font-weight: bold"></span> with a confirmation code.  Please enter it here.</div>
+		<div style="padding-top:15px;padding-bottom:15px;text-align: center;">
+			<input id="confirmcode" type="tel" style="background: rgba(255,255,255,.2);width:100px;margin:auto;border:0;padding:10px;font-size:26px;text-align: center;border-bottom:1px solid #aaa;color:#888" placeholder="Code" class="onboardinput truebox" size="4" maxlength="4">
+		</div>
+		<div style="padding-top:10px;color:#888">
+			<div class="x_change" style="text-align: center;font-size:14px;padding:10px;width:150px;margin:auto;">Change Email</div>
+			<div class="x_report" style="text-align: center;font-size:14px;padding:10px;width:150px;margin:auto;">Didn't Receive Email?</div>
+		</div>
+		<div style="padding:20px">
+			<%=$.fn.render({template:'editemail_buttons',returntemplate:true})%>
+		</div>
+	</div>
+	<div class="emailconfirmedbox" style="display: none;font-size:18px;padding:10px;margin-top:30px;">
+		<div>Email <span class="curemail" style="font-weight: bold"><%=data.email%></span> Confirmed!</div>
+		<div style="margin-top:20px;padding:20px;text-align: center;font-size:12px" class="x_change">Change Email</div>
+		<div style="padding:50px">
+			<%=$.fn.render({template:'editemail_buttons',returntemplate:true})%>
+		</div>
+	</div>
+</div>

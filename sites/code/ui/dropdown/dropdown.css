@@ -1,0 +1,12 @@
+.dropdownitem:not(:last-child){
+	border-bottom:1px solid #eee;
+}
+.dropdownitem.selected{
+	font-weight: bold;
+}
+.dropdownquestion{
+	display: none;
+}
+.hasselection .dropdownquestion{
+	display: block;
+}

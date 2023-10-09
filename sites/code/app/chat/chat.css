@@ -1,0 +1,111 @@
+.chatcontentbox{
+	background: white;
+}
+.retryitem{
+	display: none;
+}
+.chatrow{
+	position: relative;
+}
+.retryarea{
+	position: absolute;top:0;right:0;color:#f02;
+}
+.retrymode .retryitem{
+	display: block;
+}
+.retrymode .regularcontent{
+	margin-right: 80px;
+}
+.chatitem{
+	overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+}
+.chattoolpane{
+	transform:translate(0,-100%);
+}
+.chattoolsshowing .chattoolpane{
+	transform:translate(0,0%);
+}
+.chatitemtools{
+	overflow: hidden;
+}
+.chatwave {
+	position:relative;
+	text-align:center;
+	padding:5px 0px;
+}
+.chatdot {
+	display:inline-block;
+	width:12px;
+	height:12px;
+	border-radius:50%;
+	margin-right:3px;
+	background:black;
+	animation: wave 1.3s linear infinite;
+}
+.chatdot:nth-child(2){
+	animation-delay: -1.1s;
+}
+.chatdot:nth-child(3){
+	animation-delay: -.9s;
+}
+@keyframes wave {
+	0%, 60%, 100% {
+		transform: initial;
+	}
+
+	30% {
+		transform: translateY(-15px);
+	}
+}
+.chatboxname{
+	width:95vw;
+}
+@media only screen and (min-device-width: 802px) {
+	.chatboxname{
+		width:400px !important;
+	}
+}
+.chattime{
+	color:#999;
+	opacity: 0;
+	-moz-transition-duration: .2s;
+    -webkit-transition-duration: .2s;
+    -o-transition-duration: .2s;
+    -transition-timing-function: linear;
+}
+.showtimes .chattime{
+	opacity: 1;
+}
+.chatarrow{
+	position: absolute;bottom:7px;left:0;
+	border-right: 10px solid #DEDEDE;
+	border-top:10px solid transparent;
+	border-bottom:10px solid transparent;
+}
+.chatarrow_me{
+	position: absolute;bottom:7px;right:0;
+	border-left: 10px solid #0F69B9;
+	border-top:10px solid transparent;
+	border-bottom:10px solid transparent;
+}
+.chat_me_box .chatcontentarea{
+	text-align: right;
+}
+.chat_me{
+	padding:10px 10px 10px 10px;margin-right:5px;font-size:14px;color:black;background:#f8f8f8;/*background: #0F69B9;color:white;*/
+}
+.chat_other{
+	padding:10px 10px 10px 10px;font-size:14px;background: #DEDEDE;color:black;margin-left:5px;margin-right:25px;
+}
+.chattheme textarea{
+	border:1px solid #ccc !important;
+	color:#333 !important;
+}
+.chattheme textarea::placeholder{
+	color:#888;
+}
+.chattheme ._stap:not(.linkcancel):not(.pagenav){
+	color:black !important;
+}

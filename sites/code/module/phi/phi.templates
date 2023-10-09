@@ -1,0 +1,33 @@
+@@@app_header@@@
+<%if(data.page){%>
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;top:0;left:0;right:0;height:65px; overflow: hidden;z-index:2;" class="themebg appbg pageheader l-corner-top-web frostedbg <%if(data.class){%><%=data.class%><%}%>">
+<%}%>
+<div style="position:relative;width:100%;height:45px;position:absolute;top:20px;left:0;right:0;" class="appheader" <%if(!data.page){%>data-<%=template%>="<%=_tid%>"<%}%>>
+	<div class="sfit" style="z-index: 1;">
+		<table style="width:100%;height:100%;font-size:18px;">
+			<tr>
+				<td style="width:70px;text-align: left;font-size:18px;padding-left:5px" class="<%if(data.backClass){%><%=data.backClass%><%}else{%>x_done backbtn<%}%>">
+					<%=data.back%>
+				</td>
+				<td style="text-align: center;font-size:18px" class="currentpage <%if(data.nameClass){%><%=data.nameClass%><%}%>">
+					<div><%=data.name%></div>
+					<%if(data.subtitle){%>
+					<div style="font-size:11px;padding-top:3px" class="pagesubtitle"><%=data.subtitle%></div>
+					<%}%>
+				</td>
+				<td style="width:70px;text-align: right;padding-right:5px;" class="<%if(data.addClass){%><%=data.addClass%><%}else if(data.submitClass){%><%=data.submitClass%><%}else{%>x_add<%}%> revicon">
+					<%if(data.submit){%>
+					<%=data.submit%>
+					<%}else{%>
+					<i class="icon-add-clean" style="font-size:28px;"></i>
+					<%}%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<%if(data.page){%>
+</div>
+<%}%>
+@@@phi_appcover@@@
+<div class="sfit" id="appcover" style="background:rgba(55,55,55,.6)"></div>

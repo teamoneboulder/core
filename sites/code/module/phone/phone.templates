@@ -1,0 +1,2 @@
+@@@phone_footer@@@
+<div data-<%=template%>="<%=_tid%>" id="footer_color" style="position: fixed;bottom:0;left:0;right:0;z-index:0;height:40px"></div>

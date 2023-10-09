@@ -1,0 +1,5 @@
+#!/bin/bash
+mv ${ROOT}/_certs ${HOME}/priv
+chmod 0700 ${HOME}/priv
+chmod -R 0600 ${HOME}/priv/*
+chown -R root:www-data ${HOME}/priv

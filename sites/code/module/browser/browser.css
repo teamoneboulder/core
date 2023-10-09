@@ -1,0 +1,14 @@
+.comingsoon.browsernav{
+	opacity: .4;
+}
+.browsernav{
+	vertical-align: bottom;
+}
+.pagecontent .mainbrowsernav{
+	border-bottom:1px solid #ededed;font-size:16px;
+}
+@media only screen and (min-device-width: 802px) {
+	.browsercontent{
+		max-height:60vh;
+	}
+}

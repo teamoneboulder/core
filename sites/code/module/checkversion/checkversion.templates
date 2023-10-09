@@ -1,0 +1,8 @@
+@@@updatealert@@@
+<div style="padding:5px 20px 10px 20px;text-align:left;font-size:14px;">
+    <div class="modalheader" style="text-align:center;font-size:18px;padding-bottom:5px"><b>Required App Update</b></div>
+    <div style="padding-bottom:10px;padding-top:10px">Seldomly, we make changes to the core of <%=appname%> to ensure that you recieve the best experience possible.</div>
+    <div style="padding-bottom:10px">To keep to this commitment, we request that you update the app by clicking the button below.</div>
+    <div style="padding-bottom:10px">Thanks!</div>
+    <div style="padding-bottom:10px"><i class="icon-heart" style="color:red;font-size:20px;"></i></div>
+</div>

@@ -1,0 +1,125 @@
+html *{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}*,:after,:before{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}body{font-size:100%}a{text-decoration:none}img{max-width:100%}
+.frst-container{max-width:1200px;margin:0 auto;padding:10px 15px;}.frst-container::after{content:'';display:table;clear:both}.frst-timeline{position:relative}.frst-right-align{text-align:right}.frst-timeline-block{position:relative;min-height:16px;padding-left:35px;padding-right:35px}.frst-timeline-block::before{content:"";position:absolute;height:100%;left:0;top:0}.frst-timeline-block:last-child::before{display:none}.frst-right-align .frst-timeline-block::before{right:0;left:auto!important;margin-left:0!important}.frst-timeline-block::after{content:"";display:table;clear:both}.frst-date,.frst-timeline-img i{display:block}.frst-timeline-img{position:absolute;min-width:1px;min-height:1px;left:0;top:0}.frst-right-align .frst-timeline-img{margin-left:0!important;left:auto!important;right:0}.frst-last-empty-item .frst-timeline-img span{vertical-align:top}.frst-timeline-content-inner{position:relative}.cssanimations .frst-timeline-content.is-hidden{visibility:hidden}.cssanimations .frst-timeline-content.animated{visibility:visible}.frst-labels span{display:inline-block}.frst-labels{padding:20px 0}.frst-labels.frst-start-label{padding-top:0!important}.frst-labels.frst-end-label{margin-bottom:0!important}.turqoise{background:#00A79D!important}.light-blue{background:#27AAE2!important}.blue{background:#1D75BD!important}.violette{background:#2B3991!important}.dark-violette{background:#272264!important}@media only screen and (min-width:679px){.frst-date-opposite,.frst-left-align.frst-date-opposite{margin-left:190px}.frst-right-align.frst-date-opposite{margin-right:190px;margin-left:0;text-align:right}.frst-date-opposite.frst-alternate{margin:0}.frst-timeline.frst-alternate.frst-left-align .frst-timeline-content,.frst-timeline.frst-alternate.frst-right-align .frst-timeline-content,.frst-timeline.frst-date-opposite.frst-left-align .frst-timeline-content,.frst-timeline.frst-date-opposite.frst-right-align .frst-timeline-content{width:100%}.frst-alternate .frst-timeline-block::before{left:50%}.frst-alternate .frst-timeline-img{left:50%!important}.frst-alternate .frst-timeline-block.frst-even-item .frst-timeline-content{float:right}.frst-alternate .frst-timeline-block.frst-odd-item .frst-timeline-content{float:left}.frst-date-opposite .frst-date{position:absolute;top:0;text-align:right}.frst-alternate .frst-timeline-block.frst-odd-item .frst-timeline-content,.frst-alternate.frst-date-opposite .frst-timeline-block.frst-even-item .frst-date,.frst-date-opposite.frst-left-align .frst-date,.frst-right-align{text-align:right}.frst-alternate.frst-date-opposite .frst-timeline-block.frst-odd-item .frst-timeline-content .frst-date,.frst-date-opposite.frst-right-align .frst-date{text-align:left}.frst-alternate .frst-timeline-label-block{text-align:center}.frst-alternate .frst-timeline-label-block .frst-labels span{left:0;right:0}}@media only screen and (max-width:678px){.frst-timeline{margin-left:20px}.frst-timeline.frst-responsive-right,.frst-timeline.frst-right-align{margin-right:20px;margin-left:0}.frst-responsive-right .frst-timeline-block::before,.frst-responsive-right .frst-timeline-img{margin-left:0!important;left:auto!important;right:0}.frst-responsive-right{text-align:right}.frst-date{margin-bottom:10px}}
+
+.frst-timeline-style-12 {
+    color: #333;
+}
+
+.frst-timeline-style-12 .frst-timeline-block::before {
+    width: 2px;
+    background: #DDDDE5;
+    margin-left: -1px;
+}
+
+.frst-timeline-style-12.frst-right-align .frst-timeline-block::before {
+    margin-right: -2px;
+}
+
+.frst-timeline-block {
+    padding-bottom: 30px;
+}
+
+.frst-timeline-style-12 .frst-timeline-img {
+    margin-left: -18px;
+    width: 36px;
+    height: 36px;
+    text-align: center;
+    font-size: 22px;
+    vertical-align: top;
+}
+
+.frst-timeline-style-12 .frst-timeline-img span {
+    display: inline-block;
+    vertical-align: top;
+    background: #DDDDE5;
+    padding: 7px;
+    min-width: 10px;
+    min-height: 10px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+
+.frst-timeline-style-12.frst-right-align .frst-timeline-img {
+    margin-right: -18px;
+}
+
+.frst-timeline-style-12 .frst-timeline-completed .frst-timeline-img span {
+    background: #f09;
+}
+
+.frst-timeline-style-12 .frst-timeline-completed::before {
+    background: #f09;
+}
+
+.frst-timeline-style-12 .frst-timeline-completed.frst-timeline-completed-last::before {
+    background: #d0d0d0;
+}
+
+.frst-timeline-style-12 .frst-timeline-content {}
+
+.frst-timeline-style-12 .frst-date {
+    font-weight: 600;
+}
+
+.frst-timeline-style-12 h2 {
+    font-size: 14px;
+    text-transform: uppercase;
+    margin: 20px 0 5px;
+    font-weight: 800;
+    color: #e1545d;
+}
+
+.frst-date-opposite.frst-timeline-style-12 h2 {
+    margin-top: 0;
+}
+
+.frst-timeline-style-12 p {
+    margin: 0;
+}
+
+.frst-timeline-style-12 .frst-labels span {
+    position: relative;
+    left: -37px;
+    background: #50b9f3;
+    color: #fff;
+    padding: 8px 20px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.frst-timeline-style-12.frst-right-align .frst-labels span {
+    left: auto;
+    right: -37px
+}
+
+
+/*---------- Responsive part ------------*/
+
+@media only screen and (min-width: 679px) {
+    .frst-timeline-style-12.frst-alternate .frst-timeline-content {
+        width: calc(50% - 32px);
+    }
+    .frst-timeline-style-12.frst-date-opposite .frst-date {
+        left: -225px;
+        line-height: 20px;
+        width: 160px;
+    }
+    .frst-timeline-style-12.frst-date-opposite.frst-right-align .frst-date, .frst-timeline-style-12.frst-date-opposite.frst-alternate .frst-timeline-block.frst-odd-item .frst-date {
+        right: -225px;
+        left: auto;
+        text-align: left;
+    }
+}
+
+@media only screen and (max-width: 678px) {
+    .frst-timeline-style-12.frst-responsive-right .frst-timeline-block::before {
+        margin-right: -2px;
+    }
+    .frst-timeline-style-12.frst-responsive-right .frst-timeline-img {
+        margin-right: -18px;
+    }
+    .frst-timeline-style-12.frst-responsive-right .frst-labels span {
+        left: auto;
+        right: -37px
+    }
+}

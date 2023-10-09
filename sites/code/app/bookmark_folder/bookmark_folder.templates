@@ -1,0 +1,121 @@
+@@@bookmark_folder_loading@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden" class="mainprofilepage">
+	<%if(!inline){%>
+	<%=$.fn.render({template:'app_header',data:{
+		data:{
+			name:name,
+			back:'<i class="icon-left-open"></i>',
+			submit:' '
+		}
+	},returntemplate:true})%>
+	<%}%>
+	<div style="position: absolute;top:0;left:0;bottom:0px;padding-top:10px;z-index: 3;width:300px;" class="websubmenu_responsive">
+		
+	</div>
+	<div style="position:absolute;top:<%if(!inline){%>65px<%}else{%>0px<%}%>;left:0;right:0;bottom:0px;z-index:2;" class="content apppage topnavcontent_responsive">
+		<div style="height:100%;" class="feeditems_event">
+			<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+		</div>
+
+	</div>
+</div>
+@@@bookmark_folder_webnav@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background: white;border-right:1px solid #ccc">
+	<div style="width:100%;height:150px;<%if(resp.data.user.bg){%>background-image:url(<%=modules.tools.getImg(resp.data.user.bg,'background')%>);<%}else{%>background:#ddd;<%}%>" class="coverimg"></div>
+	<div style="border:1px solid white;position: absolute;top:120px;left:5px;width:60px;height:60px;background-image: url(<%=modules.tools.getImg(resp.data.user.pic,'square')%>)" class="circle coverimg"></div>
+	<div style="padding:10px 10px 10px 75px;font-size:14px;" class="bold"><%=resp.data.user.name%>'s Bookmarks</div>
+	<div style="position: absolute;top:200px;left:0;right:0;bottom:0;" class="scrollY">
+		<div>
+			<%if(resp.data.parent){%>
+			<div style="border-bottom:2px solid #ccc">
+				<div style="background: white;padding-left:5px" class="x_folderitem" data-id="<%=resp.data.parent.id%>">
+					<div class="itable" style="height:40px;">
+						<div class="tcell" style="width:30px;">
+							<div style="width:30px;height:30px;<%if(resp.data.parent.pic){%>background-image:url(<%=modules.tools.getImg(resp.data.parent.pic,'small')%>);<%}else{%>background:#aaa;<%}%>" class="coverimg circle"></div>
+						</div>
+						<div class="tcell" style="text-align: left;padding:5px;">
+							<div style="font-size:14px;" class="bold"><%=resp.data.parent.name%></div>
+							<div style="font-size:12px;color:#888;padding:2px"><%if(resp.data.parent.count){%><%=resp.data.parent.count%> bookmarks<%}else{%>No Bookmarks<%}%></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<%}%>
+			<%if(resp.data.children_info&&resp.data.children_info.order){%>
+			<%for (var i = 0; i < resp.data.children_info.order.length; i++) {
+				var item=resp.data.children_info.list[resp.data.children_info.order[i]];%>
+				<div style="background: white;padding-left:5px" class="x_folderitem" data-id="<%=item.id%>">
+					<div class="itable" style="height:40px;">
+						<div class="tcell" style="width:30px;position: relative;">
+							<div style="width:30px;height:30px;<%if(item.pic){%>background-image:url(<%=modules.tools.getImg(item.pic,'small')%>);<%}else{%>background:#aaa;<%}%>" class="coverimg circle"></div>
+							<div style="position: absolute;bottom:3px;right:-8px;width:20px;height:20px;background: white" class="circle">
+								<div class="table">
+									<div class="tcell"><span aria-label="<%=modules.inlinepermissions_global.getLabel(item.perms)%>" data-balloon-pos="down"><i class="<%=modules.inlinepermissions_global.getIcon(item.perms)%>"></i></span></div>
+								</div>
+							</div>
+						</div>
+						<div class="tcell" style="text-align: left;padding:5px 8px;">
+							<div style="font-size:14px;" class="bold"><%=item.name%></div>
+							<div style="font-size:12px;color:#888;padding-left:2px"><%if(item.count){%><%=item.count%> bookmarks<%}else{%>No Bookmarks<%}%></div>
+						</div>
+					</div>
+				</div>
+			<%}%>
+			<%}else{%>
+			<div style="padding:10px;">No folders</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@bookmark_folder_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div class="feeditems_event">
+		<%if(resp.data.pic){%>
+		<div style="position:relative;height:30vh;background-image:url(<%=modules.tools.getImg(resp.data.pic,'small')%>)" class="coverimg mainimg">
+		</div>
+		<%}else{%>
+		<%}%>
+		<%if(resp.data.children&&app.size(resp.data.children)&&resp.data.children_info){%>
+		<div style="padding-top:4px">
+			<div class="foldercontainer">
+			<%for (var i = 0; i < resp.data.children_info.order.length; i++) {
+				var item=resp.data.children_info.list[resp.data.children_info.order[i]]%>
+				<div style="display: inline-block;position: relative;font-size:16px;" data-folder="<%=resp.data.children_info.order[i]%>" class="folderitem truebox">
+					<div style="padding:5px 3px;margin:2px;border:1px solid #ccc;overflow: hidden;background: white" class="s-corner-all">
+						<table style="width:100%;height:25px;">
+							<tr>
+								<td style="width:30px;position: relative;">
+									<i class="icon-folder" style="font-size:24px;"></i>
+								</td>
+								<td style="text-align: left;">
+									<div class="foldername" data-max="16" data-incriment="2"><%=item.name%></div>
+									<div style="font-size:9px;padding-top:2px;padding-left:5px;display: none;"><%if(item.count){%><%=item.count%><%}else{%>0<%}%> Saved Items</div>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			<%}%>
+			</div>
+		</div>
+		<%}%>
+		<div style="border-bottom:1px solid #ccc;">
+			<table style="width:100%;">
+				<tr>
+					<td style="padding-left:5px;font-size:20px;padding:5px;">
+						<%=resp.data.name%>
+					</td>
+					<td style="width:75px;text-align: center;font-size:18px;padding:5px" class="x_filter">
+						<span class="sorttype">All Items</span>
+					</td>
+					<%if(!resp.data.home){%>
+					<td style="width:70px;text-align: right;font-size:18px;padding:5px" class="x_edit">
+						<i class="icon-pencil"></i> Edit
+					</td>
+					<%}%>
+				</tr>
+			</table>
+		</div>
+		<div class="content"></div>
+	</div>
+</div>

@@ -1,0 +1,74 @@
+@@@admin_checkin@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-600px;width:300px;z-index:3">
+        <div style="margin:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:left;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Check Ins</b> 
+                <i class="icon-refresh refresh" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div style="padding:5px;max-height:60vh;min-height:80px;position: relative;" class="navscroller">
+                <div>
+                    <div class="topnavitems">
+                        <%=$.fn.render({template:'admin_checkin_location',returnhtml:1,data:{data:{id:'all',name:'All Checkins'}}})%>
+                    </div>
+                    <div class="navlist"></div>
+                </div>
+            </div>
+            <div style="padding:5px;text-align:right;background: #888;color:white;text-align: center" class="x_add m-corner-bottom"><i class="icon-add-clean"></i> Add Location</div>
+        </div>
+    </div>
+    <div class="sfit scroller" style="z-index:2;;overflow-y:auto;">
+        <div style="padding-left:210px;width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_checkin_location@@@
+<div data-<%=template%>="<%=_tid%>">
+    <div style="padding:5px 60px 5px 5px;text-align:left;position: relative;" class="navselect" data-location="<%=data.id%>">
+        <div style="display: inline-block;">
+        <%if(data.data&&data.data.data){%>
+        <%=data.data.data.name%>
+        <%if(data.data.type=='event'){%>
+        - <%=modules.moment.format(data.data.data.start,'event',false,1)%>
+        <%}%>
+        <%}else{%>
+        <%=data.name%>
+        <%}%>
+        </div>
+        <div style="position: absolute;top:0;right:0;bottom:0;background: rgba(255,255,255,.8);padding:5px" >
+        <%if(data.id!='all'){%>
+        <div data-id="<%=data._id%>" class="x_qr" style="display: inline-block;">
+            <i class="icon-qrcode"></i>
+        </div>
+        <div data-id="<%=data._id%>" class="x_edit" style="display: inline-block;">
+            <i class="icon-pencil"></i>
+        </div>
+        <%}%>
+        </div>
+    </div>
+</div>
+@@@admin_checkin_item@@@
+<div data-<%=template%>="<%=_tid%>" style="margin:2px;background: white;padding:5px">
+    <div class="itable">
+        <div class="tcell" style="width:50px;">
+            <div style="width:50px;height:50px;background-image:url(<%=_.getImg(data.page.data.pic,'square')%>)" class="coverimg circle"></div>
+        </div>
+        <div class="tcell" style="text-align: left;padding-left:5px;">
+            <div style="font-size:16px;font-weight: bold"><%=data.page.data.name%> <span style="font-size:14px;font-weight: normal">(<%=data.location.data.name%> <%if(data.location.type=='event'){%>- <%=modules.moment.format(data.location.data.start,'event',false,1)%><%}%>)</span> <span class="reltime" data-ts="<%=data.ts%>" data-type="ago" style="font-weight: normal;font-size:11px"><%=modules.moment.format(data.ts,'ago',false,1)%></span></div>
+            <div style="font-size:13px'"></div>
+            <div style="padding-left:5px;padding-top:3px">
+                <%if(data.page.data.level_info){%>
+                <span style="padding:1px 5px;background: royalblue;color:white;margin-right:5px;" class="s-corner-all"><%=data.page.data.level_info.pretty_name_simple%></span>
+                <%}%>
+                <%if(data.page.current_subscription_info){%>
+                <%for(var key in data.page.current_subscription_info.membership){
+                    var info=data.page.current_subscription_info.membership[key];
+                %>
+                <span style="padding:1px 5px;background: green;color:white;margin-right:5px;" class="s-corner-all"><%=info.name%></span>
+                <%}%>
+                <span style="font-size:11px">Exp: <%=modules.moment.format(data.page.current_subscription_info.valid_until,'event',false,1)%> (<%=modules.moment.format(data.page.current_subscription_info.valid_until,'ago',false,1)%>)</span>
+                <%}%>
+            </div>
+        </div>
+    </div>
+</div>

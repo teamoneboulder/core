@@ -1,0 +1,180 @@
+/*LOADERS*/
+.infinity-loader {
+  position: fixed; /*We have to use it as we are using absolute positioning on its children and we will align it in the center of the page*/
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /*yes, we have to define width and height, otherwise transformation won't work*/
+  width: 130px; /* 2 x width - border-width */
+  height: 70px; /* width */
+}
+
+.infinity-loader .bg div,
+.infinity-loader > .fg > div > div {
+  width: 70px; /* width */
+  height: 70px; /* width */
+  border: 10px solid #aaa; /* border-width solid #aaa */
+  box-sizing: border-box; /* so that its border won't increase its width*/
+  border-radius: 50%; /* to make the div round*/
+  position: absolute;
+}
+
+.infinity-loader .right-bg {
+  transform: translate(100%, 0);
+  left: -10px; /* -border-width */
+}
+
+.infinity-loader > .fg > div > div {
+  border-color: #f02 #f02 transparent transparent;
+  transform: rotate(135deg);
+  animation: infinitespin 1s linear infinite; /* spin time linear infinite */
+  position: static; /*add this otherwise transformation in its parent won't work as expect*/
+}
+
+.infinity-loader > .fg > div {
+  clip: rect(0, 70px, 35px, 0); /* 0, width, width/2, 0*/
+  position: absolute; /* required for using clip: rect() */
+}
+
+.infinity-loader > .fg > .bottom-right-rect {
+  left: -10px; /* -border-width */
+  transform: translateX(100%) scale(1, -1);
+}
+
+.infinity-loader > .fg > .bottom-right-rect > div {
+  animation-delay: 0.25s; /* time/4 */
+}
+
+.infinity-loader > .fg > .top-right-rect {
+  left: -10px; /* -border-width */
+  transform: translateX(100%) scale(-1, 1);
+}
+
+.infinity-loader > .fg > .top-right-rect > div {
+  animation-delay: 0.5s; /* (2 x time)/4 */
+}
+
+.infinity-loader > .fg > .bottom-left-rect {
+  transform: scale(-1);
+}
+
+.infinity-loader > .fg > .bottom-left-rect > div {
+  animation-delay: 0.75s; /* (3 x time)/4 */
+}
+
+.infinity-loader > .fg {
+  filter: drop-shadow(0 0 6px orangered);
+}
+
+@keyframes infinitespin {
+  50%,
+  100% {
+    transform: rotate(495deg);
+  } /* (360 + 135)deg*/
+}
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: black;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis.lds-ellipsis-white div{
+  background: white !important;
+}
+.lds-ellipsis.lds-ellipsis-grey div{
+  background: #888 !important;
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+@keyframes lds-blocks {
+  0% {
+    background: #d618aa;
+  }
+  12.5% {
+    background: #d618aa;
+  }
+  12.625% {
+    background: #3b86c7;
+  }
+  100% {
+    background: #3b86c7;
+  }
+}
+@-webkit-keyframes lds-blocks {
+  0% {
+    background: #d618aa;
+  }
+  12.5% {
+    background: #d618aa;
+  }
+  12.625% {
+    background: #3b86c7;
+  }
+  100% {
+    background: #3b86c7;
+  }
+}
+.lds-blocks {
+  position: relative;
+}
+.lds-blocks div {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: #3b86c7;
+  -webkit-animation: lds-blocks 2.5s linear infinite;
+  animation: lds-blocks 2.5s linear infinite;
+}
+.lds-blocks {
+  width: 94px !important;
+  height: 94px !important;
+  -webkit-transform: translate(-47px, -47px) scale(0.47) translate(47px, 47px);
+  transform: translate(-47px, -47px) scale(0.47) translate(47px, 47px);
+}

@@ -1,0 +1,69 @@
+@@@onboardstatus_complete_profile@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100%;float:right">
+	<table style="height:100%;">
+		<tr>
+			<td style="padding-right:5px">
+				Complete your profile
+			</td>
+			<td>
+				<div style="display: inline-block;width:40px;height:40px;" class="indicator"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@onboardstatus_complete_profile_mobile@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100%;padding:5px;background:white;border-top: 1px solid #ccc">
+	<table style="height:100%;width:100%;">
+		<tr>
+			<td style="width:50px;text-align: center;">
+				<div style="display: inline-block;width:40px;height:40px;" class="indicator"></div>
+			</td>
+			<td style="padding:5px;font-size:18px;">
+				<div style="display: inline-block;" class="spinner"><i class="icon-down-open"></i></div> Complete your profile
+			</td>
+			<td style="width:30px;text-align: center;" class="x_close">
+				<i class="icon-cancel" style="font-size:16px"></i>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@onboardstatus_complete_profile_nav@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY" style="background: white;">
+	<%if(app.prefs.get('seenwelcome')){%>
+	<div style="padding:15px;color:white;background:#2F99C9;position: relative;">
+		<i class="icon-cancel x_close" style="position: absolute;top:0;right:0;padding:10px;color:white;font-size:14px"></i>
+		<div style="padding-right:30px;">Welcome to Nectar, <%=name%>!</div>
+		<div style="padding-top:15px">Nectar is full of amazing tools! Take these steps to activate your Nectar experience and start making connections with the Nectar Community!</div>
+	</div>
+	<%
+		app.prefs.set('seenwelcome',1);
+	}%>
+	<div style="border-bottom:1px solid #ddd;border-top:1px solid #ddd">
+		<div class="highlighttext2" style="padding-top:10px;text-align: center;font-size:14px">You're <%=(parseFloat(data.percent)).toFixed(0)%>% done with your Nectar Activation</div>
+		<div style="margin-top:10px;padding:10px;">
+			<div style="height:15px;background:#eee;">
+				<div style="height:100%;background:#2F99C9;width: <%=data.percent%>%"></div>
+			</div>
+		</div>
+	</div>
+	<div class="extramenu" style="overflow:hidden">
+		<div class="pane">
+		<%for (var i = 0; i < data.needs.length; i++) {
+			var need=data.needs[i];
+			var item=items[need];
+			%>
+			<div style="padding:10px;border-bottom:1px solid #ddd;" class="x_onboarditem reghover" data-type="<%=item.id%>">
+				<table style="width:100%;font-size:14px;color:#888">
+					<tr>
+						<td style="width:40px;text-align: center"><i class="<%=item.icon%> highlighttext2" style="font-size:24px"></i></td>
+						<td class="highlighttext2 bold" style="padding-left:8px"><%=item.title%></td>
+					</tr>
+				</table>
+				<div style="padding-left:10px;padding-top:10px;font-size:14px">
+					<%=item.content%>
+				</div>
+			</div>
+		<%}%>
+		</div>
+	</div>
+</div>

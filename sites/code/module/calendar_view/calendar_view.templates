@@ -1,0 +1,10 @@
+@@@calendar_view_calendar@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+	<div style="background:white;padding:5px 5px 120px 5px">
+		<div class="calendarcontent"></div>
+	</div>
+</div>
+@@@calendar_view_list@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div class="calendarlistcontent feeditems"></div>
+</div>

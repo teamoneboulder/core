@@ -1,0 +1,7 @@
+if [[ "$1" = "" ]] ; then
+echo "...need a video url";
+exit;
+fi
+ffmpeg $(youtube-dl -g "$1" | sed "s/.*/-ss 00:05 -i &/") -t 01:00 -c copy out.mkv
+
+#youtube-dl "$1" -o "/tmp/%(title)s.%(ext)s"

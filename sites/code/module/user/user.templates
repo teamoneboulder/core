@@ -1,0 +1,20 @@
+@@@user_retry_login@@@
+<div data-<%=template%>="<%=_tid%>" style="font-size:16px;text-align: left;padding:15px">
+	<%if(error=='account_blocked'){%>
+	<div>We believe your account is linked to suspicious activity and have suspended your account.  To re-enable your account, please contact <span class="bold x_link" data-email="team@oneboulder.one">team@oneboulder.one</span></div>
+	<%}else{%>
+	<div>We were unable to check your login.</div>
+	<div style="padding-top:15px;"><div style="padding:20px;"><%=error%></div></div>
+	<%}%>
+</div>
+@@@updatemodal@@@
+<div style="text-align:left">
+	<div style="font-size:20px;padding-bottom:20px;padding-top:20px">The app has been updated!</div>
+	<div style="font-size:20px;padding-bottom:20px">Click "Reload App" to load the new app!</div>
+	<div style="font-size:12px;padding-bottom:20px">*Note* If you are working on something important, you can close this modal and the new code will load the next time your app reloads.</div>
+</div>
+@@@reloadmodal@@@
+<div style="text-align:center">
+	<div style="font-size:20px;padding-bottom:20px;padding-top:20px">Major changes have been made</div>
+	<div style="font-size:12px;padding-bottom:20px">The app will automatically reload to update these changes.</div>
+</div>

@@ -1,0 +1,73 @@
+@@@admin_graphs@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page">
+    <div style="position:relative;height:100%;">
+        <div style="position:absolute;bottom:0;left:0;right:0;top:0px;">
+            <div style="font-size:16px;padding-bottom:3px;" class="sfit">
+                <table style="width:100%;position: absolute;top:0;left:0;right:0;height:50px;" >
+                    <tr>
+                        <td>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="active">Activity</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="membership">Membership</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="finances">Finances</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="ticket_receipt">Ticket Orders</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="users">Users</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="user_timeline">User Timeline</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="messages">Messages</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="notifications">Notifications</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="exchanges">Exchanges</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="awards">Awards</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="award_breakdown">Awards Breakdown</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="referal">Referals</div>
+                            <div style="display:none">
+                                <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="api">API</div>
+                                <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="api_timeline">APIT</div>
+                            </div>
+                        </td>
+                        <td style="width:200px;text-align: right;">
+                            <input id="graphselector" style="width:160px;background:transparent"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="usergraph" style="position:absolute;top:50px;left:5px;right:5px;bottom:5px;border:1px solid #aaa;" class="s-corner-all"></div>
+        </div>
+    </div>
+</div>
+@@@api_data@@@
+<div data-<%=template%>="<%=_tid%>">
+    api data
+</div>
+@@@game_list@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+    <%for (var i = 0; i < order.length; i++) {
+        var item=list[order[i]];%>
+        <div style="padding:5px;background:white;border-bottom:1px solid #ccc;" class="itable">
+            <div class="tcell" style="width:50px;text-align:center;"><%=item.count%></div>
+            <div class="tcell" style="text-align:left">
+                <%if(item.game){%><%=item.game.name%><%}else{%>No Game<%}%>
+            </div>                
+        </div>
+    <%}%>
+</div>
+@@@referal_list@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+    <%for (var i = 0; i < order.length; i++) {
+        var item=list[order[i]];%>
+        <div style="padding:5px;background:white;border-bottom:1px solid #ccc;" class="itable">
+            <div class="tcell" style="width:50px;text-align:center;"><%=item.count%></div>
+            <div class="tcell" style="text-align:left">
+                <div style="font-size:20px;">
+                    <%if(item.referer){%><%=item.referer.name%><%}else{%>No Referer<%}%>
+                </div>
+                <%if(item.people){%>
+                <div style="font-size:11px">
+                    <%for (var ti = 0; ti < item.people.length; ti++) {
+                        var person=item.people[ti];%>
+                        <span><%=person.name%></span><%if(item.people[ti+1]){%>,<%}%> 
+                    <%}%>
+                </div>
+                <%}%>
+            </div>                
+        </div>
+    <%}%>
+</div>

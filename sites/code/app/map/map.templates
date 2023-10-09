@@ -1,0 +1,10 @@
+@@@module_map_page@@@
+<div data-<%=template%>="<%=_tid%>" <%if(inline){%>class="sfit"<%}else{%>style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden"<%}%>>
+	<div style="position:absolute;top:0;left:0;right:0;bottom:0px;z-index:1" class="content">
+	</div>
+	<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+</div>
+@@@layertoggle@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:4px;background:rgba(55,55,55,.5);color:white;text-align:center" class="s-corner-all">
+    <i class="icon-left x_toggler menuicon" data-dir="-" style="font-size:18px;<%if((current+1)==1){%>opacity:0<%}%>"></i> <%=current+1%> of <%=total%> <i class="icon-right x_toggler menuicon" data-dir="+" style="font-size:18px;<%if((current+1)==total){%>opacity:0<%}%>"></i>
+</div>

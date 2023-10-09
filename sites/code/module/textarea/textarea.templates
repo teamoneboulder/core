@@ -1,0 +1,9 @@
+@@@textarea@@@
+<div data-<%=template%>="<%=_tid%>" class="dynamictextarea" <%if(this.id){%>data-id="<%=id%>"<%}%>>
+	<div class="inputheight" style="position:relative;min-height: <%=minHeight%>;overflow: hidden">
+		<div style="position: absolute;top:0;left:0;right:0;z-index:2" class="inputboxarea">	
+			<textarea class="inputarea autosize truebox dont-break-out inputareastyle maxlengtharea" <%if(this.maxlength){%>maxlength="<%=maxlength%>"<%}%> style="<%if(this.debug&&debug){%>color:rgba(0,0,0,.8);<%}else{%>color:rgba(0,0,0,0);<%}%>width:100%;min-height:<%=minHeight%>;background:transparent;font-weight: 400;resize:none;<%if(this.maxHeight&&maxHeight){%>max-height:<%=maxHeight%>;<%}%><%if(this.fontSize){%>font-size:<%=fontSize%>px;line-height:<%=(fontSize+2)%>px;<%}%>" placeholder="<%=placeholder%>"><%=message%></textarea>
+		</div>
+		<div style="position: absolute;top:0;left:0;right:0;z-index: 1;font-weight: 400;color:#555;<%if(this.fontSize){%>font-size:<%=fontSize%>px;line-height:<%=(fontSize+2)%>px;<%}%>" class="renderedcontent dont-break-out inputareastyle"><%=message%></div>
+	</div>
+</div>

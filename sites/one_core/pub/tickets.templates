@@ -1,0 +1,288 @@
+@@@home@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background:white">
+	<%if(event){%>
+    <div class="webview sfit" style="background:#eee">
+        <div class="sfit scrollY" style="z-index: 1">
+            <div style="padding-left: 300px;">
+                <div style="width:800px;margin:auto;">
+                    <div style="position:relative;height:400px;background-image:url(<%=modules.tools.getImg(event.pic,'background')%>)" class="coverimg" action="click:imageviewer:<%=phi.formatOptions({
+                        ele:'$',
+                        img:event.pic
+                    })%>">
+                    </div>
+                    <div style="padding:0px 0px 10px 0px;background: white;">
+                        <div>
+                            <div style="padding:10px;font-size:16px;">
+                                <div><%=event.description%></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="position: absolute;top:0px;left:50%;bottom:0;width:300px;margin-left:-552px;background: white;z-index: 2;border:1px solid #ccc;color:#555" class="scrollY">
+            <div>
+                <div style="padding:10px;font-size:24px;font-weight: bold"><%=event.name%></div>
+                <div style="padding:10px 0px 10px 0px;background: white;">
+                    <div>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div style="font-size:11px;padding-bottom:5px;">Event Time</div>
+                            <div><%=event.pretty_time%></div>
+                        </div>
+                        <%if(event.location){%>
+                        <%if(event.location.data){%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;" action="click:navigateTo">
+                            <div style="font-size:11px;padding-bottom:5px;">Location</div>
+                            <div><%=phone.location.getName(event.location.data,'simple')%></div>
+                        </div>
+                        <%}else if(event.location.text){%>
+                         <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div style="font-size:11px;padding-bottom:5px;">Location</div>
+                            <div><%=event.location.text%></div>
+                        </div>
+                        <%}%>
+                        <%}%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;" link="<%=_.getLink(event.page.data)%>">
+                            <div style="font-size:11px;padding-bottom:5px;">Hosted By</div>
+                            <div><%=event.page.data.name%></div>
+                        </div>
+                        <%if(event.ticket_url){%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;" link="<%=event.ticket_url%>">
+                            <div style="font-size:11px;padding-bottom:5px;">Ticket Link</div>
+                            <div><%=event.ticket_url%></div>
+                        </div>
+                        <%}%>
+                    </div>
+                </div>
+                <%if(event.ticket&&event.ticket.tickets){
+                    var ticketCount=0;
+                    for (var i = 0; i < event.ticket.tickets.order.length; i++){
+                        var id=event.ticket.tickets.order[i];
+                        var ticket=event.ticket.tickets.list[id];
+                        if(ticket.type!='donation'){
+                            if(ticket.available_to&&ticket.available_to.indexOf('explorer')>=0){
+                                ticketCount++;
+                            }else if(!ticket.available_to||ticket.available_to.length==0){
+                                ticketCount++;
+                            }
+                        }
+                    }
+                %>
+                <div style="padding-left:10px">
+                    <div style="font-size:11px;padding-bottom:5px;">Tickets</div>
+                    <div>
+                    <%for (var i = 0; i < event.ticket.tickets.order.length; i++) {
+                        var id=event.ticket.tickets.order[i];
+                        var ticket=event.ticket.tickets.list[id];
+                        ticket.remaining=ticket.quantity;
+                        if(ticket.all) ticket.remaining-=ticket.all;
+                        if(ticket.available_to&&ticket.available_to.length&&ticket.available_to.indexOf('explorer')==-1){
+                            continue;
+                        }
+                        %>
+                        <%if(ticket.type!='donation'){%>
+                        <div style="padding:5px;font-size:15px;border-bottom:1px solid #eee" class="ticketitem" data-id="<%=ticket.id%>" data-type="web">
+                            <table style="width:100%">
+                                <tr>
+                                    <td style="padding-left:5px">
+                                        <div style="font-size:16px" class="bold"><%=ticket.name%></div>
+                                        <div style="padding-left:5px"><%if(event.ticket_settings&&event.ticket_settings.showremaining||ticket.remaining<10){%><span style="font-size:12px;font-weight: normal"><%=ticket.remaining%>/<%=ticket.quantity%> remaining</span><%}%></div>
+                                    </td>
+                                    <td style="width:80px;text-align: right;padding-right:5px;font-size:16px;vertical-align: middle;">
+                                        $<%=modules.tools.toMoney(ticket.price)%></td>
+                                    <td style="width:60px;text-align: right;padding-right:5px;font-size:16px;vertical-align: top;padding-top: 3px;position: relative;">
+                                        <div class="ticketselect m-corner-all" style="display:inline-block;border:1px solid #ccc;">
+                                            <div style="display: inline-block;">
+                                                <span class="ticket_quantity select"></span>
+                                            </div>
+                                            <i class="icon-down-open" style="position: absolute;top:12px;right:8px;pointer-events: none;font-size:12px"></i>
+                                        </div>
+                                        <div class="ticketsoldout" style="font-size:11px">
+                                            Sold Out!
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <%}else{%>
+                        <div style="font-size:15px;" action="click:donate" data-id="<%=ticket.id%>">
+                            <div class="button1 truebox" style="text-align: center;"><%=ticket.name%></div>
+                        </div>
+                        <%}%>
+                    <%}%>
+                    </div>
+                    <div style="text-align: center;padding:10px">
+                        <div class="button1 x_gettickets" action="click:purchase" style="padding:7px 20px;font-size:14px;display: inline-block;">
+                            Purchase Tickets!
+                        </div>
+                    </div>
+                </div>
+                <%}%>
+            </div>
+        </div>
+    </div>
+    <div class="sfit mobileview"> 
+    	<div class="sfit scrollY" style="z-index: 1;bottom:30px">
+    		<div>
+                <div style="height:30px;z-index: 1;text-align: center;position: relative;font-size:14px;font-weight: bold;" class="button2" action="click:goToApp">
+                    <div class="table">
+                        <div class="tcell">Purchase in the ONE|Boulder App</div>
+                    </div>
+                </div>
+    			<div style="position:relative;height:50vw;background-image:url(<%=modules.tools.getImg(event.pic,'background')%>)" class="coverimg" action="click:imageviewer:<%=phi.formatOptions({
+                    ele:'$',
+                    img:event.pic
+                })%>">
+                    <div class="upgradient" style="display:none;height:30px;;color:white;position: absolute;bottom:0;left:0;right:0;font-size:12px;font-weight: bold;height:40px;">
+                        <div style="position:absolute;bottom:0px;left:0;right:0;padding-left:60px;padding-bottom:5px;font-size:16px">
+                            <%=event.page.data.name%>
+                        </div>
+                        <div style="position:absolute;bottom:-20px;left:5px;width:50px;height:50px;border:1px solid white;display: inline-block;background-image:url(<%=modules.tools.getImg(event.page.data.pic,'small')%>)" class="circle coverimg"></div>
+                    </div>
+                </div>
+                <div style="padding:0px 0px 10px 0px;background: white;">
+                    <div>
+                    	<div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div><%=event.name%></div>
+                        </div>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div style="font-size:11px;padding-bottom:5px;">Event Time</div>
+                            <div><%=event.pretty_time%></div>
+                        </div>
+                        <%if(event.location){%>
+                        <%if(event.location.data){%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;" action="click:navigateTo">
+                            <div style="font-size:11px;padding-bottom:5px;">Location</div>
+                            <div><%=phone.location.getName(event.location.data,'simple')%></div>
+                        </div>
+                        <%}else if(event.location.text){%>
+                         <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div style="font-size:11px;padding-bottom:5px;">Location</div>
+                            <div><%=event.location.text%></div>
+                        </div>
+                        <%}%>
+                        <%}%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;" link="<%=_.getLink(event.page.data)%>">
+                            <div style="font-size:11px;padding-bottom:5px;">Hosted By</div>
+                            <div><%=event.page.data.name%></div>
+                        </div>
+                        <%if(event.ticket_url){%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;" link="<%=event.ticket_url%>">
+                            <div style="font-size:11px;padding-bottom:5px;">Ticket Link</div>
+                            <div><%=event.ticket_url%></div>
+                        </div>
+                        <%}%>
+                        <%if(event.ticket&&event.ticket.tickets){
+                            var ticketCount=0;
+                            for (var i = 0; i < event.ticket.tickets.order.length; i++){
+                                var id=event.ticket.tickets.order[i];
+                                var ticket=event.ticket.tickets.list[id];
+                                if(ticket.type!='donation'){
+                                    if(ticket.available_to&&ticket.available_to.indexOf('explorer')>=0){
+                                        ticketCount++;
+                                    }else if(!ticket.available_to||ticket.available_to.length==0){
+                                        ticketCount++;
+                                    }
+                                }
+                            }
+                        %>
+                        <div style="padding-left:10px">
+                            <div style="font-size:11px;padding-bottom:5px;padding-top:10px">Tickets</div>
+                            <div>
+                            <%for (var i = 0; i < event.ticket.tickets.order.length; i++) {
+                                var id=event.ticket.tickets.order[i];
+                                var ticket=event.ticket.tickets.list[id];
+                                ticket.remaining=ticket.quantity;
+                                if(ticket.all) ticket.remaining-=ticket.all;
+                                if(ticket.available_to&&ticket.available_to.length&&ticket.available_to.indexOf('explorer')==-1){
+                                    continue;
+                                }
+                                %>
+                                <%if(ticket.type!='donation'){%>
+                                <div style="padding:5px;font-size:15px;border-bottom:1px solid #eee" class="ticketitem" data-id="<%=ticket.id%>" data-type="mobile">
+                                    <table style="width:100%;color:#555">
+                                        <tr>
+                                            <td style="padding-left:5px">
+                                                <div style="font-size:16px" class="bold"><%=ticket.name%></div>
+                                                <div style="padding-left:5px"><%if(event.ticket_settings&&event.ticket_settings.showremaining||ticket.remaining<10){%><span style="font-size:12px;font-weight: normal"><%=ticket.remaining%>/<%=ticket.quantity%> remaining</span><%}%></div>
+                                            </td>
+                                            <td style="width:80px;text-align: right;padding-right:5px;font-size:16px;vertical-align: middle;">
+                                                $<%=modules.tools.toMoney(ticket.price)%></td>
+                                            <td style="width:60px;text-align: right;padding-right:5px;font-size:16px;vertical-align: top;padding-top: 3px;position: relative;">
+                                                <div class="ticketselect m-corner-all" style="display:inline-block;border:1px solid #ccc;">
+                                                	<div style="display: inline-block;">
+                                                    	<span class="ticket_quantity select"></span>
+                                                    </div>
+                                                    <i class="icon-down-open" style="position: absolute;top:12px;right:8px;pointer-events: none;font-size:12px"></i>
+                                                </div>
+                                                <div class="ticketsoldout" style="font-size:11px">
+                                                    Sold Out!
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <%}else{%>
+                                <div style="font-size:15px;" action="click:donate" data-id="<%=ticket.id%>">
+                                    <div class="button1 truebox" style="text-align: center;"><%=ticket.name%></div>
+                                </div>
+                                <%}%>
+                            <%}%>
+                            </div>
+                        </div>
+                        <%}%>
+                        <div style="padding:10px;font-size:16px;border-bottom:1px solid #ccc;">
+                            <div style="font-size:11px;padding-bottom:5px;">Description</div>
+                            <div><%=event.description%></div>
+                        </div>
+                    </div>
+                </div>
+    		</div>
+    	</div>
+    	<div style="position: absolute;bottom:0;left:0;right:0;height:30px;z-index: 2">
+    		<div class="table" style="text-align: center">
+    			<%if(modules.prefs.get('qrs.'+event.id,false)){%>
+    			<div class="tcell button1 x_gettickets" action="click:purchase" style="font-size:18px;width:48%">Buy Tickets</div>
+    			<div class="tcell button2" action="click:view" style="font-size:18px;width:48%">View Tickets</div>
+    			<%}else{%>
+    			<div class="tcell button1 x_gettickets" action="click:purchase" style="font-size:18px;">Buy Tickets</div>
+    		<%}%>
+    		</div>
+    	</div>
+    </div>
+	<%}else{%>
+	<div style="padding:50px;font-size:24px;text-align: center;"><i class="icon-warning-sign"></i> Event not found</div>
+	<%}%>
+</div>
+@@@tickets_view@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;overflow: hidden" class="apppageview">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;" class="content m-corner-top">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px;border-bottom:1px solid #ccc" class="themebg m-corner-top">
+				<table style="width:100%;color:#888">
+					<tr>
+						<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+							<i class="icon-cancel" style="font-size:14px;"></i>
+						</td>
+						<td style="text-align: center;font-size:18px;color:#888;padding:3px;">Tickets</td>
+						<td style="width:50px;text-align: right;padding-right:5px;font-size:16px;" class="timeremaining">
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="position: relative;overflow: hidden" class="ticket_checkout_height scrollY">
+				<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pagepane">
+					<div>
+						<%for (var i = 0; i < qrs.length; i++) {
+							var qr=qrs[i];%>
+							<div style="padding:5px;text-align: center;"><div style="padding-bottom:5px;font-size: 18px;color:#888;font-weight: bold">Ticket <%=(i+1)%>/<%=(qrs.length)%></div><div><img src="<%=qr%>" style="width:80%;text-align: center;display: inline-block;"></div></div>
+						<%}%>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

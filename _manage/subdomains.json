@@ -1,0 +1,31 @@
+[{
+	"subdomain":"img",
+	"root":"_img"
+},{
+	"subdomain":"render",
+	"root":"sites/render"
+},{
+	"subdomain":"api",
+	"root":"api"
+},{
+	"subdomain":"app",
+	"root":"sites/one_core"
+},{
+	"subdomain":"admin",
+	"root":"sites/admin"
+},{
+	"subdomain":"code",
+	"root":"sites/code"
+},{
+	"subdomain":"icons",
+	"root":"sites/code"
+},{
+	"subdomain":"dev",
+	"root":"sites/dev"
+},{
+	"subdomain":"editor",
+	"root":"sites/one_core"
+},{
+	"subdomain":"actualize",
+	"root":"sites/one_core"
+}]

@@ -1,0 +1,10 @@
+@@@togglecheck@@@
+<div data-ui="togglecheck" <%if(this.id){%>id="<%=id%>"<%}%> style="display:inline-block">
+	<label class="togglecheck label">
+		<span class="label__text">
+		  <span class="label__check">
+		    <i class="icon-check-1 togglecheckicon"></i>
+		  </span>
+		</span>
+	</label>
+</div>

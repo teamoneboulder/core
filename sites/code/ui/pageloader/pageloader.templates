@@ -1,0 +1,78 @@
+@@@ui_pageloader@@@
+<%if(this.inline){%>
+<div class="<%if(theme){%>themecolor<%}%>" style="text-align:left;margin:0;z-index:100;<%if(this.background&&!this.feed){%>background:<%=background%>;<%}%>" <%if(this.id){%>id="<%=id%>"<%}%>>
+	<%if(this.feed){%>
+	<div class="feeditems" style="<%if(this.background){%>background:<%=background%>;<%}%>">
+	<%}%>
+	<div style="padding:5px;text-align:center;">
+		<div class="lds-ellipsis <%if(this.themeClass){%><%=themeClass%><%}%>">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+	</div>
+	<%if(this.feed){%>
+	</div>
+	<%}%>
+</div>
+<%}else{%>
+<div class="sfit splashcover <%if(theme){%>themecolor<%}%>" style="text-align:left;margin:0;z-index:100" <%if(this.id){%>id="<%=id%>"<%}%>>
+	<%if(this.type=='ellipsis'){%>
+	<%if(this.feed){%>
+	<div class="feeditems" style="height:100%;position: relative;">
+	<%}%>
+   <div style="position:absolute;top:50%;left:0;right:0;text-align:center;<%if(this.small){%>margin-top:-30px;<%}else{%>margin-top:-50px;<%}%>">
+		<div class="lds-ellipsis <%if(this.themeClass){%><%=themeClass%><%}%>">
+			<div></div>
+			<div></div>
+			<div></div>
+			<div></div>
+		</div>
+	</div>
+	<%if(this.feed){%>
+	</div>
+	<%}%>
+	<%}else if(this.type=='image'){%>
+	<div style="position:absolute;top:50%;left:50%;right:0;text-align:center;width:100px;height:100px;margin-left:-50px;margin-top:-50px">
+		<div class="sfit coverimg animate-spin" style="background-image:url(<%=this.background%>);"></div>
+	</div>
+	<%}else{%>
+	 <div class="infinity-loader">
+       <div class="bg">
+            <!--background circles-->
+            <div class="left-bg"></div>
+            <div class="right-bg"></div>
+          </div>
+          <div class="fg">
+            <!--foreground circles-->
+            <div class="top-left-rect">
+              <div></div>
+            </div>
+            <div class="bottom-right-rect">
+              <div></div>
+            </div>
+            <div class="top-right-rect">
+              <div></div>
+            </div>
+            <div class="bottom-left-rect">
+              <div></div>
+            </div>
+          </div>
+    </div>
+	<%}%>
+</div>
+<%}%>
+@@@ui_pageloader_blocks@@@
+<div class="sfit splashcover <%if(theme){%>themecolor<%}%>" style="text-align:left;margin:0;z-index:100" <%if(this.id){%>id="<%=id%>"<%}%>>
+	<div class="lds-blocks" style="position:absolute;top:50%;left:50%;margin-top:-44px;margin-left:-44px;">
+		<div style="left:38px;top:38px;animation-delay:0s"></div>
+		<div style="left:80px;top:38px;animation-delay:0.3125s"></div>
+		<div style="left:122px;top:38px;animation-delay:0.625s"></div>
+		<div style="left:38px;top:80px;animation-delay:2.1875s"></div>
+		<div style="left:122px;top:80px;animation-delay:0.9375s"></div>
+		<div style="left:38px;top:122px;animation-delay:1.875s"></div>
+		<div style="left:80px;top:122px;animation-delay:1.5625s"></div>
+		<div style="left:122px;top:122px;animation-delay:1.25s"></div>
+	</div>
+</div>

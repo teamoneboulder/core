@@ -1,0 +1,57 @@
+<div>
+    <table style="width:100%">
+        <tr>
+            <td style="width:50px;vertical-align:top;">
+                <div style="background-image:url({$data['post']['by']['data']['pic']|getImg:square});width:50px;height:50px; background-repeat:no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position:center;"></div>
+            </td>
+            <td style="padding-left:5px">
+                <div style="font-weight:bold;font-size:14px;">
+                    {$data['post']['by']['data']['name']}
+                </div>
+                <div n:if="isset($data['post'])" style="font-size:12px;padding:4px">
+                    {$data['post']|parsePostContent|noescape}
+                </div>
+                <div n:if="isset($data['post']['attachment'])" style="font-size:11px;color:#888;padding:5px">
+                    <div n:if="$data['post']['attachment']['type']=='event'">
+                        with an attached event
+                    </div>
+                    <div n:if="$data['post']['attachment']['type']=='post'">
+                        with an attached post
+                    </div>
+                </div>
+                <div n:if="isset($data['post']['media'])" style="font-size:11px;color:#888;padding:5px">
+                    <div n:if="$data['post']['media']['type']=='images'">
+                        {if ($data['post']['media']['data']|sizeof)==1}
+                        <div>
+                            sent {$data['post']['media']['data']|sizeof} image
+                        </div>
+                        {/if}
+                        {if ($data['post']['media']['data']|sizeof)>1}
+                        <div>
+                            sent {$data['post']['media']['data']|sizeof} images
+                        </div>
+                        {/if}
+                    </div>
+                    <div n:if="$data['post']['media']['type']=='video'">
+                        sent a video
+                    </div>
+                    <div n:if="$data['post']['media']['type']=='link'">
+                        sent a link
+                    </div>
+                    <div n:if="$data['post']['media']['type']=='audio'">
+                        sent an audio message
+                    </div>
+                </div>
+                <div n:if="isset($data['post']['with'])&&(sizeof($data['post']['with']))" style="font-size:11px;color:#888;padding:5px">
+                    {if ($data['post']['with']|sizeof)>1}
+                    with {$data['post']['with']|sizeof} people
+                    {/if}
+                    {if ($data['post']['with']|sizeof)==1}
+                    with 1 person
+                    {/if}
+                </div>
+                <div style="font-size:11px;color:#888;padding:5px">{$data['post']['_id']|getTs}</div>
+            </td>
+        </tr>
+    </table>
+</div>

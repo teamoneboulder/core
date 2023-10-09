@@ -1,0 +1,27 @@
+.alertcontent{
+	left:50%;
+	text-align: center;
+}
+.modalalert{
+	background: transparent !important; 
+}
+.modalcontent{
+	text-align:center;
+}
+.alertbtn{
+	padding:5px 10px;
+	border:1px solid white;
+	background: rgba(200,200,200,.5);
+}
+.bbtn{
+	padding:5px 10px;
+	border:1px solid #555;
+	color:#555;
+}
+.blurclass{
+  -webkit-transition: .2s linear;
+    -moz-transition: .2s linear;
+    -ms-transition: .2s linear;
+    -o-transition: .2s linear;
+    transition: .2s linear;
+}

@@ -1,0 +1,279 @@
+@@@admin_finances@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position: absolute;top:0;left:0;right:0;height:50px;background: white;text-align: left;" class="table">
+        <div class="tcell" style="padding-left:5px;text-align: left">
+            <div style="padding:5px 10px;display: inline-block;" class="x_setpage" data-page="cashflow">Cash Flow</div>
+            <div style="padding:5px 10px;display: inline-block;" class="x_setpage" data-page="invoices">Invoices</div>
+            <div style="padding:5px 10px;display: inline-block;" class="x_setpage" data-page="payments">Payments</div>
+            <div style="padding:5px 10px;display: inline-block;" class="x_setpage" data-page="subscriptions">Subscriptions</div>
+        </div>
+        <div class="tcell" style="width:80px;text-align: right;padding-right:15px">
+            <div style="font-size:11px;padding-bottom: 4px">Stripe Balance</div>
+            <div class="x_balance_stripe"><i class="icon-refresh animate-spin"></i></div>
+         </div>
+        <div class="tcell" style="width:80px;text-align: right;padding-right:15px">
+            <div style="font-size:11px;padding-bottom: 4px">Stripe Pending</div>
+            <div class="x_pending_stripe"><i class="icon-refresh animate-spin"></i></div>
+         </div>
+         <div class="tcell" style="width:80px;text-align: right;padding-right:15px">
+            <div style="font-size:11px;padding-bottom: 4px">O|B Balance</div>
+            <div class="x_balance_ob"><i class="icon-refresh animate-spin"></i></div>
+         </div>
+         <div class="tcell" style="width:80px;text-align: right;padding-right:15px">
+            <div style="font-size:11px;padding-bottom: 4px">O|B Pending</div>
+            <div class="x_pending_ob"><i class="icon-refresh animate-spin"></i></div>
+         </div>
+        <div class="tcell" style="width:150px;text-align: right;padding-right:5px">
+            <div class="button1 x_addinvoice m-corner-all"><i class="icon-add-clean"></i> Create Invoice</div>
+        </div>
+    </div>
+    <div id="dashboardcontent" style="border-top:1px solid #ccc;position: absolute;top:50px;left:0;right:0;bottom:0;background: white;"></div>
+</div>
+@@@admin_finances_cashflow@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position: absolute;top:0;right:0;z-index: 2">
+        <span class="x_refresh"><i class="icon-refresh"></i></span> <input id="dashboardselector" style="width:160px"/>
+    </div>
+    <div style="position: absolute;top:0;left:0;width:300px;bottom:0;border-right:1px solid #ccc;" id="listarea">
+        
+    </div>
+    <div style="position: absolute;top:0;left:301px;right:0;bottom:0;z-index: 1" id="grapharea"></div>
+</div>
+@@@admin_finances_subscriptions@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div class="sfit scroller" style="z-index:2;;overflow-y:auto;">
+        <div style="width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_finances_subscription_info@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:10px;border-bottom: 1px solid #ccc">
+    <div class="itable">
+        <div class="tcell" style="width:50px;vertical-align: top">
+            <div style="width:40px;height:40px;background-image:url(<%=_.getImg(data.page.data.pic,'square')%>)" class="circle coverimg"></div>
+        </div>
+        <div class="tcell" style="text-align: left;vertical-align: top">
+            <div style="font-size:16px;font-weight: bold;"><%=data.page.data.name%></div>
+            <div style="padding:5px;">Last Updated: <%=modules.moment.format(data.ts,'ago',false,1)%></div>
+            <%if(data.canceled){%>
+            <div style="padding:5px;font-weight: bold;color:#f22">Stopped: <%=modules.moment.format(data.canceled,'ago',false,1)%></div>
+            <%}%>
+            <%if(data.overdue){%>
+            <div style="padding:5px;font-weight: bold;color:#f22">Overdue</div>
+            <%}%>
+        </div>
+    </div>
+    <div class="itable" style="margin-top:10px;">
+        <div class="tcell" style="text-align: left">
+            <div>
+                <%
+                var tooltip='';
+                var total=0;
+                for (var key in data.membership) {
+                    var membership=data.membership[key];
+                    total+=membership.value;
+                    var pagename=key;
+                    tooltip+=data.membership_page[key].name+': $'+_.toMoney(membership.value,1)+'&#xa;';
+                    if(data.membership_page&&data.membership_page[key]){
+                        pagename=data.membership_page[key].name;
+                    }
+                %>
+                    <div><%if(membership.founder){%><span class="button1 l-corner-all" style="font-size:11px;margin-right:5px">Founder</span><%}%><%=pagename%>: <%=membership.name%> ($<%=_.toMoney(membership.value,1,false,1)%>)</div>
+                <%}%>
+            </div>
+        </div>
+        <div class="tcell" style="width:100px;text-align: right;" data-tooltip="<%=tooltip%>"><b>$<%=_.toMoney(total,1,false,1)%></b>/mo</div>
+    </div>
+</div>
+@@@admin_finances_payments@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div class="sfit scroller" style="z-index:2;;overflow-y:auto;">
+        <div style="width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_finances_refund_partial@@@
+<div>
+    <div style="padding:10px;font-size:18px;">Partial Refund</div>
+    <div>
+        <input class="x_amount" type="text" style="font-size:14px;width:200px;padding:5px 5px 5px 25px;background: transparent;" placeholder="Amount"/>
+    </div>
+</div>
+@@@admin_finances_payment_info@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:10px;border-bottom: 1px solid #ccc">
+    <div class="itable">
+        <div class="tcell" style="width:50px;vertical-align: top">
+            <%if(data.page.data.pic){%>
+            <div style="width:40px;height:40px;background-image:url(<%=_.getImg(data.page.data.pic,'square')%>)" class="circle coverimg"></div>
+            <%}else{%>
+             <div style="width:40px;height:40px;background: #eee;" class="circle table">
+                 <div class="tcell"><%=data.page.data.name[0].toUpperCase()%></div>
+             </div>
+            <%}%>
+        </div>
+        <div class="tcell" style="text-align: left;vertical-align: top">
+            <div style="font-size:16px;font-weight: bold;"><%=data.page.data.name%> <%if(data.page.data.email){%><span style="font-size:11px;font-weight: normal;">(<%=data.page.data.email%>)</span><%}%></div>
+            <div style="padding:5px;"><%=modules.moment.format(data.ts,'ago',false,1)%></div>
+        </div>
+        <%if(data.to&&data.to.data){%>
+        <div class="tcell" style="width:50px;vertical-align: top">To</div>
+        <div class="tcell" style="width:50px;vertical-align: top">
+            <%if(data.to.data.pic){%>
+            <%if(data.to.type=='event'){%>
+            <div style="width:40px;height:40px;background-image:url(<%=_.getImg(data.to.data.pic,'small')%>)" class="circle coverimg"></div>
+            <%}else{%>
+            <div style="width:40px;height:40px;background-image:url(<%=_.getImg(data.to.data.pic,'square')%>)" class="circle coverimg"></div>
+            <%}%>
+            <%}else{%>
+             <div style="width:40px;height:40px;background: #eee;" class="circle table">
+                 <div class="tcell"><%=data.to.data.name[0].toUpperCase()%></div>
+             </div>
+            <%}%>
+        </div>
+        <div class="tcell" style="text-align: left;vertical-align: top">
+            <div style="font-size:16px;font-weight: bold;"><%=data.to.data.name%></div>
+            <%if(data.to.type=='event'&&data.to.data){%>
+             <div style="padding:5px;">Event Date: <%=modules.moment.format(data.to.data.start,'ago',false,1)%></div>
+            <%}%>
+        </div>
+        <%}%>
+        <%if(data.tag=='subscription'){%>
+        <%if(!data.refunded){%>
+        <div class="tcell" style="width:80px;text-align: right;"><span class="button1 s-corner-all" action="click:refundSubscription" data-id="<%=data._id%>">Refund</span></div>
+        <%}%>
+        <%}%>
+    </div>
+    <div class="itable" style="margin-top:5px;">
+        <div class="tcell" style="text-align: left">
+            <div>
+                <%=data.description%>
+            </div>
+            <%if(data.refunded){%>
+            <div style="padding:5px;font-size:11px">Refunded by <%=data.refunded.by.data.name%> <%=modules.moment.format(data.refunded.ts,'ago',false,1)%></div>
+            <%}%>
+        </div>
+        <div class="tcell" style="width:100px;text-align: right;<%if(data.refunded){%>color:gold;<%}%>">
+           <div> <b>$<%=_.toMoney(data.total,1,false,1)%></b></div>
+           <%if(data.refunded&&data.refunded.total!=data.total){%>
+           <div style="padding-top:3px;font-size:11px">($<%=_.toMoney(data.refunded.amount,1,false,1)%> refunded)</div>
+           <%}%>
+        </div>
+    </div>
+</div>
+@@@admin_finances_invoices@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div class="sfit scroller" style="z-index:2;;overflow-y:auto;">
+        <div style="width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_finances_invoice_info@@@
+<div data-<%=template%>="<%=_tid%>" data-id="<%=data._id%>" style="padding:10px;border-bottom: 1px solid #ccc">
+    <div class="searchitem" data-id="<%=data.id%>" style="background:white">
+        <table style="width:100%">
+            <tr>
+                <td style="width:60px">
+                    <%if(data.page.type=='event'){%>
+                    <div style="width:60px;height:60px;position:relative;background-image:url(<%=modules.tools.getImg(data.page.data.pic,'background')%>)" class="coverimg circle">
+                    </div>
+                    <%}else{%>
+                    <div style="width:60px;height:60px;position:relative;background-image:url(<%=modules.tools.getImg(data.page.data.pic,'square')%>)" class="coverimg circle">
+                    </div>
+                    <%}%>
+                </td>
+                <td style="padding-left:10px;font-size:18px;text-align: left;color:#555">
+                    <div style="padding-bottom: 5px;"><%=data.page.data.name%></div>
+                    <div style="font-size:12px;padding-left:5px;padding-top:5px">
+                        <%if(data.status=='pending'){%>
+                        <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all">Pending</span>
+                        <%}else if(data.status=='finalized'){%>
+                        <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all">Finalized</span>
+                        <%if(data.paid){%>
+                         <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all">Paid</span>
+                        <%}else{%>
+                        <%if(data.page.stripe&&data.page.stripe.express&&data.page.stripe.express.linked){%>
+                        <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all x_payinvoice button2" data-invoice="<%=data._id%>">Pay Invoice</span>
+                        <%}else{%>
+                        <%if(data.page.stripe&&data.page.stripe.express&&!data.page.stripe.express.linked&&data.page.stripe.express.code){%>
+                        <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all x_retry button2" data-invoice="<%=data._id%>">Retry Link</span>
+                        <%}else{%>
+                        <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all x_request button2" data-invoice="<%=data._id%>">Request to Link Payout</span>
+                        <%}%>
+                        <%}%>
+                        <%}%>
+                        <%}else if(data.status=='temporary'){%>
+                        <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all">Temporary</span>
+                        <%}%>
+                        <%if(data.page.type=='event'){%>
+                        <span style="padding:3px 5px;border:1px solid #ccc;" class="l-corner-all" link="<%=app.siteurl+'/event/'+data.page.id%>">View Event</span>
+                        <%}%>
+                        <span style="padding-left:5px;"><%=modules.moment.format(data.start,'date',false,1)%><%if(data.end){%> to <%=modules.moment.format(data.end,'date',false,1)%><%}%></span></div>
+                </td>
+                <td style="width:40px;text-align: center;">
+                    $<%=_.toMoney(data.total,1,false,1)%>
+                </td>
+            </tr>
+        </table>
+        <%if(data.description){%>
+        <div style="padding:5px;font-size:12px;background: #f6f6f6;margin: 10px;" class="m-corner-all"><%=data.description%></div>
+        <%}%>
+    </div>
+</div>
+@@@admin_finances_cashflow_list@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+    <div class="sfit scrollY" style="bottom:40px;">
+        <div>
+            <%if(items){%>
+            <div style="padding:5px;font-size:18px;font-weight: bold;">IN</div>
+            <div style="padding:5px;background: #555;color:white">
+                Total: $<%if(all.total.data.total){%><%=_.toMoney(all.total.data.total,1,false,1)%><%}else{%>0<%}%>
+            </div>
+            <div style="padding:5px"><i class="icon-rss"></i> Subscriptions: <span style="float:right">$<%if(all.subscription.data.total){%><%=_.toMoney(all.subscription.data.total,1,false,1)%><%}else{%>0<%}%></span></div>
+            <div style="padding:5px"><i class="icon-ticket"></i> Event Tickets: <span style="float:right">$<%if(all.event_ticket.data.total){%><%=_.toMoney(all.event_ticket.data.total,1,false,1)%><%}else{%>0<%}%></span></div>
+            <div style="padding:5px"><i class="icon-ticket"></i> Ticket Fees: <span style="float:right">$<%if(all.fees.list.one_boulder.fees.ticket_platform_fee){%><%=_.toMoney(all.fees.list.one_boulder.fees.ticket_platform_fee,1,false,1)%><%}else{%>0<%}%></span></div>
+            <div style="padding:5px"><i class="icon-hands_heart"></i> Page Donations: <span style="float:right">$<%if(all.donation_page.data.total){%><%=_.toMoney(all.donation_page.data.total,1,false,1)%><%}else{%>0<%}%></span></div>
+            <div style="padding:5px"><i class="icon-hands_heart"></i> Fundraisers: <span style="float:right">$<%if(all.fundraiser.data.total){%><%=_.toMoney(all.fundraiser.data.total,1,false,1)%><%}else{%>0<%}%></span></div>
+            <div style="padding:5px"><i class="icon-hands_heart"></i> Fundraiser Fees: <span style="float:right">$<%if(all.fees.list.one_boulder.fees.fundraiser_platform_fee){%><%=_.toMoney(all.fees.list.one_boulder.fees.fundraiser_platform_fee,1,false,1)%><%}else{%>0<%}%></span></div>
+            <div style="padding:5px"><i class="icon-money"></i> CC Processing Fees: <span style="float:right">$<%if(all.fees.list.stripe.fees.cc_processing){%><%=_.toMoney(all.fees.list.stripe.fees.cc_processing,1,false,1)%><%}else{%><%}%></span></div>
+            <%}%>
+            <%if(invoice){%>
+            <div style="padding:5px;font-size:18px;font-weight: bold;margin-top:15px">Out</div>
+            <div style="padding:5px;background: #555;color:white">
+                Paid: $<%=_.toMoney(invoice.paid,1,false,1)%> - Pending: $<%=_.toMoney(invoice.pending,1,false,1)%>
+            </div>
+            <%for (var i = 0; i < invoice.order.length; i++) {
+                var item=invoice.list[invoice.order[i]];
+                if(!item){
+                    //console.log(item,invoice.order[i]);
+                    continue;
+                }
+                %>
+                <%if(item.page){%>
+                <%if(item.page&&item.page.start){%><div style="font-size:11px;padding-bottom:2px;padding-left: 5px;padding-top:10px"><%=modules.moment.format(item.page.start,'event_full',false,1)%> (<%=modules.moment.format(item.page.start,'ago',false,1)%>) <span link="<%=_.getLink(item.page,app.siteurl)%>"><b>Link</b></span><%if(modules.moment.getDiff(item.page.start,1,'days')>3){%><span style="background:#f02;color:white;padding:2px 5px;margin-left:5px" class="s-corner-all">Overdue</span><%}%></div><%}%>
+                <div style="padding:5px;" class="itable">
+                    <div class="tcell" style="text-align: left;padding-left: 5px;font-size:16px;vertical-align: top">
+                        <div><%=item.page.name%></div>
+                    </div>
+                    <div class="tcell" style="width:100px;text-align: right;padding-right:10px;font-size:20px;">
+                        <div>$<%=_.toMoney(item.total,1,false,1)%></div>
+                    </div>
+                </div>
+                <%}%>
+            <%}%>
+            <%}%>
+        </div>
+    </div>
+    <%if(invoice.total){%>
+    <div style="position: absolute;bottom:0;left:0;right:0;height:40px;border-top:1px solid #ccc" class="table">
+        <div class="tcell" style="text-align: left;padding-left: 5px;font-size:16px">
+            Total
+        </div>
+        <div class="tcell" style="width:100px;text-align: right;padding-right:10px;font-size:20px;font-weight: bold">
+            $<%=_.toMoney(invoice.total,1,false,1)%>
+        </div>
+    </div>
+    <%}%>
+</div>

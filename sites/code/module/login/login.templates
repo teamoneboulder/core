@@ -1,0 +1,126 @@
+@@@login@@@
+<div data-<%=template%>="<%=_tid%>" style="<%if(this.inline){%>position:relative;<%}else{%>position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;<%}%><%if(this.background){%>background-image:url(<%=background%>)<%}%>" class="<%if(!this.inline){%>scrollY<%}%> coverimg">
+	<div style="width:600px;max-width:100%;margin:auto;">
+		<div style="background:<%if(this.backgroundColor){%><%=backgroundColor%><%}else{%>white<%}%>;text-align: center;" <%if(this.corner){%>class="m-corner-all"<%}%>>
+			<%if(user){%>
+			<div style="text-align: center;">
+				<div style="margin:auto;width:100px;height:100px;background-image:url(<%=modules.img.getImg(user.pic,'small')%>)" class="coverimg circle"></div>
+			</div>
+			<div style="padding-top:10px;font-size:20px;color:#888">
+				<%=user.name%>
+			</div>
+			<%}%>
+			<%if(titleTemplate){%>
+			<%=$.fn.render({template:titleTemplate,returnhtml:1})%>
+			<%}%>
+			<div style="padding:20px;">
+				<div>
+					<div id="loginform" class="welcometransition">
+						<div style="padding:5px 0px;width:300px;margin:auto;position:relative;max-width:100%;" class="truebox ">
+							<div class="<%=prettyClass%>" style="position: relative;<%if(user){%>display: none;<%}%>">
+								<label>
+								  <input type="email" required id="email" class="truebox" <%if(placeholder){%>placeholder="Email"<%}%> style="width:300px;"/>
+								  <div class="label-text">Email</div>
+								</label>
+							</div>
+							<div class="<%=prettyClass%>" style="position: relative;display: none;" id="passwordbox">
+								<label>
+								  <input type="password" required id="password" class="truebox" <%if(placeholder){%>placeholder="Password"<%}%> style="width:300px;display:block"/>
+								  <div class="label-text">Password</div>
+								</label>
+							</div>
+							<div id="signinresponse" style="padding:20px;text-align:left;display:none;font-size:16px;"></div>
+							<div style="padding:20px;">
+								<div class="nectarbtn s-corner-all shineybutton x_loginbtn button1" id="signin" style="position:relative;color:white;padding:7px;font-size:18px;text-align: center;">Log In</div>
+							</div>
+							<%if(!app.appleTestingMode&&hasCreate){%>
+							<div style="padding:0px 20px 20px 20px">
+								<div class="nectarbtn s-corner-all x_create shineybutton button2" style="position:relative;color:white;padding:7px;">Create Account!</div>
+							</div>
+							<%}%>
+						</div>
+						<div style="max-width:320px;margin:auto;">
+							<div class="truebox">
+								<div style="text-align:center">
+									<div>
+										<div style="display:block;padding:10px;font-size:16px;text-align:center;color:#888" data-goto="forgot" class="x_forgot"><b>Forgot Password?</b></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="forgotform" class="welcometransition" style="display: none;">
+						<div style="padding:5px 0px;width:300px;margin:auto;position:relative;max-width:100%;" class="truebox ">
+							<div class="<%=prettyClass%>" style="position: relative;">
+								<label>
+								  <input type="email" required id="resetemail" class="truebox" <%if(placeholder){%>placeholder="Email"<%}%> style="width:90vw;"/>
+								  <div class="label-text">Email</div>
+								</label>
+							</div>
+							<div style="padding:20px">
+								<div class="nectarbtn s-corner-all shineybutton x_loginbtn truebox button1" id="reset" style="position:relative;color:white;padding:7px;font-size:18px;text-align: center;overflow: hidden">Reset Password</div>
+							</div>
+						</div>
+						<div id="resetresponse" style="padding:20px 20px 10px 20px;text-align:left;display:none;font-size:16px;"></div>
+						<div style="max-width:320px;margin:auto;">
+							<div class="truebox">
+								<div style="text-align:center">
+									<div>
+										<div style="display:block;padding:20px;font-size:16px;text-align:center;margin-top:5px;color:#888"  class="x_tologin"><b>Back to Login</b></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="setform" class="welcometransition" style="display: none;">
+						<div style="padding:5px;width:300px;margin:auto;position:relative;max-width:100%;" class="truebox ">
+							<div id="setprofilepic">
+								<div class="itable profilepicupload">
+									<div class="tcell" style="width:60px;">
+										<div style="width:50px;height:50px;border:1px solid #ccc;display: inline-block;text-align: center" class="circle profilepic coverimg">
+											<div style="width:100%;height:100%" class="table uploadimgcover">
+												<div class="tcell">
+													<div><i class="icon-upload" style="color:#888;font-size:22px;"></i></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tcell" style="padding-left:10px;color:#888;font-size:18px;text-align:left">Profile Picture</div>
+								</div>
+							</div>
+							<div class="<%=prettyClass%>" style="position: relative;">
+								<label>
+								  <input type="password" required id="setpass1" class="truebox" <%if(placeholder){%>placeholder="Password"<%}%>/>
+								  <div class="label-text">Password</div>
+								</label>
+							</div>
+							<div class="<%=prettyClass%>" style="position: relative;">
+								<label>
+								  <input type="password" required id="setpass2" class="truebox" <%if(placeholder){%>placeholder="Re-Password"<%}%>/>
+								  <div class="label-text">Re-type Password</div>
+								</label>
+							</div>
+							<div id="setresponse" style="padding:20px 20px 10px 20px;text-align:left;display:none;font-size:16px;"></div>
+							<div style="margin:20px;color:#888;font-size:18px;padding:7px;position: relative;color:white;" id="setpw" class="truebox nectarbtn s-corner-all shineybutton button1">
+								<i class="seticon icon-logout"></i> Log In
+							</div>
+						</div>
+						<div style="max-width:320px;margin:auto;">
+							<div class="truebox">
+								<div style="text-align:center">
+									<div>
+										<div style="display:block;padding:20px;font-size:16px;text-align:center;margin-top:5px;color:#888"  class="x_tologin"><b>Back to Login</b></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@login_create_password@@@
+<div style="padding:20px;text-align: left;font-size:20px">
+	Your password has been cleared, click "Set Password" to create a new one.
+</div>

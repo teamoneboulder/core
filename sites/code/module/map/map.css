@@ -1,0 +1,239 @@
+.scrollable .zoombtn{
+  display: block !important
+}
+.nomenu .navmenuicon{
+  display: none !important;
+}
+.locate .locatebtn{
+  display: block !important;
+}
+.map_glnavcontainer{
+	background: rgba(255,255,255,.4);
+}
+.map_markerview_mobile{
+	top:120%;
+	height:100%;
+	color:black;
+}
+.markershowing .map_markerview_mobile{
+  margin-top:-100px;
+  top:100%;
+}
+.markershowing.showmore .map_markerview_mobile{
+	top:0;
+	margin-top: 0;
+}
+.iphoneX .mapcovertop{
+    top: 90px !important;
+}
+.isPhoneGap:not(.iphoneX) .mapcovertop{
+    top: 75px !important;
+}
+.markershowing.showmore .togglemore{
+	background: #eee;
+}
+.showmore .arrowicon{
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.mapboxgl-ctrl-bottom-left{
+	display: none !important;
+}
+.map_maparea{
+	position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;z-index:1
+}
+.map_bottomnav{
+	position:absolute;bottom:10px;left:10px;z-index:10
+}
+.map_looking{
+	opacity: 1;
+}
+.map_ctrl{
+	/*background:rgba(255,255,255,.5);*/
+	padding:4px;margin-bottom:3px;
+	cursor: pointer;
+	text-align: center;
+	font-size: 25px;
+}
+.map_ctrl i{font-size:26px;}
+body:not(.isMobile) .map_ctrl i:hover{
+	text-shadow: none;
+	opacity: .6;
+	filter:Alpha(Opacity=.6);
+}
+.map_ctrl.lesspadding{
+	padding:2px;
+}
+.map_helpshowing .map_subctrl,.layersshowing .map_subctrl,.map_subctrl.forceshow{
+	display: block;
+}
+.map_subctrl{
+	display: none;
+}
+.map_menuiconbox span{
+    height: 4px;
+    -webkit-transition: all 0.1s ease-in-out;
+    transition: all 0.1s ease-in-out;
+}
+.map_layersshowing .map_menuiconbox{
+	margin-left:5px;
+}
+.map_layerlist .normalicon:first-child{
+	-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; -khtml-border-top-left-radius: 4px; border-top-left-radius: 4px;
+	-moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; -khtml-border-top-right-radius: 4px; border-top-right-radius: 4px;
+}
+.map_layerlist .normalicon:last-child{
+	-moz-border-radius-bottomleft: 4px; -webkit-border-bottom-left-radius: 4px; -khtml-border-bottom-left-radius: 4px; border-bottom-left-radius: 4px; 
+	-moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px;
+}
+.map_layerlist .normalicon:not(:last-child){
+	border-bottom:1px solid #ccc;
+}
+.map_layer{
+	padding:5px;
+	background: white;
+}
+.map_layerbox{
+	display: none;
+}
+.map_layersshowing .map_layerbox{
+	display: block
+}
+.map_menuiconbox{
+	display: -webkit-box;
+    display: flexbox;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    position: relative;
+    margin:auto;
+    padding: 4px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    z-index: 998;
+    cursor: pointer;
+}
+.map_layersshowing:not(.map_helpshowing) .map_menuiconbox span:nth-of-type(1) {
+    -webkit-transform: rotate(45deg) translateY(130%);
+    -ms-transform: rotate(45deg) translateY(130%);
+    transform: rotate(45deg) translateY(130%);
+}
+.map_layersshowing:not(.map_helpshowing) .map_menuiconbox span:nth-of-type(2) {
+    display: none;
+}
+.markershowing .map_layertoggle{
+	bottom:110px !important;
+	display: block ;
+}
+.map_layertoggle{
+	display: none;
+}
+.map_layersshowing:not(.map_helpshowing) .map_menuiconbox span:nth-of-type(3) {
+    -webkit-transform: rotate(-45deg) translateY(-130%);
+    -ms-transform: rotate(-45deg) translateY(-130%);
+    transform: rotate(-45deg) translateY(-130%);
+}
+.map_menuiconbox span{
+	background: white;
+}
+.map_menuiconbox span:not(:last-of-type) {
+    margin-bottom: 4px;
+}
+.map_layersshowing:not(.map_helpshowing) .tooltip .tooltiptext{
+	visibility: hidden !important;
+}
+.map_layersshowing .map_navbg{
+	display: block;
+}
+.map_helpbg,.map_navbg{
+	display: none;
+}
+.map_helpcloseicon{
+	display: none;
+}
+.map_helpshowing .map_helpcloseicon{
+	display: block;
+}
+.map_helpshowing .map_helpicon{
+	display: none;
+}
+.map_helpshowing .map_helpbg{
+	display: block;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+body:not(.isMobile) .tooltip:hover:not(.nohover) .tooltiptext {
+    visibility: visible;
+}
+/* Tooltip container */
+.tooltip {
+    position: relative;
+}
+.tooltip .tooltiptext {
+    opacity: 0;
+    transition: opacity .5s;
+}
+.tooltip_right .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 100%; /* To the right of the tooltip */
+    margin-top: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(55,55,55,.7);
+}
+.tooltip_bl .tooltiptext::after {
+    content: " ";
+    position: absolute;
+    top: 100%;
+    left: 17px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(55,55,55,.7) transparent transparent transparent;
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(55,55,55,.7);
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+  font-size:12px;
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+.tooltip_right .tooltiptext {
+    top: 50%;
+    margin-top:-13px;
+    right: 110%; 
+}
+.tooltip_bl .tooltiptext {
+    bottom: 110%;
+    left: 0%; 
+}
+.tooltip_bl .tooltiptext2 {
+    bottom: 99% !important;
+}
+.helpshowing .tooltip .tooltiptext{
+  opacity: 1;
+  visibility: visible;
+}
+.layersshowing:not(.helpshowing) .tooltip .tooltiptext{
+	visibility: hidden !important;
+}
+body:not(.isMobile) .tooltip:hover:not(.nohover) .tooltiptext {
+    opacity: 1;
+}

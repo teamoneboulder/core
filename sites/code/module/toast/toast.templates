@@ -1,0 +1,47 @@
+@@@module_toast_item@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;left:0;right:0;<%if(loc=='top'){%>top:0;<%}else{%>bottom:0;<%}%>;z-index: 10000;" class="toaster coverimg shadow_bottom_long">
+    <div style="margin-left:5px;margin-right:5px;padding:4px;<%if(this.highlightImage){%>background-image:url(<%=highlightImage%>);<%}else{%>background: <%=highlightcolor%>;<%}%>border:1px solid #ccc;" class="toastarea m-corner-all">
+        <table style="width:100%;min-height:40px;<%if(this.fontColor){%>color:<%=fontColor%>;<%}%>">
+            <tr>
+                <%if(images.length){%>
+                <td style="width:50px;text-align:center;vertical-align:top">
+                    <%switch(images.length){
+                        case 1:
+                        case 2:
+                        case 3:
+                        %>
+                        <img src="<%=modules.tools.getImg(images[0],defaultImageSize)%>" class="circle" style="width:50px;height:50px">
+                        <%
+                        break;
+                        case 4:
+                        %>
+                        <div style="width:50px;height:50px;position:relative;">
+                            <div style="position:absolute;top:0;left:0;height:25px;width:25px;background-image:url(<%=modules.tools.getImg(images[0],defaultImageSize)%>);" class="coverimg m-corner-tl"></div>
+                            <div style="position:absolute;top:0;right:0;height:25px;width:25px;background-image:url(<%=modules.tools.getImg(images[1],defaultImageSize)%>);" class="coverimg m-corner-tr"></div>
+                            <div style="position:absolute;bottom:0;left:0;height:25px;width:25px;background-image:url(<%=modules.tools.getImg(images[2],defaultImageSize)%>);" class="coverimg m-corner-bl"></div>
+                            <div style="position:absolute;bottom:0;right:0;height:25px;width:25px;background-image:url(<%=modules.tools.getImg(images[3],defaultImageSize)%>);" class="coverimg m-corner-br"></div>
+                        </div>
+                        <%
+                        break;
+                        default:
+                        %>
+                        <img src="<%=modules.tools.getImg(images[0],defaultImageSize)%>" class="m-corner-all" style="width:50px;height:50px">
+                        <%
+                        break;
+                    }%>
+                </td>
+                <%}else{%>
+                <td style="width:40px;text-align:center;vertical-align: top;"><i class="<%=icon%>" style="font-size:40px;"></i></td>
+                <%}%>
+                <td style="padding-left:8px;font-size:16px">
+                    <%if(title){%><div style="font-size:18px" class="bold"><%=title%></div><%}%>
+                    <div style="padding-left:4px"><%=content%></div>
+                </td>
+                <%if(this.closeable){%><td style="vertical-align:middle;width:30px;text-align:center;"><i class="x_closer icon-cancel menuiconb" style="cursor:pointer;font-size:24px"></i></td><%}%>
+            </tr>
+        </table>
+        <div style="padding:5px 0px 2px 0px;text-align: center;">
+            <div style="width:80px;height:4px;background:rgba(100,100,100,.6);display: inline-block;;" class="s-corner-all"></div>
+        </div>
+    </div>
+</div>

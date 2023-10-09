@@ -1,0 +1,73 @@
+@@@invite_page@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 100;background: rgba(55,55,55,.4);overflow: hidden" class="apppageview inviteview">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;min-height:85vh" class="content m-corner-top">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<%if(this.title){%>
+			<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px">
+				<table style="width:100%;color:#888">
+					<tr>
+						<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+							<i class="icon-cancel" style="font-size:14px;"></i>
+						</td>
+						<td style="text-align: center;font-size:18px;color:#888;padding:3px;"><%=title%></td>
+						<td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;font-size:16px;" class="x_share highlightcolor">
+							<i class="icon-send"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<%}%>
+			<div style="position: absolute;top:40px;left:0;right:0;height:40px;">
+				<input type="text" style="width:96vw;padding:5px 5px 5px 30px;border:1px solid #ccc;margin-left:2vw;font-size:18px" class="truebox l-corner-all taginput" placeholder="Search for Friends">
+				<div style="position: absolute;top:0;right:0;width:60px;bottom:0;z-index:1"></div>
+				<i class="tagcancel icon-cancel" style="display:none;position: absolute;top:3px;right:2vw;margin-right:3px;font-size:18px;padding:5px;color:#888;z-index: 2"></i>
+				<i class="icon-search" style="position: absolute;top:3px;left:2vw;font-size:18px;padding:5px;color:#888"></i>
+			</div>
+			<div style="position: absolute;top:80px;left:0;right:0;bottom:0;z-index: 2;display: none;background: white;" class="searchele"></div>
+			<div style="position: absolute;top:80px;left:0;right:0;bottom:0;z-index: 1;" class="searchcontent">
+				<div style="position: absolute;top:0;left:0;right:0;height:30px;">
+					<%=_ui.swipenav.render({id:'invitenav',nav:nav})%>
+				</div>
+				<div style="position: absolute;top:30px;left:0;right:0;bottom:0;">
+					<div data-page="selected" class="pages sfit">
+						<div class="searchresults"></div>
+					</div>
+					<div data-page="suggested" class="pages sfit">
+						<div class="suggestedlist"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@invite_no_results@@@
+<div data-<%=template%>="<%=_tid%>" style="font-size:16px;padding:20px;">
+	Search for friends you would like to invite!
+</div>
+@@@invite_results@@@
+<div data-<%=template%>="<%=_tid%>" style="height:50px;width:100%;position: relative;">
+	<div class="container">
+		
+	</div>
+</div>
+@@@invite_item@@@
+<div data-<%=template%>="<%=_tid%>" data-id="<%=data.id%>" class="inviterow <%if(opts.invited){%>invited<%}%>">
+	<table style="width:100%">
+		<tr>
+			<td style="width:60px">
+				<div style="width:60px;height:60px;position:relative;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>)" class="coverimg">
+				</div>
+			</td>
+			<td style="padding-left:10px;font-size:18px;text-align: left">
+				<%=data.name%>
+			</td>
+			<td style="width:70px;text-align: right;padding-right:5px" class="x_invite" data-id="<%=data.id%>">
+				<div style="padding:5px;border:1px solid #ccc;" class="s-corner-all invitebtn">Invite</div>
+				<div style="padding:5px;border:1px solid #ccc;" class="s-corner-all removeinvite">Remove</div>
+			</td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,44 @@
+@@@location_page@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;">
+	<div style="position:absolute;top:0px;left:0;right:0;height:70px;overflow:visible;z-index:2;">
+		<table style="width:100%;height:50px;margin-top:20px;" class="appcontent">
+			<tr>
+				<td style="width:50px"><%=$.fn.render({template:'backbtn',returntemplate:true})%></td>
+				<td><div style="font-size:24px;text-align:center;">Update Address</div></td>
+				<td style="width:50px;font-size:18px;;" class="revicon x_save">Save</td>
+			</tr>
+		</table>
+	</div>
+	<div style="position:absolute;bottom:40px;left:0;right:0;top:70px;font-size:24px;text-align:center;z-index:1;background:white" class="locationarea">
+		<div class="locationcontent"></div>
+	</div>
+	<div style="position:absolute;left:0;right:0;bottom:0px;height:40px;text-align:center;z-index:2;background:white" class="permissions">
+	</div>
+</div>
+@@@location_cityinput@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if(!location){%>
+	<div style="border-bottom:1px solid #ccc;">
+		<i class="icon-search appcontent" style="position:absolute;top:8px;left:5px;font-size:26px"></i>
+		<input class="s-corner-all truebox addressinput normalinput appinput_clean" placeholder="Enter Address">
+	</div>
+	<div style="position: absolute;top:50px;left:0;right:0;bottom:0;" class="resultslist"></div>
+	<%}else{%>
+	<div data-<%=template%>="<%=_tid%>" style="padding:10px;color:black;text-align: left;border:1px solid white;margin:5px" class="s-corner-all">
+	    <div style="font-size:18px;"><b><%=app.location.getName(location_info,'city')%></b></div>
+	</div>
+	<div style="text-align: center;">
+		<div style="width:90vw;font-size:12px;text-align: left;margin:auto;padding-bottom:2px">Apartment #</div>
+		<div>
+			<input type="text" style="width:90vw;padding:5px;border:1px solid #ccc;font-size:20px;margin:auto;" class="s-corner-all normalinput truebox x_apt" placeholder="Apartment Number" value="<%=location_apt%>">
+		</div>
+	</div>
+	<div style="margin-top:15px;">
+		<div class="blacknectarbtn s-corner-all x_removecity"><i class="icon-pencil"></i> Change Address</div>
+	</div>
+	<%}%>
+</div>
+@@@location_city_search@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:10px;color:black;text-align: left;border-bottom:1px solid #ccc;;font-size:18px" class="searchrow">
+	<div><%=app.location.getName(data,format)%></div>
+</div>

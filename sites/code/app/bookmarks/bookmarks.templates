@@ -1,0 +1,96 @@
+@@@bookmarks_loading@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden" class="mainprofilepage">
+	<div style="position:absolute;top:20px;left:0;right:0;height:45px;z-index:2" class="profileheader">
+		<table style="width:100%;height:100%;">
+			<tr>
+				<td style="width:50px"><%=$.fn.render({template:'backbtn',returntemplate:true})%></td>
+				<td><div style="font-size:24px;text-align:center;color:white">Bookmarks</div></td>
+				<td style="width:50px"></td>
+			</tr>
+		</table>
+	</div>
+	<div style="position:absolute;top:65px;left:0;right:0;bottom:0px;z-index:2;background:white;" class="content">
+		<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+	</div>
+</div>
+@@@bookmarks_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div style="position: absolute;top:0;left:0;right:0;height:30px;" class="headercolor">
+		<%=_ui.swipenav.render({id:'bookmarknav',nav:nav})%>
+	</div>
+	<div style="position: absolute;top:30px;left:0;right:0;bottom:0;background:#eee;" class="pagecontent">
+		<div style="display: none;" class="pages sfit" data-page="stream">
+			<div style="position: absolute;top:0px;left:0;right:0;bottom:0;">
+				<div class="stream"></div>
+			</div>
+		</div>
+		<div style="display: none;" class="pages sfit" data-page="collections">
+			<div style="position: absolute;top:0px;left:0;right:0;bottom:0;">
+				<div class="collections"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@bookmarks_collection@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="padding:10px;font-size:20px;" class="x_set" data-id="<%=data._id%>">
+		<table style="width:100%">
+			<tr>
+				<td style="width:50px;text-align: center;">
+				 	<div class="circle coverimg" style="width:40px;height:40px;<%if(item.pic){%>background-image:url(<%=modules.tools.getImg(data.pic,'small')%>);<%}else{%>border:1px solid #ccc<%}%>"></div>
+				</td>
+				<td style="font-size:18px;color:#888">
+					<%=data.name%>
+				</td>
+			</tr>
+		</table>
+			
+	</div>
+</div>
+@@@bookmarks_item@@@
+<div data-<%=template%>="<%=_tid%>" class="postitem" data-id="<%=data.post.id%>">
+	<div style="margin:5px 0px;text-align:left;color:#555">
+		<div style="padding:5px;position: relative;" class="postbg">
+			<div class="x_viewprofile">
+				<table style="width:100%">
+					<tr>
+						<td style="width:50px;vertical-align:top">
+							<%if(data.post.user){%>
+							<div class="coverimg circle" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(data.post.user.pic,'small')%>)"></div>
+							<%}else if(data.post.page){%>
+							<div class="coverimg circle" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(data.post.page.data.pic,'small')%>)"></div>
+							<%}%>
+						</td>
+						<td style="vertical-align:top">
+							<div style="font-size:14px;"><%=modules.feed_global.getStatus(data.post)%></div>
+							<div style="padding-top:2px;padding-left:2px"><span class="livetime" data-id="<%=data.post._id%>"><%=modules.moment.format(data.post._id,'ago')%></span> <i class="<%=modules.inlinepermissions_global.getIcon(data.post.perms)%>"></i></div>
+						</td>
+						<td style="width:40px;text-align: right;vertical-align: top;">
+						</td>
+					</tr>
+				</table>
+				<i class="icon-dot-3 x_more" data-id="<%=data.post.id%>" style="position:absolute;top:0;right:0;padding:10px;font-size:18px"></i>
+			</div>
+			<div class="postcontent">
+				<%if(this.full){%>
+				<%=modules.links_global.fixContent(modules.feed_global.parseMessage(data.post,false,1))%>
+				<%}else{%>
+				<%=app.wrapContent(modules.links_global.fixContent(modules.feed_global.parseMessage(data.post,false,1)),200)%>
+				<%}%>
+			</div>
+			<div>
+				<%if(data.post.media&&data.post.media.type){%>
+				<%=modules.feed_global.render(data.post)%>
+				<%}%>
+			</div>
+			<%if(!opts.share){%>
+			<div class="postbg tagarea <%=data.post.id%>_tags" style="padding-top:5px;">
+				<%=modules.tagvote.render({id:data.post.id,data:{eid:data.post.id,hashtag:true,tags:data.post.tags,selected:data.post.user_votes,stats:data.post.vote_stats}},1)%>
+			</div>
+			<div class="postbg statsarea <%=data.post.id%>_stats" style="padding-top:5px">
+				<%=$.fn.render({template:'module_feed_stats',data:{data:data.post},returntemplate:true})%>
+			</div>
+			<%}%>
+		</div>
+	</div>
+</div>

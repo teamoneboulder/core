@@ -1,0 +1,42 @@
+@@@modules_votestats@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;">
+	<div style="position: absolute;top:100%;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;" class="s-corner-top">
+			<div style="padding:5px 10px;font-size:18px;text-align: center;font-weight: bold;border-bottom:1px solid #ccc;">Tag Stats</div>
+			<div style="height: 200px;background: #eee;position: relative;" class="results">
+				<div style="position: relative;height:100%;">
+					<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@modules_votestats_loading@@@
+<div style="position: relative;height:100%;">
+	<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+</div>
+@@@modules_votestats_feed@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div>
+	<%if(this.order){%>
+	<%for (var i = 0; i < order.length; i++) {
+		var item=list[order[i]];%>
+		<div style="position: relative;" class="x_selecttag" data-id="<%=item.tag%>">
+			<div style="font-size:18px;margin:5px;padding:5px;" class="themecolor l-corner-all">
+				<table style="color:white;font-size:24px;font-weight: bold;width:100%;">
+					<tr>
+						<td style="width:50px;text-align: center;"><%=item.count%></td>
+						<td style="text-align: left;">#<%=item.tag%></td>
+						<td style="width:50px;text-align: center;">
+							<i class="icon-info"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	<%}%>
+	<%}else{%>
+	No Results Yet.
+	<%}%>
+	</div>
+</div>

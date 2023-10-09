@@ -1,0 +1,46 @@
+[{
+	"id":"video_tester",
+	"name":"Video Tester"
+},{
+	"id":"nl_interface",
+	"name":"Natural Language Tester"
+},{
+	"id":"finances",
+	"name":"Finances"
+},{
+	"id":"event_steward",
+	"name":"Event Steward"
+},{
+	"id":"admin",
+	"name":"Admin"
+},{
+	"id":"marketing",
+	"name":"Marketing"
+},{
+	"id":"consierge",
+	"name":"Consierge"
+},{
+	"id":"music_tender",
+	"name":"Music Tender"
+},{
+	"id":"podcast_tender",
+	"name":"Podcast Tender"
+},{
+	"id":"tester",
+	"name":"Feature Tester"
+},{
+	"id":"coreteam",
+	"name":"Core Team"
+},{
+	"id":"copy",
+	"name":"Copy Writer"
+},{
+	"id":"layout_tester",
+	"name":"Layout Tester"
+},{
+	"id":"admin_stats",
+	"name":"Admin Stats"
+},{
+	"id":"deal_steward",
+	"name":"Deal Steward"
+}]

@@ -1,0 +1,7 @@
+<div>
+    <div style="padding-bottom:15px;"><b>{$data['from']['name']}</b> invited you to the event <b>{$data['event']['name']}!</b></div> 
+    <div n:if="isset($data['event']['pic'])&&$data['event']['pic']" style="width:100%;height:250px;background-image:url({$data['event']['pic']|getImg:background});background-repeat:no-repeat;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;background-position:center;"></div>
+    <div n:if="isset($data['event'])" style="font-size:12px;padding:4px;margin-top:10px">
+        {$data['event']['description']|parseHtmlContent|noescape}
+    </div>
+</div>

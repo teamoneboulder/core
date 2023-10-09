@@ -1,0 +1,106 @@
+@@@admin_invite_page@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;top:0;left:<%=left%>%;position:absolute">
+	<%=$.fn.render({template:'app_header',data:{
+        data:{
+            name:'Admin Invite',
+            back:'<i class="icon-left-open"></i>',
+            submit:'<i class="icon-add-clean"></i>'
+        }
+    },returntemplate:true})%>
+	<div style="position:absolute;bottom:0px;left:0;right:0;top:65px;padding:10px;font-size:24px;text-align:center;z-index:1;background:white" class="apppage content">
+		<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+	</div>
+</div>
+@@@admin_invite_content@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+    <div class="list"></div>
+</div>
+@@@admin_invite_item@@@
+<div data-<%=template%>="<%=_tid%>">
+    <div class="rowitem <%if(data.user){%>x_showprofile<%}%>" data-id="<%=data._id%>" style="border-bottom:1px solid #ccc;">
+        <table style="width:100%">
+            <tr>
+                <%if(data.user){%>
+                <td style="width:50px;text-align: center;" class="x_profile">
+                    <div style="width:50px;height:50px;background-image: url(<%=modules.tools.getImg(data.user.pic,'small')%>)" class="coverimg"></div>
+                </td>
+                <%}else{%>
+                <td style="width:50px;text-align: center;">
+                    <i class="icon-metadrop" style="font-size:40px"></i>
+                </td>
+                <%}%>
+                <td style="padding:4px 0px 4px 5px;text-align: left">
+                    <div style="font-size:20px"><%=data.name%></div>
+                    <div style="font-size:12px;padding-left:10px;padding-top:4px">
+                        <i class="icon-real-time"></i> <%=data.trial%> Mo
+                        <%if(data.tester){%>
+                        &nbsp;&middot;&nbsp;<i class="icon-cog"></i> Tester
+                        <%}%>
+                        <%if(data.skip_cc){%>
+                        &nbsp;&middot;&nbsp;<i class="icon-credit-card"></i>
+                        <%}%>
+                    </div>
+                    <div style="padding-top:4px;padding-left:10px;">
+                        <%if(!data.user){%>
+                        <%=modules.moment.format(data._id,'short')%> by <b><%=data.admin.name.firstName()%></b>
+                        <%}else{%>
+                        Claimed <%=modules.moment.format(data.claimed_ts,'short',false,1)%>&nbsp;&middot;&nbsp;added by <b><%=data.admin.name.firstName()%></b>
+                        <%}%>
+                    </div>
+                </td>
+                <%if(!data.user){%>
+                <td style="width:50px;text-align: center;" class="x_share" data-id="<%=data._id%>">
+                    <i class="icon-share-post" style="font-size:20px"></i>
+                </td>
+                <%}%>
+            </tr>
+        </table>
+    </div>
+</div>
+@@@admin_invite_add@@@
+<div data-<%=template%>="<%=_tid%>" style="background: white;position: absolute;top:0;left:0;width:100%;height:100%;">
+    <%=$.fn.render({template:'app_header',data:{
+        data:{
+            name:'Create Invite',
+            back:'Cancel',
+            page:1,
+            submit:'<i class="icon-send"></i>'
+        }
+    },returntemplate:true})%>
+    <div style="position: absolute;top:65px;left:0;right:0;z-index:2;overflow:hidden;" class="sfit extranavcontainer apppage">
+        <div style="border-bottom:1px solid #ccc;">
+            <input style="width:100vw;padding:10px;font-size:18px;" class="truebox x_name" placeholder="Invite Name">
+        </div>
+        <div style="border-bottom:1px solid #ccc;">
+            <input style="width:100vw;padding:10px;font-size:18px;" class="truebox numpad" placeholder="Trial Period (months)">
+        </div>
+        <div style="border-bottom:1px solid #ccc">
+            <div style="padding:5px 0px;">
+                <table style="width:100%">
+                    <tr>
+                        <td style="padding-left:10px;font-size:18px;">
+                            Facebook Content Tester
+                        </td>
+                        <td style="width:60px;padding-right: 5px">
+                            <%=_ui.toggle.render({id:'add_invite',status:0})%>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div style="padding:5px 0px;">
+                <table style="width:100%">
+                    <tr>
+                        <td style="padding-left:10px;font-size:18px;">
+                            Bypass CC info
+                        </td>
+                        <td style="width:60px;padding-right: 5px">
+                            <%=_ui.toggle.render({id:'skip_cc',status:0})%>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

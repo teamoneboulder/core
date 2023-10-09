@@ -1,0 +1,205 @@
+@@@admin_engagement@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page">
+    <div style="position: absolute;top:0;left:0;width:400px;bottom:0;border-right:1px solid #ccc">
+        <div style="position: absolute;top:0;left:0;right:0;height:30px;background: white;border-bottom: 1px solid #ccc">
+            <table style="width:100%;height:100%">
+                <tr>
+                    <td style="padding-left:10px;"><b>Emails</b></td>
+                    <td style="width:80px;text-align: right;padding-right: 5px;font-size:14px" class="x_new">
+                        <i class="icon-add-clean"></i> New
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="position: absolute;top:31px;left:0;right:0;bottom:0px;">
+            <div class="emaillist"></div>
+        </div>
+    </div>
+    <div style="position: absolute;top:0;left:401px;right:0;bottom:0" class="emailcontent"></div>
+</div>
+@@@admin_engagement2@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page">
+    <div style="position: absolute;top:0;left:0;width:400px;bottom:0;border-right:1px solid #ccc">
+        <!-- <div style="position: absolute;top:0;left:0;right:0;height:30px;background: white;border-bottom: 1px solid #ccc">
+            <%=_ui.swipenav.render({id:'engagementnav',nav:menu,align:"left",color:"#555"})%>
+        </div> -->
+        <div style="position: absolute;top:0px;left:0;right:0;height:30px;background: white;border-bottom: 1px solid #ccc">
+            <table style="width:100%;height:100%">
+                <tr>
+                    <td style="padding-left:10px;font-weight: bold;font-size:18px">
+                        System Notifications
+                        <!-- <div style="position: relative;width:120px;display: inline-block;">
+                            <input type="text" style="padding:5px;border:1px solid #ccc;width:120px" class="l-corner-all" placeholder="Search Content">
+                        </div>
+                        <div style="position: relative;width:120px;margin-left: 10px;display: inline-block;">
+                            <input type="text" style="padding:5px;border:1px solid #ccc;width:120px" class="l-corner-all" placeholder="Search Hooks">
+                        </div> -->
+                    </td>
+                    <td style="width:80px;text-align: right;padding-right: 5px;font-size:14px" class="x_new">
+                        <i class="icon-add-clean"></i> New
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div style="position: absolute;top:31px;left:0;right:0;bottom:0px;">
+            <div class="emaillist"></div>
+        </div>
+    </div>
+    <div style="position: absolute;top:0;left:401px;right:0;bottom:0" class="emailcontent"></div>
+</div>
+@@@admin_engagement_preview@@@
+<div data-<%=template%>="<%=_tid%>" style="font-size:16px;width:300px;padding:5px">
+    <div style="padding-top:5px">
+        <div style="font-size:14px;margin-bottom:10px"><b>Send Preview To</b>
+            <select class="previewid" style="margin-left:5px">
+                <option value="UIAMPLAYER1">Tom</option>
+                <option value="UCQ13TO59M6D">Nikko</option>
+                <option value="UUSTQC80LZIO">Logan</option>
+                <option value="UMEA5HR43G6F">Padme</option>
+                <option value="UTF17BXWSM6R">Kathena</option>
+            </select>
+        </div>
+        <div style="padding-top:20px;">
+            <div class="highlightbutton2 nbtn x_send">
+                Send Preview!
+            </div>
+        </div>
+        <div style="padding-top:5px;">
+            <div class="highlightbutton2 nbtn x_preview">
+                View Email in Browser!
+            </div>
+        </div>
+        <div style="padding-top:5px;">
+            <div class="highlightbutton2 nbtn x_previewdata">
+                View Email Data!
+            </div>
+        </div>
+    </div>
+</div>
+@@@admin_engagement_send@@@
+<div data-<%=template%>="<%=_tid%>" style="font-size:16px;width:300px;padding:5px">
+    <div style="padding-top:5px">
+        <div style="padding-top:20px;">
+            <div class="highlightbutton2 nbtn x_send">
+                Send Email!
+            </div>
+        </div>
+    </div>
+</div>
+@@@admin_engagement_email@@@
+<div class="sfit" data-<%=template%>="<%=_tid%>">
+    <div style="position: absolute;top:0;left:0;right:0;height:40px;background: white;border-bottom:1px solid #ccc">
+        <div>
+            <table style="width:100%;height:100%">
+                <tr>
+                    <td style="padding-left:10px;">
+                        <div><b>Editor</b></div>
+                        <div class="lastupdate" style="font-size:10px;padding:3px"><%if(data.tsu){%>Last Saved: <%=modules.moment.format(data.tsu,'ago')%><%}else{%>Not saved yet<%}%></div>
+                    </td>
+                    <td style="text-align: right">
+                        <table style="float:right">
+                            <tr>
+                                <%if(data.stats&&data.stats.list){%>
+                                <td class="x_list" style="padding:5px;">Sent to <%=data.stats.total%> people <%if(data.campaign){%><%=modules.moment.format(data.campaign._id,'ago')%><%}%></td>
+                                <td class="x_more"><i class="icon-dot-3" style="padding:5px;"></i></td>
+                                <%}else{%>
+                                <%if(page=='custom'){%>
+                                <td class="x_segment notonsystem" data-id="hassegment" style="padding:5px;"><i class="icon-audience"></i> Segment <span class="segmentcount"></span></td>
+                                <td class="x_send notonsystem" style="padding:5px;"><i class="icon-mail"></i> Send!</td>
+                                <%}%>
+                                <td class="x_preview" style="padding:5px;"><i class="icon-eye"></i> Preview</td>
+                                <td class="x_action" data-action="delete" style="padding:5px;display: none;"><i class="icon-trash-empty"></i> Delete</td>
+                                <td class="x_action" data-action="save" style="padding:5px;"><i class="icon-floppy"></i> Save</td>
+                                <td class="x_more"><i class="icon-dot-3" style="padding:5px;"></i></td>
+                                <%}%>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="sfit content" style="top:41px;">  
+    </div>
+</div>
+@@@admin_engagement_email_welcome@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+    <div style="padding:20px;font-size:20px;">Welcome to the Engagement Tool!</div>
+    <div style="padding:20px;font-size:16px;">Select and Edit templates or create a new one!</div>
+</div>
+@@@admin_engagement_pushitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:10px 30px 10px 10px;position:relative;border-bottom:1px solid #ccc" class="rowitem reghover" data-id="<%=data.id%>">
+    <div style="font-size:16px"><b><%=data.title%></b></div>
+    <%if(data.system_info){%>
+    <div style="padding:5px;"><b><%=data.system_info.name%></b> <span style="font-size:11px">(<%=data.system_id%>)</span></div>
+    <%}%>
+    <div style="position: absolute;top:2px;right:2px;width:30px;height:30px;background:#eee" class="circle">
+        <table style="width:100%;height:100%">
+            <tr>
+                <td style="text-align: center">
+                    <i class="icon-pencil"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+@@@admin_email_nav@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:10px 30px 10px 10px;position:relative;border-bottom:1px solid #ccc" class="rowitem reghover" data-id="<%=data.id%>">
+    <div style="font-size:16px"><b><%=data.subject%></b></div>
+    <%if(data.stats){%>
+    <div>
+        <%if(data.stats.processing){%>
+        <%}else{%>
+        <div style="font-size:11px">
+            Sent to <%=data.stats.total%> people<%if(data.stats.time){%> in <%=(data.stats.time).toFixed(2)%> seconds<%}%>  <%if(data.campaign){%><%=modules.moment.format(data.campaign._id,'ago')%><%}%>
+        </div>
+        <%}%>
+        <%if(data.campaign){%>
+        <div style="font-size:11px">
+            <%=data.campaign.clicked%> clicks, <%=(data.campaign.read/data.campaign.sent*100).toFixed(0)%>% read.
+        </div>
+        <%}%>
+    </div>
+    <%}%>
+    <div style="padding:5px;font-size:11px">Last Edit: <%=modules.moment.format(data.tsu,'ago')%></div>
+    <div style="position: absolute;top:2px;right:2px;width:30px;height:30px;background:#eee" class="circle">
+        <table style="width:100%;height:100%">
+            <tr>
+                <td style="text-align: center">
+                    <i class="icon-pencil"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+@@@admin_engagement_notification@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:10px 30px 10px 10px;position:relative;border-bottom:1px solid #ccc" class="rowitem reghover" data-id="<%=data.id%>">
+    <div style="font-size:16px"><b><%=data.subject%></b></div>
+    <%if(data.system_info){%>
+    <div style="padding:5px;"><b><%=data.system_info.name%></b> <span style="font-size:11px">(<%=data.system_id%>)</span></div>
+    <%}%>
+    <%if(data.stats){%>
+    <div>
+        <%if(data.stats.processing){%>
+        <%}else{%>
+        <div style="font-size:11px">
+            Sent to <%=data.stats.total%> people<%if(data.stats.time){%> in <%=(data.stats.time).toFixed(2)%> seconds<%}%>  <%if(data.campaign){%><%=modules.moment.format(data.campaign._id,'ago')%><%}%>
+        </div>
+        <%}%>
+        <%if(data.campaign){%>
+        <div style="font-size:11px">
+            <%=data.campaign.clicked%> clicks, <%=(data.campaign.read/data.campaign.sent*100).toFixed(0)%>% read.
+        </div>
+        <%}%>
+    </div>
+    <%}%>
+    <div style="position: absolute;top:2px;right:2px;width:30px;height:30px;background:#eee" class="circle">
+        <table style="width:100%;height:100%">
+            <tr>
+                <td style="text-align: center">
+                    <i class="icon-pencil"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

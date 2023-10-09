@@ -1,0 +1,234 @@
+@@@modules_mobilealert@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: <%if(this.zIndex){%><%=zIndex%><%}else{%>1000000<%}%>;background: transparent;">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<%if(this.menu&&menu.endpoint){%>
+			<%if(this.title){%>
+			<div class="mobilealert_title"><%=title%>
+				<%if(this.closer){%>
+				<i class="icon-cancel x_closer" style="font-size:16px;float:right;padding:3px;"></i>
+				<%}%>
+			</div>
+			<%if(this.subtitle){%>
+			<div class="mobilealert_subtitle"><%=subtitle%></div>
+			<%}%>
+			<%}else if(this.subtitle){%>
+			<div class="mobilealert_subtitle"><%=subtitle%>
+				<%if(this.closer){%>
+				<i class="icon-cancel x_closer" style="font-size:16px;float:right;padding:3px;"></i>
+				<%}%>
+			</div>
+			<%}%>
+			<%if(menu.infinitescroller){%>
+			<div style="height:60vh;">
+				<div class="endpointreults">
+				</div>
+			</div>
+			<%}else{%>
+			<div class="endpointreults">
+				<div style="padding:20px;font-size:16px;"><i class="icon-refresh animate-spin"></i> Loading...</div>
+			</div>
+			<%}%>
+			<%}else{%>
+			<%if(this.title){%>
+			<div class="mobilealert_title"><%=title%>
+				<%if(this.closer){%>
+				<i class="icon-cancel x_closer" style="font-size:16px;float:right;padding:3px;"></i>
+				<%}%>
+			</div>
+			<%if(this.subtitle){%>
+			<div class="mobilealert_subtitle"><%=subtitle%></div>
+			<%}%>
+			<%}%>
+			<%if(this.steps){%>
+			<div class="stepscontent"></div>
+			<%}else{%>
+			<div style="max-height:70vh;" class="scrollY">
+			<div>
+			<div></div>
+			<%if(this.menu&&menu.length){%>
+			<%for (var i = 0; i < menu.length; i++) {
+				var item=menu[i];%>
+				<%=$.fn.render({template:render_template,data:{item:item},returntemplate:true})%>
+			<% }%>
+			<%}else if(this.content){%>
+			<div style="padding:20px;font-size:15px;">
+				<div><%=content%></div>
+			</div>
+			<%}else if(this.contentTemplate){%>
+			<%=$.fn.render({template:contentTemplate,data:(this.data)?data:{},returntemplate:true})%>
+			<%}else if(this.renderFunction){%>
+			<div class="rendercontent"></div>
+			<%}%>
+			<%}%>
+			</div>
+			</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@mobilealert_calendar_picker@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%for (var i = 0; i < calendars.order.length; i++) {
+		var clist=calendars.list[calendars.order[i]];
+		if(!clist.order.length) continue;
+		%>
+		<div class="headercolor bold" style="padding:10px;"><%=clist.name%></div>
+		<%for (var ti = 0; ti < clist.order.length; ti++) {
+			var item=clist.list[clist.order[ti]];%>
+		<div style="padding:12px;font-size:18px;" data-id="<%=item.id%>" class="navitem">
+			<table style="width:100%">
+				<tr>
+					<td style="padding-left:10px;">
+						<div style="font-size:18px"><%=item.name%></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<%}%>
+	<%}%>
+</div>
+@@@mobilealert_contextmenu@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<%if(this.title){%>
+			<div class="mobilealert_title" style="font-weight: normal"><%=title%>
+				<%if(this.closer){%>
+				<i class="icon-cancel x_closer" style="font-size:16px;float:right;padding:3px;"></i>
+				<%}%>
+			</div>
+			<%}%>
+			<div></div>
+			<%for (var i = 0; i < menu.length; i++) {
+				var item=menu[i];%>
+				<%=$.fn.render({template:render_template,data:{item:item},returntemplate:true})%>
+			<% }%>
+		</div>
+	</div>
+</div>
+@@@mobilealert_contextmenu_item@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:12px;font-size:18px;" data-id="<%=item.id%>" class="<%if(item.toggle){%>toggleitem<%}else{%>navitem<%}%>">
+	<%if(item.toggle){
+		var titem=item.opts[item.state];
+	}else{
+		var titem=item;
+	}%>
+	<%if(titem){%>
+	<table style="width:100%">
+		<tr>
+			<%if(titem.icon){%>
+			<td style="width:40px;text-align: center;">
+				<i style="margin-right:10px;font-size:30px" class="<%=titem.icon%>"></i>
+			</td>
+			<%}%>
+			<td style="padding-left:10px;">
+				<div style="font-size:18px"><%=titem.name%></div>
+			</td>
+		</tr>
+	</table>
+	<%}%>
+</div>
+@@@modules_mobilealert_identity@@@
+<div style="padding:10px;font-size:18px;" data-id="<%=item.id%>" class="navitem navitemclick">
+	<table style="width:100%">
+		<tr>
+			<td style="width:40px;text-align: center;" class="subnavitem" data-id="<%if(item.id[0]=='U'){%>profile<%}else{%>page<%}%>">
+				<div style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(item.pic,'small')%>)" class="coverimg s-corner-all"></div>
+			</td>
+			<td style="padding-left:10px;">
+				<div style="font-size:18px"><%=item.name%></div>
+				<%if(item.selected){%>
+				<div style="padding-left:5px">
+					Selected
+				</div>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@modules_mobilealert_pagenav@@@
+<div style="padding:10px;font-size:18px;" data-id="<%=item.id%>" class="navitem navitemclick">
+	<table style="width:100%">
+		<tr>
+			<td style="width:40px;text-align: center;" class="subnavitem" data-id="<%if(item.id[0]=='U'){%>profile<%}else{%>page<%}%>">
+				<div style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(item.pic,'small')%>)" class="coverimg s-corner-all"></div>
+			</td>
+			<td style="padding-left:10px;">
+				<div style="font-size:18px"><%=item.name.limitlength(18)%></div>
+				<%if(item.following){%>
+				<div style="font-size:14px">
+					<%=item.following%> followers
+				</div>
+				<%}%>
+				<%if(item.friends){%>
+				<div style="font-size:14px">
+					<%=item.friends%> friends
+				</div>
+				<%}%>
+			</td>
+			<td style="width:35px;text-align: center;position: relative;padding:0px 3px;"><i class="icon-home-2" style="font-size:26px"></i></td>
+			<td style="width:35px;text-align: center;position: relative;padding:0px 3px;" class="subnavitem" data-id="chats">
+				<i class="<%=app.getIcon('chat')%>" style="font-size:26px"></i>
+				<%if(item.badge&&item.badge.chat_count){%>
+				<span style="position: absolute;top:2px;left:50%;margin-left:5px;color:white;" class="circle noticetheme">
+					<table style="width:100%;height:100%;color:white;text-align: center">
+						<tr>
+							<td><%=item.badge.chat_count%></td>
+						</tr>
+					</table>
+				</span>
+				<%}%>
+			</td>
+			<td style="width:35px;text-align: center;padding:0px 3px;position: relative" class="subnavitem" data-id="notifications">
+				<i class="icon-bell-thin-new" style="font-size:26px"></i>
+				<%if(item.badge&&item.badge.notification){%>
+				<span style="position: absolute;top:2px;left:50%;margin-left:5px;color:white;" class="circle noticetheme">
+					<table style="width:100%;height:100%;color:white;text-align: center">
+						<tr>
+							<td><%=item.badge.notification%></td>
+						</tr>
+					</table>
+				</span>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@modules_mobilealert_item@@@
+<div style="padding:20px;font-size:18px;" data-id="<%=item.id%>" class="navitem navitemclick">
+	<table style="width:100%">
+		<tr>
+			<%if(item.icon){%>
+			<td style="width:40px;text-align: center;">
+				<i style="margin-right:10px;font-size:30px" class="<%=item.icon%>"></i>
+			</td>
+			<%}%>
+			<td style="padding-left:10px;">
+				<div style="font-size:18px"><%=item.name%></div>
+				<%if(item.caption){%><div style="padding-top:5px;font-size:14px;color:#555"><%=item.caption%></div><%}%>
+				<%if(item.description){%><div style="padding-top:5px;font-size:14px;color:#555"><%=item.description%></div><%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@modules_mobilealert_peoplelist@@@
+<div style="font-size:18px;" data-id="<%=item.id%>" class="navitem navitemclick">
+	<table style="width:100%">
+		<tr>
+			<td style="width:50px;text-align: center;">
+				<div style="width:50px;height:50px;background-image: url(<%=modules.tools.getImg(item.pic,'small')%>)" class="coverimg"></div>
+			</td>
+			<td style="padding-left:5px;">
+				<div style="font-size:18px"><%=item.name%></div>
+				<%if(item.caption){%><div style="padding-top:5px;font-size:14px;color:#555"><%=item.caption%></div><%}%>
+			</td>
+		</tr>
+	</table>
+</div>

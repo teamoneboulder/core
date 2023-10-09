@@ -1,0 +1,36 @@
+@@@button@@@
+<div data-<%=template%>="<%=_tid%>" style="display: inline-block;padding:6px 10px 6px 10px;<%=data.style%>" class="buttoncolor bold <%if(data.corner.tl){%>s-corner-tl<%}%> <%if(data.corner.tr){%>s-corner-tr<%}%> <%if(data.corner.bl){%>s-corner-bl<%}%> <%if(data.corner.br){%>s-corner-br<%}%>">
+	<%=data.name%>
+</div>
+@@@memberbutton@@@
+<div data-<%=template%>="<%=_tid%>" style="display: inline-block;padding:6px 5px 6px 10px;" class="buttoncolor <%if(data.corner.tl){%>s-corner-tl<%}%> <%if(data.corner.tr){%>s-corner-tr<%}%> <%if(data.corner.bl){%>s-corner-bl<%}%> <%if(data.corner.br){%>s-corner-br<%}%>">
+	<span class="bold"><%=data.name%></span> <i class="icon-down-open"></i>
+</div>
+@@@drivebutton@@@
+<div data-<%=template%>="<%=_tid%>" style="display: inline-block;padding:6px 5px 6px 10px;" class="buttoncolor <%if(data.corner.tl){%>s-corner-tl<%}%> <%if(data.corner.tr){%>s-corner-tr<%}%> <%if(data.corner.bl){%>s-corner-bl<%}%> <%if(data.corner.br){%>s-corner-br<%}%>">
+	<%if(data.pic){%>
+	<table>
+		<tr>
+			<td style="width:25px;height:25px;">
+				<div style="width:25px;height:25px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>)" class="coverimg circle"></div>
+			</td>
+			<td style="padding-left:5px;">
+				<div>
+					<span class="bold"><%=data.name%></span>
+				</div>
+				<%if(data.email){%>
+				<div style="padding-top:2px;padding-left:5px;font-size:11px">
+					<%=data.email%>
+				</div>
+				<%}%>
+			</td>
+			<%if(data.dropdown){%>
+			<td style="width:20px;text-align: center;">
+				<i class="icon-down-open"></i>
+			</td>
+			<%}%>
+	</table>
+	<%}else{%>
+		<span class="bold"><%=data.name%></span> <%if(data.dropdown){%><i class="icon-down-open"></i><%}%>
+	<%}%>
+</div>

@@ -1,0 +1,4 @@
+@@@home@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white">
+	<div id="redactor"></div>
+</div>

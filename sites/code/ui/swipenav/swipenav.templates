@@ -1,0 +1,176 @@
+@@@ui_swipenav@@@
+<div class="swipenav" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;width:100%;<%if(this.align){%>text-align:<%=align%><%}else{%>text-align:center<%}%>">
+			<tr>
+				<td>
+					<%for (var i = 0; i < nav.length; i++) {
+						var n=nav[i];%>
+					<div style="<%if(this.color){%>color:<%=color%>;<%}%>" class="swipenavitem x_swipenavitem swipenavtext <%if(n.selected){%>selected<%}%> <%if(n.notselectable){%>notselectable<%}%> <%if(this.itemClass){%><%=itemClass%><%}%>" data-nav="<%=n._id%>"><%=n.name%></div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ui_swipenav_prettytext@@@
+<div class="swipenav" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;width:100%;text-align:center">
+			<tr>
+				<td>
+					<%for (var i = 0; i < nav.length; i++) {
+						var n=nav[i];%>
+					<div class="swipenavitem x_swipenavitem swipenavtext swipenavprettytext <%if(n.selected){%>selected<%}%> <%if(this.itemClass){%><%=itemClass%><%}%>" data-nav="<%=n._id%>"><%=n.name%></div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ui_swipenav_header@@@
+<div class="swipenav headercolor" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;width:100%;text-align:center">
+			<tr>
+				<td>
+					<%for (var i = 0; i < nav.length; i++) {
+						var n=nav[i];%>
+					<div class="swipenavitem x_swipenavitem swipenavtext <%if(n.selected){%>selected<%}%> <%if(this.itemClass){%><%=itemClass%><%}%>" data-nav="<%=n._id%>" style="font-weight: normal"><%=n.name%></div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ui_swipenav_icon@@@
+<div class="swipenav" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;width:100%;<%if(this.align){%>text-align:<%=align%>;<%}else{%>text-align:center;<%}%>">
+			<tr>
+				<td>
+					<%for (var i = 0; i < nav.length; i++) {
+						var page=nav[i];
+						var index=i+1;
+						%>
+						<div class="swipenavitem x_swipenavitem pagenav revicon themeiconcolor" data-nav="<%=page.id%>" style="width:40px;height:45px;margin:2px;display:inline-block;<%if(this.color){%>color:<%=color%>;<%}%>text-align:center;position: relative;" data-pagenav="<%=page.id%>" data-page="<%=index%>">
+							<img src="<%=app.idot%>" style="height:100%;vertical-align:middle;display:inline-block;width:1px;margin-left:-1px">
+							<%if(page.image){%>
+							<div style="display:inline-block;vertical-align:middle;width:40px;height:40px;background-image: url(<%=page.image%>)" class="s-corner-all coverimg"></div>
+							<%}else{%>
+							<i class="<%=page.icon%> nomargin" style="font-size:<%if(page.icon_size){%><%=page.icon_size%><%}else{%>34<%}%>px;vertical-align:middle"></i>
+							<%}%>
+							<%if(page.hasCount){%>
+							<div style="position: absolute;top:-2px;right:-4px;width:18px;height:18px;background:#f02;color:white;font-size:13px;display: none;" class="circle count">
+								<table style="width:100%;height:100%;color:white;text-align: center;">
+									<tr>
+										<td class="countnumber">0</td>
+									</tr>
+								</table>
+							</div>
+							<%}%>
+						</div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ui_swipenav_emoji@@@
+<div class="swipenav" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;text-align:center">
+			<tr>
+				<td>
+					<%if(this.title){%>
+					<div class="swipenavitem x_swipenavitem" style="margin:5px;display:inline-block;color:#555;text-align:center;font-weight: normal;"><%=title%></div>
+					<%}%>
+					<%for (var i = 0; i < nav.length; i++) {
+						var page=nav[i];
+						var index=i+1;
+						%>
+						<div class="swipenavitem x_swipenavitem pagenav revicon emojinav transition <%if(page.selected){%>selected<%}%>" data-nav="<%=page.id%>" style="margin:5px;display:inline-block;color:#555;text-align:center" data-pagenav="<%=page.id%>" data-page="<%=index%>">
+							<%if(page.svg){%>
+							<img src="<%=app.idot%>" style="height:100%;vertical-align:middle;display:inline-block;width:1px">
+							<img src="<%=page.svg%>" style="height:30px;vertical-align:middle;display:inline-block;" class="emojiimg"/>
+							<%}else{%>
+							<%=page.name%>
+							<%}%>
+						</div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ui_swipenav_icon_3@@@
+<div class="swipenav" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;width:100%;text-align:center">
+			<tr>
+				<td>
+					<%for (var i = 0; i < nav.length; i++) {
+						var page=nav[i];
+						var index=i+1;
+						%>
+						<div class="swipenavitem x_swipenavitem pagenav revicon <%if(this.itemClass){%><%=itemClass%><%}%> <%if(page.selected){%>selected<%}%>" data-nav="<%=page.id%>" style="width:55px;height:45px;margin:5px 2px;display:inline-block;color:white;text-align:center" data-pagenav="<%=page.id%>" data-page="<%=index%>">
+							<img src="<%=app.idot%>" style="height:100%;vertical-align:middle;display:inline-block;width:1px">
+							<i class="<%=page.icon%> nomargin" style="font-size:<%if(page.icon_size){%><%=page.icon_size%><%}else{%>30<%}%>px;vertical-align:middle"></i>
+						</div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ui_swipenav_icon_2@@@
+<div class="swipenav" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;width:100%;text-align:center">
+			<tr>
+				<td>
+					<%for (var i = 0; i < nav.length; i++) {
+						var page=nav[i];
+						var index=i+1;
+						%>
+						<div class="x_swipenavitem pagenav revicon topnav" data-nav="<%=page._id%>" style="width:70px;display:inline-block;text-align:center" data-pagenav="<%=page._id%>" data-page="<%=index%>">
+							<div style="padding-top:3px;">
+								<i class="<%=page.icon%> nomargin" style="font-size:26px;vertical-align:middle"></i>
+							</div>
+							<div style="text-align: center;padding-top:2px;font-size:11px"><%=page.name%></div>
+						</div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ui_swipenav_filter@@@
+<div class="swipenav" id="<%=id%>" data-ui="swipenav">
+	<div class="swipenavcontainer">
+		<table style="height:100%;width:100%;text-align:center">
+			<tr>
+				<td>
+					<%for (var i = 0; i < nav.order.length; i++) {
+						var filter=nav.list[nav.order[i]];
+						var index=i+1;
+						%>
+						<div style="height:100px;width:80px;display:inline-block;position:relative" class="swipenavitem x_swipenavitem appitem truebox"  data-nav="<%=nav.order[i]%>" data-pagenav="<%=filter.id%>" data-page="<%=index%>">
+							<%if(filter.pic){%>
+							<div class="l-corner-all transition coverimg" style="width:60px;height:60px;text-align:center;margin:auto;background-image:url(<%=modules.tools.getImg(filter.pic,'profile')%>)"></div>
+							<%}else{%>
+							<div class="l-corner-all glossybg transition" style="width:60px;height:60px;text-align:center;margin:auto;">
+								<img src="<%=app.idot%>" style="height:100%;vertical-align:middle;display:inline-block;width:1px">
+								<i class="<%=filter.icon%> nomargin" style="font-size:<%if(filter.icon_size){%><%=filter.icon_size%><%}else{%>40<%}%>px;vertical-align:middle"></i>
+							</div>
+							<%}%>
+							<div style="padding:3px 3px;text-align:center;font-size:11px" class="appname">
+								<b><%=filter.name.limitlength(14)%></b>
+							</div>
+						</div>
+					<%};%>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,30 @@
+@@@tickets@@@
+<%for (var i = 0; i < tickets.order.length; i++) {
+	var ticket=tickets.list[tickets.order[i]];
+	if(!ticket.ticket_info) ticket.ticket_info={
+		name:'',
+		description:''
+	};
+%>
+<div class="page">
+	<div class="pagecontent">
+		<div style="padding:20px;border: 1px solid #ccc;">
+			<table style="width:100%">
+				<tr>
+					<td>
+						<div style="font-size:20px;font-weight: bold"><%=ticket.event_info.name%></div>
+						<div style="font-size:14px;padding-top:10px;"><%=ticket.event_info.prettyDate%></div>
+						<div style="font-size:14px;padding-top:10px;"><%=ticket.ticket_info.name%></div>
+						<%if(ticket.ticket_info.description&&false){%>
+						<div style="font-size:16px;padding-top:10px;"><%=ticket.ticket_info.description%></div>
+						<%}%>
+					</td>
+					<td style="width:125px;;text-align: right">
+						<div style="display:inline-block;width:75px;height:75px;background-image:url(<%=ticket.qr%>)" class="coverimg"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<%}%>

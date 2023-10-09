@@ -1,0 +1,155 @@
+[{
+    "id":"one_boulder",
+    "appid":"2366d44c84409765d9a00619aea4c1234",
+    "appids":["2366d44c84409765d9a00619aea4c1234","33ee6d44c844xx9765d9220619ae8c152f"],
+    "core":"one_boulder_core",
+    "flower_id":"one",
+    "production":true,
+    "testing":{
+        "ios":"https://testflight.apple.com/join/WNmDSlIz",
+        "android":"https://play.google.com/apps/testing/one.oneboulder.oneboulder"
+    },
+    "display_name":"ONE|Boulder",
+    "homescreen_name":"ONE|Boulder",
+    "icon_image":"https://s3.amazonaws.com/one-light/static/ob_icon.png",
+    "push_image":"https://s3.amazonaws.com/one-light/static/oneboulder_push.png?ver=5",
+    "splash_image":"",
+    "splash_background":"https://s3.amazonaws.com/one-light/static/one_boulder_splash.jpg?ver=1",
+    "load_splash_image":"https://s3.amazonaws.com/one-light/static/flatirons.jpg?ver=5",
+    "promo_bg":"https://s3.amazonaws.com/one-light/static/flatirons.jpg",
+    "settings":{
+        "fiticon":true
+    },
+    "app_scheme":"oneboulder",
+    "libraries_id":"one_boulder_libraries",
+    "cache_libraries_id":"one_boulder_libraries",
+    "cache_core_id":"one_boulder_core",
+    "splash_ver":14,
+    "splashtext":"One Boulder",
+    "theme_color":"983897",
+    "support_url":"https://oneboulder.one",
+    "metadata":{
+        "tags":"boulder,local,social,network,tool,community,event,calendar",
+        "category":"SOCIAL_NETWORKING",
+        "short_description":"Activating the Soul Purpose of Boulder by localizing essentials for thriving!",
+        "description":"ONE|Boulder exists to localize our Essentials for Thriving (EFTs), to lay a solid foundation and connect directly to the source of what we need to survive and thrive in our daily lives. We aim to rewrite some core assumptions about money & power by investing in our local community and developing regenerative means of production. We call our efforts EPICs (shorthand for Events, Projects, Incidents & Campaigns) and use the Unified Coordination System to support the development of EFT projects.  The ONE|Boulder app provides you tools to support your deepening connection with the ONE|Boulder Community.  This includes tools for exchanging gifts, giving offers, requesting support, connecting via chat, and exploring the directory to see who is playing the game!  Want to join the ONE|Boulder community and start playing the game in the app?  Learn more at https://www.oneboulder.one/membership and fill out a form to get the process started!  We are looking forward to playing the game with you!"
+    },
+    "icon_bg":"white",
+    "splash_bg":"white",
+    "android_bg":"white"
+},{
+    "id":"actualize",
+    "appid":"3336d44c846666d9a00619aea4c9999",
+    "appids":["3336d44c846666d9a00619aea4c9999"],
+    "core":"one_boulder_core",
+    "flower_id":"actualize",
+    "production":true,
+    "testing":{
+        "ios":"https://testflight.apple.com/join/WNmDSlIz",
+        "android":"https://play.google.com/apps/testing/one.oneboulder.oneboulder"
+    },
+    "display_name":"Actualize~",
+    "homescreen_name":"Actualize",
+    "icon_image":"https://s3.amazonaws.com/one-light/static/actualize_logo.jpeg",
+    "push_image":"https://s3.amazonaws.com/one-light/static/one_white.png?ver=5",
+    "splash_image":"",
+    "splash_background":"https://s3.amazonaws.com/one-light/static/actualize_splash.png",
+    "load_splash_image":"https://s3.amazonaws.com/one-light/static/actualize_splash.png",
+    "promo_bg":"https://s3.amazonaws.com/one-light/static/flatirons.jpg",
+    "settings":{
+        "fiticon":true
+    },
+    "app_scheme":"actualize",
+    "libraries_id":"one_boulder_libraries",
+    "cache_libraries_id":"one_boulder_libraries",
+    "cache_core_id":"one_boulder_core",
+    "splash_ver":14,
+    "splashtext":"Actualize",
+    "theme_color":"983897",
+    "support_url":"https://actualize.earth",
+    "metadata":{
+        "tags":"boulder,local,social,network,tool,community,event,calendar",
+        "category":"SOCIAL_NETWORKING",
+        "short_description":"Activating the Soul Purpose of Boulder by localizing essentials for thriving!",
+        "description":"ONE|Boulder exists to localize our Essentials for Thriving (EFTs), to lay a solid foundation and connect directly to the source of what we need to survive and thrive in our daily lives. We aim to rewrite some core assumptions about money & power by investing in our local community and developing regenerative means of production. We call our efforts EPICs (shorthand for Events, Projects, Incidents & Campaigns) and use the Unified Coordination System to support the development of EFT projects.  The ONE|Boulder app provides you tools to support your deepening connection with the ONE|Boulder Community.  This includes tools for exchanging gifts, giving offers, requesting support, connecting via chat, and exploring the directory to see who is playing the game!  Want to join the ONE|Boulder community and start playing the game in the app?  Learn more at https://www.oneboulder.one/membership and fill out a form to get the process started!  We are looking forward to playing the game with you!"
+    },
+    "icon_bg":"white",
+    "splash_bg":"white",
+    "android_bg":"white"
+},{
+    "id":"boulder",
+    "appid":"2366244c84401765d9a00615aea4c1224",
+    "appids":["2366244c84401765d9a00615aea4c1224"],
+    "core":"boulder_core",
+    "flower_id":"boulder",
+    "production":true,
+    "testing":{
+        "ios":"https://testflight.apple.com/join/WNmDSlIz",
+        "android":"https://play.google.com/apps/testing/one.oneboulder.oneboulder"
+    },
+    "display_name":"Explore Boulder",
+    "homescreen_name":"🚀 Boulder",
+    "icon_image":"https://s3.amazonaws.com/one-light/static/one_boulder_logo.jpg?ver=5",
+    "push_image":"https://s3.amazonaws.com/one-light/static/one_white.png?ver=5",
+    "splash_image":"",
+    "splash_background":"https://s3.amazonaws.com/one-light/static/one_boulder_splash.jpg?ver=1",
+    "load_splash_image":"https://s3.amazonaws.com/one-light/static/flatirons.jpg?ver=5",
+    "promo_bg":"https://s3.amazonaws.com/one-light/static/flatirons.jpg",
+    "settings":{
+        "fiticon":true
+    },
+    "app_scheme":"boulder",
+    "libraries_id":"one_boulder_libraries",
+    "cache_libraries_id":"one_boulder_libraries",
+    "cache_core_id":"boulder_core",
+    "splash_ver":14,
+    "splashtext":"Boulder",
+    "theme_color":"983897",
+    "support_url":"https://oneboulder.one",
+    "metadata":{
+        "tags":"boulder,local,social,network,tool,community,event,calendar",
+        "category":"SOCIAL_NETWORKING",
+        "short_description":"Supporting you connecting with Boulder Colorado",
+        "description":"Boulder Colorado is Awesome! We would love you to visit and have a full cultural experience.  Use our curated event calendar.  Explore a custom and unique map of Boulder.  Enjoy some services offered by the local community."
+    },
+    "icon_bg":"white",
+    "splash_bg":"white",
+    "android_bg":"white"
+},{
+    "id":"giraffx",
+    "appid":"0366d44c84449765d9x00614aea441234",
+    "appids":["0366d44c84449765d9x00614aea441234"],
+    "core":"giraffx_core",
+    "flower_id":"giraffx",
+    "production":true,
+    "testing":{
+        "ios":"https://testflight.apple.com/join/WNmDSlIz",
+        "android":"https://play.google.com/apps/testing/one.oneboulder.oneboulder"
+    },
+    "display_name":"Giraffx",
+    "homescreen_name":"Giraffx",
+    "icon_image":"https://s3.amazonaws.com/one-light/static/giraffx.jpeg",
+    "push_image":"https://s3.amazonaws.com/one-light/static/one_white.png?ver=5",
+    "splash_image":"",
+    "splash_background":"https://s3.amazonaws.com/one-light/static/giraffx.jpeg",
+    "load_splash_image":"https://s3.amazonaws.com/one-light/static/giraffx.jpeg",
+    "promo_bg":"https://s3.amazonaws.com/one-light/static/flatirons.jpg",
+    "settings":{
+        "fiticon":true
+    },
+    "app_scheme":"giraffx",
+    "libraries_id":"giraffx_libraries",
+    "splash_ver":14,
+    "splashtext":"Giraffx",
+    "theme_color":"983897",
+    "support_url":"https://oneboulder.one",
+    "metadata":{
+        "tags":"lights,color,gauntlet",
+        "category":"SOCIAL_NETWORKING",
+        "short_description":"Controller for Giraffx Supported hardware",
+        "description":"Controller for Giraffx Supported hardware"
+    },
+    "icon_bg":"white",
+    "splash_bg":"white",
+    "android_bg":"white"
+}]

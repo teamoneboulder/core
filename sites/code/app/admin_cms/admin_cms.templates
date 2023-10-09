@@ -1,0 +1,191 @@
+@@@admin_cms@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="top:0;left:0;right:0;height:50px;background:#888;color:white" class="itable">
+        <div class="tcell" style="text-align: left;padding-left:10px;font-weight: bold;width:222px">
+            <select style="width:200px;" id="cms_select">
+                <option value="onboard_slide" <%if(schema=='onboard_slide'){%>SELECTED<%}%>>Onboard Slides</option>
+                <option value="game_guide" <%if(schema=='game_guide'){%>SELECTED<%}%>>Game Guide</option>
+                <option value="tags_deal" data-template="onboard_page_tag" <%if(schema=='tags_deal'){%>SELECTED<%}%>>Deal Tags</option>
+                <option value="waiver" data-template="cms_waiver" <%if(schema=='waivers'){%>SELECTED<%}%>>Waivers</option>
+                <option value="tags_skills_staging" data-template="onboard_page_tag" <%if(schema=='tags_skills_staging'){%>SELECTED<%}%>>Skills (Staging)</option>
+                <option value="academy" data-template="onboard_page_game_guide" <%if(schema=='academy'){%>SELECTED<%}%>>Academy</option>
+            </select>
+
+        </div>
+        <div class="tcell" style="text-align: left;">
+            <div id="cmspath"></div>
+        </div>
+        <div class="tcell" style="text-align:right;padding-right:10px;display: none;">
+            Language: EN
+        </div>
+    </div>
+    <div style="position: absolute;top:50px;left:0;right:0;bottom:0" class="content">
+        <%=_ui.pageloader.render({})%>
+    </div>
+</div>
+@@@onboard_cms_path@@@
+<div data-<%=template%>="<%=_tid%>" >
+    <span class="x_goto" data-id="home"><i class="icon-home"></i> Home</span>
+    <%if(path&&path.length){%>
+    <%for (var i = 0; i < path.length; i++) {
+        var item=path[i];
+        %>
+        <span style="padding-left:10px">></span><span class="x_goto" data-id="<%=item.id%>" style="padding:2px 10px;">
+            <%if(item.page_name){%><%=item.page_name%><%}%>
+            <%if(item.name){%><%=item.name%><%}%>
+            </span>
+    <%}%>
+    <%}%>
+</div>
+@@@onboard_page_onboard_slide@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page scrollY" style="color:black">
+    <%if(resp.success){%>
+    <div class="edititems">
+    <%if(resp.data&&resp.data.order&&resp.data.order.length){%>
+    <%for (var i = 0; i < resp.data.order.length; i++) {
+        var item=resp.data.list[resp.data.order[i]];%>
+    <div style="width:200px;height:400px;margin:10px;display: inline-block;vertical-align: top;position: relative;overflow: hidden;color: white;background:<%if(item.background){%><%=item.background%><%}else{%>white<%}%>;<%if(item.color){%>color:<%=item.color%><%}else{%>color: #555<%}%>" class="l-corner-all x_drag" data-id="<%=item._id%>">
+        <%if(item.visible){%>
+        <div style="position: absolute;top:5px;right:5px;font-size:8px;padding:2px 5px;background: green;color: white;" class="s-corner-all">visible</div>
+        <%}else{%>
+        <div style="position: absolute;top:5px;right:5px;font-size:8px;padding:2px 5px;background: #f02;color:white" class="s-corner-all">not visible</div>
+        <%}%>
+        <div style="text-align:center;padding:5px;margin-top:15px"><i class="<%=item.icon%>" style="font-size:40px;"></i></div>
+        <div style="font-size:18px;font-weight: bold;text-align: center;"><%=item.title%></div>
+        <div class="redactorcontent" style="padding:10px;font-size:12px"><%=item.content%></div>
+        <div class="button1 x_edit l-corner-bottom" data-iid="<%=item._id%>" style="position:absolute;bottom:0;left:0;right:0;text-align: center;" ><i class="icon-pencil"></i> Edit</div>
+    </div>
+    <%}%>
+    <%}%>
+    <div style="width:200px;height:400px;margin:10px;display: inline-block;vertical-align: top;position: relative;background:white" class="l-corner-all x_add">
+        <div class="table">
+            <div class="tcell">
+                <div>
+                    <i class="icon-add-clean"></i>
+                </div>
+                <div>
+                    Add Page
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%}else{%>
+    <div style="padding:30px;">
+        <div class="x_reload button1" style="display:inline-block">Reload</div>
+    </div>
+    <%}%>
+</div>
+@@@onboard_page_game_guide@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page scrollY" style="color:black">
+    <%if(resp.success){%>
+    <div class="edititems">
+    <%if(resp.data&&resp.data.order&&resp.data.order.length){%>
+    <%for (var i = 0; i < resp.data.order.length; i++) {
+        var item=resp.data.list[resp.data.order[i]];%>
+    <div style="width:200px;height:400px;margin:10px;display: inline-block;vertical-align: top;position: relative;overflow: hidden;color: white;background:white;color: #555" class="l-corner-all x_drag" data-id="<%=item._id%>">
+        <%if(item.visible){%>
+        <div style="position: absolute;top:5px;right:5px;font-size:8px;padding:2px 5px;background: green;color: white;" class="s-corner-all">visible</div>
+        <%}else{%>
+        <div style="position: absolute;top:5px;right:5px;font-size:8px;padding:2px 5px;background: #f02;color:white" class="s-corner-all">not-visible</div>
+        <%}%>
+        <div style="font-size:18px;font-weight: bold;text-align: center;"><%=item.page_name%></div>
+        <%if(item.link_to){%>
+        <div style="padding:5px"><b>Link to:</b> <%=item.link_to%></div>
+        <%}else if(item.video){%>
+        <b>Video Info:</b> <%if(item.video.data.uri){%><i class="icon-refresh animate-spin"></i> Processing<%}else{%><%=JSON.stringify(item.video).wrapJson()%><%}%>
+        <%}else if(item.content){%>
+        <div class="redactorcontent" style="padding:10px;font-size:12px"><%=item.content%></div>
+        <%}%>
+        <div class="button1 x_edit l-corner-bl" data-iid="<%=item._id%>" style="position:absolute;bottom:0;left:0;right:50%;text-align: center;font-size:11px" ><i class="icon-pencil"></i> Edit</div>
+        <div class="button1 x_deeper l-corner-br" data-iid="<%=item._id%>" style="position:absolute;bottom:0;left:50%;right:0;text-align: center;font-size:11px" ><i class="icon-right-open"></i> Go Deeper</div>
+    </div>
+    <%}%>
+    <%}%>
+    <div style="width:200px;height:400px;margin:10px;display: inline-block;vertical-align: top;position: relative;background:white" class="l-corner-all x_add">
+        <div class="table">
+            <div class="tcell">
+                <div>
+                    <i class="icon-add-clean"></i>
+                </div>
+                <div>
+                    Add Page
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%}else{%>
+    <div style="padding:30px;">
+        <div class="x_reload button1" style="display:inline-block">Reload</div>
+    </div>
+    <%}%>
+</div>
+@@@onboard_page_tag@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page scrollY" style="color:black">
+    <%if(resp.success){%>
+    <div class="edititems">
+    <%if(resp.data&&resp.data.order&&resp.data.order.length){%>
+    <%for (var i = 0; i < resp.data.order.length; i++) {
+        var item=resp.data.list[resp.data.order[i]];%>
+    <div style="width:200px;height:200px;margin:10px;display: inline-block;vertical-align: top;position: relative;overflow: hidden;color: white;background:white;color: #555" class="l-corner-all x_drag" data-id="<%=item._id%>">
+        <div style="font-size:18px;font-weight: bold;text-align: center;padding-top:20px;"><%=item.name%></div>
+        <div style="font-size:12px;text-align: center;padding-top:20px;"><%=item.id%></div>
+        <div class="button1 x_edit l-corner-bl" data-iid="<%=item._id%>" style="position:absolute;bottom:0;left:0;right:50%;text-align: center;font-size:11px" ><i class="icon-pencil"></i> Edit</div>
+        <div class="button1 x_deeper l-corner-br" data-iid="<%=item._id%>" style="position:absolute;bottom:0;left:50%;right:0;text-align: center;font-size:11px" ><i class="icon-right-open"></i> Go Deeper</div>
+    </div>
+    <%}%>
+    <%}%>
+    <div style="width:200px;height:200px;margin:10px;display: inline-block;vertical-align: top;position: relative;background:white" class="l-corner-all x_add">
+        <div class="table">
+            <div class="tcell">
+                <div>
+                    <i class="icon-add-clean"></i>
+                </div>
+                <div>
+                    Add Tag
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%}else{%>
+    <div style="padding:30px;">
+        <div class="x_reload button1" style="display:inline-block">Reload</div>
+    </div>
+    <%}%>
+</div>
+@@@cms_waiver@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page scrollY" style="color:black">
+    <%if(resp.success){%>
+    <div class="edititems">
+    <%if(resp.data&&resp.data.order&&resp.data.order.length){%>
+    <%for (var i = 0; i < resp.data.order.length; i++) {
+        var item=resp.data.list[resp.data.order[i]];%>
+    <div style="width:300px;height:600px;margin:10px;display: inline-block;vertical-align: top;position: relative;overflow: hidden;color: white;background:white;color: #555" class="l-corner-all x_drag" data-id="<%=item._id%>">
+        <div style="font-size:18px;font-weight: bold;text-align: center;padding-top:20px;"><%=item.title%></div>
+        <div style="font-size:14px;font-weight: bold;text-align: left;padding:20px;"><%=_.fixContent(item.content)%></div>
+        <div style="font-size:12px;text-align: center;padding-top:20px;"><%=item.id%></div>
+        <div class="button1 x_edit l-corner-bl" data-iid="<%=item._id%>" style="position:absolute;bottom:0;left:0;right:0%;text-align: center;font-size:11px" ><i class="icon-pencil"></i> Edit</div>
+    </div>
+    <%}%>
+    <%}%>
+    <div style="width:200px;height:200px;margin:10px;display: inline-block;vertical-align: top;position: relative;background:white" class="l-corner-all x_add">
+        <div class="table">
+            <div class="tcell">
+                <div>
+                    <i class="icon-add-clean"></i>
+                </div>
+                <div>
+                    Add Waiver
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%}else{%>
+    <div style="padding:30px;">
+        <div class="x_reload button1" style="display:inline-block">Reload</div>
+    </div>
+    <%}%>
+</div>

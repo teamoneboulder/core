@@ -1,0 +1,32 @@
+#!/bin/bash
+if [[ "$1" = "" ]] ; then
+env="$(jq '.env' ${HOME}/priv/config.json)"
+connection_string="$(jq '.db['"${env}"']["connection_string"]' ${HOME}/priv/config.json)"
+username="$(jq '.db['"${env}"']["username"]' ${HOME}/priv/config.json)"
+password="$(jq '.db['"${env}"']["password"]' ${HOME}/priv/config.json)"
+connection_string="${connection_string%\"}"
+connection_string="${connection_string#\"}"
+username="${username%\"}"
+username="${username#\"}"
+password="${password%\"}"
+password="${password#\"}"
+mongo "${connection_string}" --username $username --password $password --authenticationDatabase "admin"
+else
+env='"$1"'
+connection_string="$(jq '.db["prod"]["connection_string"]' ${HOME}/priv/config.json)"
+echo "$connection_string"
+if [[ "$connection_string" = "" ]] ; then
+	echo "Invalid Environment"
+else
+username="$(jq '.db["prod"]["username"]' ${HOME}/priv/config.json)"
+password="$(jq '.db["prod"]["password"]' ${HOME}/priv/config.json)"
+connection_string="${connection_string%\"}"
+connection_string="${connection_string#\"}"
+username="${username%\"}"
+username="${username#\"}"
+password="${password%\"}"
+password="${password#\"}"
+mongo "${connection_string}" --username $username --password $password --authenticationDatabase "admin"
+fi
+fi
+#mongo "${connection_string}" --ssl --authenticationDatabase admin --username username --password password

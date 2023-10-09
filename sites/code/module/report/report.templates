@@ -1,0 +1,51 @@
+@@@report_page@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;overflow: hidden" class="apppageview">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;" class="content reportcontent l-corner-top-web">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper notonweb">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<%if(this.title){%>
+			<div style="margin-top:5px;padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px">
+				<table style="width:100%;color:#888">
+					<tr>
+						<td style="text-align: left;font-size:18px;color:#888;padding-left:5px;" class="bold"><%=title%></td>
+						<!-- <td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;font-size:16px;" class="x_closer">
+							<i class="icon-cancel" style="font-size:14px;"></i>
+						</td> -->
+					</tr>
+				</table>
+			</div>
+			<%}%>
+			<div class="reportpage">
+				<div style="padding:10px;">Why should this not be here? View our community standards <span class="x_link" style="font-weight: bold;">here</span>.</div>
+				<div style="padding:10px;">
+					<textarea style="width:100%;min-height:60px;resize: none;padding:5px;border:1px solid #eee;font-size:16px" class="autosize truebox s-corner-all"></textarea>
+				</div>
+				<div style="padding:10px;font-size:15px;" class="immediate">
+					<i class="icon-check-empty nocheck"></i><i class="icon-check onchecked highlighttext2"></i> Requires Immediate Attention
+				</div>
+				<div style="height:30px;">
+					<table style="width:100%;height:100%;">
+						<tr>
+							<td style="width:50%;">
+								<div style="font-size:18px;width:100%%;height:100%;background:#eee;text-align: center;" class="truebox x_closer">
+									<table style="width:100%;height:100%;color:#555;text-align: center;font-size:18px;">
+										<tr><td>Cancel</td></tr>
+									</table>
+								</div>
+							</td>
+							<td>
+								<div style="font-size:18px;width:100%;height:100%;text-align: center;" class="truebox x_send highlightbutton2">
+									<table style="width:100%;height:100%;text-align: center;font-size:18px;">
+										<tr><td class="content">Submit</td></tr>
+									</table>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

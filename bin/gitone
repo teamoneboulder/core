@@ -1,0 +1,6 @@
+#!/bin/bash
+git fetch origin --quiet
+git checkout master --quiet
+git reset --hard --quiet origin/master
+git checkout origin/master --quiet
+git show --summary

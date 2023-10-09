@@ -1,0 +1,4 @@
+#!/bin/bash
+username="$(jq '.mongo["username"]' ${HOME}/priv/config.json)"
+password="$(jq '.mongo["password"]' ${HOME}/priv/config.json)"
+mongorestore --drop --host XXXXX-00-00-ymlyt.mongodb.net:27017,XXXXX-00-01-ymlyt.mongodb.net:27017,XXXXX-00-02-ymlyt.mongodb.net:27017 --ssl --username ${username} --password ${password} --authenticationDatabase admin

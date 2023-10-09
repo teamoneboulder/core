@@ -1,0 +1,60 @@
+@@@opentok_call@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:3000;background: white;">
+	<div class="sfit" id="videoloading" style="z-index:2;background:white;<%if(app.device=='iOS'&&false){%>bottom:50px<%}%>">
+		<div style="position:absolute;top:00px;left:0;right:0;bottom:0">
+			<table style="width:100%;height:100%">
+				<tr>
+					<td style="text-align:center">
+						<div style="font-size:30px;text-align:center">
+							<%if(this.calling){%>
+							Calling
+							<%}else{%>
+							Connecting
+							<%}%>
+						</div>
+						<div style="text-align:center;margin-top:50px;">
+							<div style="width:100px;height:100px;background-image:url(<%=modules.tools.getImg(pic,'profile')%>);display:inline-block" class="coverimg circle"></div>
+						</div>
+						<div style="font-size:20px;margin-top:50px;"><%=name%></div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="sfit" id="videocontainer" style="z-index:1;">
+		<div class="sfit" style="<%if(isPhoneGap()){%>bottom:50px;<%}%>">  
+			<%if(app.device!='iOS'){%>
+			<div id="publisher" class="videos" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 10"></div>
+			<div id="subscriber" class="videos" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: 9"></div>
+			<%}else{%>
+			<div id="publisher" class="videos" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: -1"></div>
+			<div id="subscriber" class="videos" style="position: absolute;top:0;left:0;right:0;bottom:0;z-index: -2"></div>
+			<%}%>
+		</div>
+		<%if(!isPhoneGap()){%>
+		<div style="position:absolute;bottom:0;left:0;right:0;z-index:16;text-align:center;" class="upgradient bottomcontrols transition">
+			<div class="circle rotate_60 x_endcall" style="background:red;display:inline-block;width:70px;height:70px;margin-bottom:5px" class="truebox">
+				<table style="width:100%;height:100%;text-align:center">
+					<tr>
+						<td>
+							<i class="icon-phone" style="color:white;padding:0;margin:0;font-size:40px;"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<%}else{%>
+		<div style="position:absolute;bottom:0;left:0;right:0;z-index:6;text-align:center;height:50px;" class="transition">
+			<div class="circle rotate_60 x_endcall" style="background:red;display:inline-block;width:40px;height:40px;margin-bottom:5px" class="truebox">
+				<table style="width:100%;height:100%;text-align:center">
+					<tr>
+						<td>
+							<i class="icon-phone" style="color:white;padding:0;margin:0;font-size:30px;"></i>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<%}%>
+	</div>
+</div>

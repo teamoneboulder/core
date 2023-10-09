@@ -1,0 +1,35 @@
+<div style="display:inline-block;margin-top:5px;border:1px solid #ccc">
+	<div>
+		<div style="padding:3px 10px;color:white;background:#C00585;width:150px;font-size:13px"><b>Stats</b></div>
+	</div>
+	<table>
+		<tr>
+			<td style="width:80px;text-align: left;padding-left: 10px;font-size:13px;color:#C00585">Members</td>
+			<td style="font-size:13px;color:#555">[data.members]</td>
+		</tr>
+		<tr style="display:none">
+			<td style="width:80px;text-align: left;padding-left: 10px;font-size:13px;color:#C00585">Posts</td>
+			<td style="font-size:13px;color:#555">[data.posts]</td>
+		</tr>
+		<tr>
+			<td style="width:80px;text-align: left;padding-left: 10px;font-size:13px;color:#C00585">Events</td>
+			<td style="font-size:13px;color:#555">[data.events]</td>
+		</tr>
+		<tr>
+			<td style="width:80px;text-align: left;padding-left: 10px;font-size:13px;color:#C00585">Gifts</td>
+			<td style="font-size:13px;color:#555">[data.gifts]</td>
+		</tr>
+		<tr>
+			<td style="width:80px;text-align: left;padding-left: 10px;font-size:13px;color:#C00585">Needs</td>
+			<td style="font-size:13px;color:#555">[data.needs]</td>
+		</tr>
+		<tr>
+			<td style="width:80px;text-align: left;padding-left: 10px;font-size:13px;color:#C00585">Offers</td>
+			<td style="font-size:13px;color:#555">[data.offers]</td>
+		</tr>
+		<tr style="display:none">
+			<td style="width:80px;text-align: left;padding-left: 10px;font-size:13px;color:#C00585">Pages</td>
+			<td style="font-size:13px;color:#555">[data.pages]</td>
+		</tr>
+	</table>
+</div>

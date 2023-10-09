@@ -1,0 +1,8 @@
+@@@chatmanager_container@@@
+<div data-<%=template%>="<%=_tid%>" style="width:320px;height:400px;position:relative;display:inline-block;margin:0px 4px;border-top:1px solid #555;border-left:1px solid #555;border-right:1px solid #555" class="shadow_tl m-corner-top">
+	
+</div>
+@@@chatmanager_wrapper@@@
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;bottom:0;right:0;z-index: 9;">
+	<div id="chatcontainer"></div>
+</div>

@@ -1,0 +1,12 @@
+@media only screen and (min-device-width: 802px) {
+	.locationpickerpage{
+		left:50% !important;
+		width:600px !important;
+		bottom:0 !important;
+		height:100% !important;
+		margin-left:-300px !important;
+	}
+	.locationpickercontainer{
+		top:100px !important;
+	}
+}

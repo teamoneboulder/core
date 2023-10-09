@@ -1,0 +1,32 @@
+@@@donation_orders@@@
+<div data-<%=template%>="<%=_tid%>">
+<%if(!nonrefunded){%>
+<div class="item">Refunded Ticket Orders</div>
+<%}%>
+<%for (var i = 0; i < resp.data.order.length; i++) {
+	var order=resp.data.list[resp.data.order[i]];
+	if(nonrefunded&&order.refunded) continue;
+	if(!nonrefunded&&!order.refunded) continue;
+	%>
+	<div style="padding:1px;border-bottom: 1px solid #ccc;" class="item">
+		<table style="width:100%">
+			<tr>
+				<td>
+					<div style="font-size:10px;font-weight: bold"><%=order.user.name%><%if(order.refunded){%>
+						<div style="display: inline-block;padding:2px;background:#0193be;color:white;margin:0px 5px;font-size:8px">
+							Refunded
+						</div>
+						<%}%></div>
+					<%
+						var listinfo=modules.event_global.getEventTicketList(order);
+					%>
+					<%for (var ti = 0; ti < listinfo.order.length; ti++) {
+						var item=listinfo.list[listinfo.order[ti]];%>
+					<div style="padding-top:2px;padding-left:7px;font-size:8px" class="bold"><%=item.count%> &middot; <%=item.ticket.name%></div>
+					<% }%>
+				</td>
+			</tr>
+		</table>
+	</div>
+<%}%>
+</div>

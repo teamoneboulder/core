@@ -1,0 +1,3 @@
+.inlinemenunavitem:not(.category):not(:last-child){
+	border-bottom: 1px solid #ccc;
+}

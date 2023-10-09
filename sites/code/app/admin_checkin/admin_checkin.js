@@ -1,0 +1,175 @@
+modules.admin_checkin=function(options){
+	var self=this;
+	this.show=function(){
+		options.ele.render({
+			uid:'admin_checkin',
+			force:1,
+			template:'admin_checkin',
+			binding:function(ele){
+				self.ele=ele;
+                if(!self.location) self.location='all';
+                self.setScroller();
+                self.setScroller2();
+                ele.find('.x_add').stap(function(){
+                    phi.register('admin_add',{
+                        ele:$('#wrapper'),
+                        title:'Checkin Location',
+                        action:'Save!',
+                        data:{
+                            schema:'checkin_locations'
+                        },
+                        onSave:function(resp){
+                            self.location=resp.data.id;
+                            self.inf2.reload();
+                            self.inf.reload();
+                        },
+                        onRegister:function(instance){
+                            instance.component.show();
+                        }
+                    });
+                },1,'tapactive');
+                ele.find('.topnavitems').find('.navselect').stap(function(){
+                    if(!$(this).hasClass('selected')){
+                        self.ele.find('.navselect').removeClass('selected');
+                        $(this).addClass('selected');
+                        self.location=$(this).attr('data-location');
+                        self.last=false;
+                        self.listloaded=0;
+                        self.refresh();
+                    }
+                })
+                ele.find('.refresh').stap(function(){
+                    ele.find('.refresh').addClass('animate-spin');
+                    self.refresh(1)
+                },1,'tapactive');
+			}
+		})
+	}
+    this.updateTimes=function(){
+        if(self.inf&&self.inf.getScroller) self.inf.getScroller().find('.reltime').each(function(i,v){
+            $(v).html(modules.moment.format($(v).attr('data-ts'),$(v).attr('data-type'),false,1));
+        })
+    }
+    this.setScroller2=function(){
+        self.inf2=new modules.infinitescroll({
+            ele:self.ele.find('.navlist'),
+            scroller:self.ele.find('.navscroller'),
+            endpoint:app.sapiurl+'/loadlocations',
+            channel:'admin_checkin_locations',
+            loaderClass:'lds-ellipsis-black',
+            offset:'200%',
+            checkNextPage:true,
+            recentKey:'tsu',
+            keyOn:'_id',
+            opts:{
+                location:self.location
+            },
+            max:20,
+            template:'admin_checkin_location',
+            endOfList:' ',
+            nodata:'<div style="padding:20px;text-align:center;color:#888;margin-top:20px;"><div style="padding-bottom:10px;"><i class="icon-info" style="font-size:55px;"></i></div><div>No locations yet.</div></div>',
+            onPageReady:function(ele){
+                self.ele.find('.navscroller').find('[data-location='+self.location+']').addClass('selected')
+                ele.find('.x_edit').stap(function(e){
+                    phi.stop(e);
+                    var item=self.inf2.getById($(this).attr('data-id'));
+                    phi.register('admin_add',{
+                        ele:$('#wrapper'),
+                        title:'Checkin Location',
+                        action:'Save!',
+                        data:{
+                            schema:'checkin_locations',
+                            current:item
+                        },
+                        onSave:function(resp){
+                            self.location=resp.data.id;
+                            self.inf2.reload();
+                            self.inf.reload();
+                        },
+                        onRegister:function(instance){
+                            instance.component.show();
+                        }
+                    });
+                },1,'tapactive')
+                ele.find('.x_qr').stap(function(e){
+                    phi.stop(e);
+                    var item=self.inf2.getById($(this).attr('data-id'));
+                    modules.qrcode.getBase64('teest',function(img){
+                        $('body').alert({
+                            icon:false,
+                            content:'<div style="text-align:center;font-size:20px;">'+item.name+'</div><div style="padding:20px 5px;">QR Code that can be used for checkins.</div><div><img src="'+img+'" style="padding:5px"/></div>'
+                        })
+                    });
+                },1,'tapactive');
+                ele.find('.navselect').stap(function(){
+                    if(!$(this).hasClass('selected')){
+                        self.ele.find('.navselect').removeClass('selected');
+                        $(this).addClass('selected');
+                        self.location=$(this).attr('data-location');
+                        self.last=false;
+                        self.listloaded=0;
+                        self.refresh();
+                    }
+                })
+            },
+            scrollBindings:{
+                scrollStart:function(){
+                },
+                scroll:function(obj){
+                }
+            }
+        });
+    }
+	this.setScroller=function(){
+		self.inf=new modules.infinitescroll({
+            ele:self.ele.find('.itemlist'),
+            scroller:self.ele.find('.scroller'),
+            channel:'admin_checkin',
+            endpoint:app.sapiurl+'/loadcheckins',
+            loaderClass:'lds-ellipsis-black',
+            offset:'200%',
+            checkNextPage:true,
+            keyOn:'_id',
+            onInterval:{
+            	time:3000,
+            	callback:function(){
+            		self.updateTimes();
+            	}
+            },
+            opts:{
+                schema:'checkin',
+                location:self.location
+            },
+            max:20,
+            template:'admin_checkin_item',
+            nodata:'<div style="padding:20px;text-align:center;color:#888;margin-top:20px;"><div style="padding-bottom:10px;"><i class="icon-info" style="font-size:55px;"></i></div><div>No scans yet.</div></div>',
+            onPageReady:function(ele){
+                self.ele.find('.refresh').removeClass('animate-spin');
+            },
+            scrollBindings:{
+                scrollStart:function(){
+                },
+                scroll:function(obj){
+                }
+            }
+        });
+	}
+    this.refresh=function(include_nav){
+        if(self.inf){
+            self.inf.options.opts.location=self.location;
+            self.inf.reload();
+        }
+        if(self.inf2&&include_nav){
+            self.inf2.options.opts.location=self.location;
+            self.inf2.reload();
+        }
+    }
+	this.hide=function(){
+		self.inf.stop();
+		self.ele.hide();
+	}
+	this.destroy=function(){
+    	if(self.inf) self.inf.destroy();
+		self.ele.remove();
+    }
+}

@@ -1,0 +1,33 @@
+[{
+	"id":"event_invite",
+	"name":"Event Invites",
+	"priority":0
+},{
+	"id":"gift",
+	"name":"Gifts",
+	"priority":1
+},{
+	"id":"updates",
+	"name":"Updates",
+	"priority":2
+},{
+	"id":"requests",
+	"name":"Request",
+	"priority":2.5
+},{
+	"id":"music_stream",
+	"name":"Music Streams",
+	"priority":2.6
+},{
+	"id":"comment",
+	"name":"Comments",
+	"priority":3
+},{
+	"id":"comment_mention",
+	"name":"Comment Mentions",
+	"priority":4
+},{
+	"id":"comment_reply",
+	"name":"Comment Replies",
+	"priority":5
+}]

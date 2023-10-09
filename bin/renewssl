@@ -1,0 +1,4 @@
+#!/bin/bash
+php ${ROOT}/_manage/renewssl.php $1
+php ${ROOT}/_manage/updatessl.php $1
+echo 'Run [source ~/.bashrc] then [runaws updateprivate]'

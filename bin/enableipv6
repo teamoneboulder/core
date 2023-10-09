@@ -1,0 +1,4 @@
+#!/bin/bash
+cp ${ROOT}/_manage/conf/eth0.cfg /etc/network/interfaces.d/eth0.cfg
+#sudo ifdown eth0 && sudo ifup eth0
+echo "You must reboot for settings to take effect"

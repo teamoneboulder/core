@@ -1,0 +1,269 @@
+/* Top Info */
+.audio_title {
+  position: absolute;
+  width: 100%;
+  top: 3%;
+  line-height: 34px;
+  height: 34px;
+  text-align: center;
+  font-size: 34px;
+  opacity: 0.9;
+  font-weight: 300;
+  color: #555;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.33);
+}
+.audio_timer {
+  text-align: left;
+  opacity: 0.9;
+  font-weight: 300;
+  color: #555;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.33);
+}
+.audio_duration {
+  text-align: right;
+  opacity: 0.5;
+  font-weight: 300;
+  color: #555;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.33);
+}
+
+/* Controls */
+.controlsOuter {
+  position: absolute;
+  width: 100%;
+  height: 70px;
+  bottom: 3%;
+}
+.controlsInner {
+  position: absolute;
+  width: 340px;
+  height: 70px;
+  left: 50%;
+  margin: 0 -170px;
+}
+.audio_btn {
+  position: absolute;
+  cursor: pointer;
+  opacity: 0.9;
+  -webkit-filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.33));
+  filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.33));
+  -webkit-user-select: none;
+  user-select: none;
+}
+.audio_btn:hover {
+  opacity: 1;
+}
+/*.playpausebtn{
+  position: absolute;
+  bottom:50px;left:50%;margin-left:-25px;
+}*/
+.playpausebtn{
+  font-size:20px;
+  color:rgba(55,55,55,.8);
+}
+/*  .playpausebtn{
+    position: absolute;
+    bottom:50px;left:50%;margin-left:-15px;
+  }*/
+  .audio_playBtn {
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+  }
+  .audio_pauseBtn {
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+    display: none;
+  }
+}
+/* Progress */
+.audio_bar {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(55,55,55, 0.9);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.33);
+  opacity: 0.9;
+}
+.audio_progress {
+  position: absolute;
+  bottom: 0px;
+  left:0px;
+  width: 0%;
+  height: 5px;
+  background-color: rgba(55,55,55, 0.8);
+  border-radius: 3px;
+  z-index: 2;
+}
+.audio_progressbar {
+  position: absolute;
+  bottom: 0px;
+  left:0px;
+  right:0px;
+  height: 5px;
+  background-color: rgba(55,55,55, 0.4);
+  border-radius: 3px;
+  z-index: 1;
+}
+.audio_progressslider{
+  width: 28px;
+  height: 28px;
+  position: absolute;
+  bottom:0;
+  left:0%;
+  z-index:10;
+  margin-bottom: -10px;
+  margin-left:-10px;
+  background-color: rgba(55,55,55, 0.8);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.33);
+  border-radius: 14px;
+  cursor: pointer;
+}
+/* Loading */
+.audio_loading {
+  position: absolute;
+  left: 50px;
+  bottom: 50px;
+  width: 70px;
+  height: 70px;
+  background-color: #fff;
+  border-radius: 100%;  
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out;
+  display: none;
+}
+@-webkit-keyframes sk-scaleout {
+  0% { -webkit-transform: scale(0) }
+  100% {
+    -webkit-transform: scale(1.0);
+    opacity: 0;
+  }
+}
+@keyframes sk-scaleout {
+  0% { 
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 100% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}
+
+/* Plylist */
+.audio_playlist {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+}
+.audio_list {
+  width: 100%;
+  height: 360px;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin: -180px auto;
+}
+.list-song {
+  width: 100%;
+  height: 120px;
+  font-size: 50px;
+  line-height: 120px;
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.33);
+}
+.list-song:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+/* Volume */
+.audio_volume {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  touch-action: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  display: none;
+}
+.bar {
+  position: absolute;
+  top: 50%;
+  left:0;
+  margin: -5px auto;
+  height: 10px;
+  background-color: rgba(55,55,55, 0.9);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.33);
+}
+.audio_barEmpty {
+  width: 100%;
+  opacity: 0.5;
+  box-shadow: none;
+  cursor: pointer;
+}
+.audio_barFull {
+  width: 100%;
+}
+.audio_sliderBtn {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  margin-top: -25px;
+  margin-left:-25px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.33);
+  border-radius: 25px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* Fade-In */
+.fadeout {
+  webkit-animation: fadeout 0.5s;
+  -ms-animation: fadeout 0.5s;
+  animation: fadeout 0.5s;
+}
+.fadein {
+  webkit-animation: fadein 0.5s;
+  -ms-animation: fadein 0.5s;
+  animation: fadein 0.5s;
+}
+@keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@-webkit-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@-ms-keyframes fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fadeout {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@-webkit-keyframes fadeout {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@-ms-keyframes fadeout {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}

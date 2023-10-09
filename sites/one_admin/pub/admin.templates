@@ -1,0 +1,1498 @@
+@@@app@@@
+<div class="sfit" data-<%=template%>="<%=_tid%>" style="z-index:5">
+    <div class="sfit" id="appwrapper" data-<%=template%>="<%=_tid%>" style="z-index:2;">
+        <div id="pageview" class="transition sfit" style="display:none">
+            <div class="header truebox coverimg" style="position:absolute;top:0;left:0;right:0;height:60px;font-size:20px;z-index:2;background-image:url(<%=header%>);padding-left:230px">
+                <i class="icon-metadrop" style="position:absolute;bottom:10px;left:5px;font-size:40px;color:white"></i>
+                <i class="icon-nectar" style="position:absolute;bottom:14px;left:40px;font-size:130px;color:white;"></i>
+                <table style="width:100%;height:100%;">
+                    <tr>
+                        <td id="pageheader">
+                            <div class="scopeitems adminnav s-corner-all" data-scope="logs" data-pagenav="logs">Logs</div>
+                            <div class="scopeitems adminnav s-corner-all" data-scope="notifications" data-pagenav="notifications">Notifications</div>
+                            <div class="scopeitems adminnav s-corner-all" data-scope="actions" data-pagenav="actions">Actions</div>
+                           <!--  <div class="scopeitems adminnav s-corner-all" data-scope="support" data-pagenav="support">Support</div> -->
+                            <div class="scopeitems adminnav s-corner-all" data-scope="jobs" data-pagenav="jobs">Jobs</div>
+                            <div class="scopeitems adminnav s-corner-all" data-scope="data" data-pagenav="data">Data</div>
+                            <div class="scopeitems adminnav s-corner-all" data-scope="stats" data-pagenav="stats">Stats</div>
+                        </td>
+                        <td style="width:150px;"></td>
+                        <td style="width:50px;text-align:center" id="profile"></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="content" style="position:absolute;top:60px;left:0;right:0;bottom:0;z-index:1">
+                <div id="screen" style="z-index:4;" class="sfit">
+                </div>
+            </div>
+        </div>
+        <div id="loginscreen" class="sfit coverimg" style="z-index:1;background-image:url(<%=img%>);"></div>
+        <div id="frame" class="sfit coverimg" style="z-index:10;background:white;display:none;top:60px;"></div>
+    </div>
+</div>
+@@@page_item@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:5px;background:white">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;">
+                <div style="width:50px;height:80px;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>)" class="coverimg"></div>
+            </td>
+            <td style="padding-left:10px;">
+                <div style="font-size:18px"><%=data.name%></div>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@embedded@@@
+<iframe src="<%=url%>" style="width:100%;height:100%;border:0px"></iframe>
+@@@pushitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center">
+                <i class="icon-bell" style="font-size:24px;"></i>
+            </td>
+            <td>
+                <div style="font-size:14px;" class="dont-break-out"><b><%=opts.message%></b></div>
+                <div style="font-size:10px;padding-top:5px">Sent <%=_id.formatTime()%> to <%if(this.userinfo){%><%=userinfo.name%><%}else if(opts.device){%><%=opts.device.did%><%}else if(opts.title){%><%=opts.title%> Topic<%}%></div>
+            </td>
+            <td style="width:50px;text-align:center">
+                <%if(this.status){%>
+                <span class="btn btn-primary preview">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@emailitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <%if(this.raw){%>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center">
+                <i class="icon-mail" style="font-size:24px;"></i>
+            </td>
+            <td>
+                <div style="font-size:14px;"><b>Email With Attachments</b></div>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(this.status&&this.status==1){%>
+                <span class="btn btn-primary preview">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+    <%}else{%>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center">
+                <i class="icon-mail" style="font-size:24px;"></i>
+            </td>
+            <td>
+                <div style="font-size:14px;"><b><%=opts.Message.Subject.Data%></b></div>
+                <div style="padding-top:5px;font-size:11px"><%=opts.Message.Body.Text.Data.limitlength(150)%></div>
+                <div style="font-size:10px;padding-top:5px" class="selectable">Sent <%=_id.formatTime()%> to <%if(this.userinfo){%><%=userinfo.name%><%}else{%><%=opts.Destination.ToAddresses.join(', ')%><%}%></div>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(this.status&&this.status==1){%>
+                <span class="btn btn-primary preview">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+    <%}%>
+</div>
+@@@jobitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center;vertical-align: top">
+                <div style="width:50px;height:50px;background-image: url(<%=modules.tools.getImg(user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+            </td>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px"><%=user_info.name%></div>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><b><%=job%></b>::<%=type%></div>
+                <%if(this.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=response%></div>
+                <%}%>
+                <%if(this.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=_id%>"><%=_id.formatTime()%></span></div>
+                <%}%>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(this.status&&status!=-1){%>
+                <span class="btn btn-primary preview">View</span>
+                <%}else if(this.status&&status==-1){%>
+                <span class="btn btn-danger preview">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@housekeeping@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px">FB Token Refresh</div>
+                <%if(this.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=response%></div>
+                <%}%>
+                <%if(this.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=_id%>"><%=_id.formatTime()%></span></div>
+                <%}%>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(this.status&&status!=-1){%>
+                <span class="btn btn-primary preview">View</span>
+                <%}else if(this.status&&status==-1){%>
+                <span class="btn btn-danger preview">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@fbtoken@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px">FB Token Refresh</div>
+                <%if(this.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=response%></div>
+                <%}%>
+                <%if(this.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=_id%>"><%=_id.formatTime()%></span></div>
+                <%}%>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(this.status&&status!=-1){%>
+                <span class="btn btn-primary preview">View</span>
+                <%}else if(this.status&&status==-1){%>
+                <span class="btn btn-danger preview">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@broadcastitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center;vertical-align: top">
+                <div style="width:50px;height:50px;background-image: url(<%=modules.tools.getImg(user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+            </td>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px"><%=user_info.name%></div>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><b>Broadcast</b>::<%if(this.broadcast){%>Admin<%}else{%>User<%}%></div>
+                <%if(this.resp&&resp.message){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=resp.message%></div>
+                <%}%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=_id%>"><%=_id.formatTime()%></span></div>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(this.status&&status!=-1){%>
+                <span class="btn btn-primary preview">View</span>
+                <%}else if(this.status&&status==-1){%>
+                <span class="btn btn-danger preview">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@jobpreview@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:20px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="padding:10px;text-align: center;">
+        <div style="display:inline-block;width:100px;height:100px;background-image: url(<%=modules.tools.getImg(user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+    </div>
+    <div style="font-size:16px"><%=user_info.name%></div>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><b><%=job%></b>::<%=type%></div>
+    <%if(this.response){%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=response%></div>
+    <%}%>
+    <div style="text-align: left">
+        <%if(this._data){%>
+        <code>
+            <%=JSON.stringify(this._data).wrapJson()%>
+        </code>
+        <%}%>
+        <%if(this.data){%>
+        <code>
+            <%=JSON.stringify(this.data).wrapJson()%>
+        </code>
+        <%}%>
+    </div>
+</div>
+@@@fbpreview@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:20px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><b><%=job%></b></div>
+    <%if(this.response){%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=response%></div>
+    <%}%>
+    <div style="text-align: left">
+        <%if(this._data){%>
+        <code>
+            <%=JSON.stringify(this._data).wrapJson()%>
+        </code>
+        <%}%>
+        <%if(this.data){%>
+        <code>
+            <%=JSON.stringify(this.data).wrapJson()%>
+        </code>
+        <%}%>
+    </div>
+</div>
+@@@broadcastpreview@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:20px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="padding:10px;text-align: center;">
+        <div style="display:inline-block;width:100px;height:100px;background-image: url(<%=modules.tools.getImg(user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+    </div>
+    <div style="font-size:16px"><%=user_info.name%></div>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><b>Broadcast</b>::<%if(this.broadcast){%>Admin<%}else{%>User<%}%></div>
+    <%if(this.resp&&resp.message){%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=resp.message%></div>
+    <%}%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=_id%>"><%=_id.formatTime()%></span></div>
+    <div style="text-align: left;" class="selectable">
+        <code>
+            <%=JSON.stringify(this).wrapJson()%>
+        </code>
+    </div>
+</div>
+@@@login@@@
+<div data-<%=template%>="<%=_tid%>" style="max-width:320px;margin:auto;margin-top:30px">
+    <div style="padding:20px;text-align:center">
+        <i class="icon-metadrop textshadow" style="font-size:80px;color:white"></i>
+    </div>
+    <div style="padding:10px 5px;width:100%;position:relative;" class="truebox l-corner-all revglossybg2">
+        <div class="prettyinput">
+            <label>
+              <input class="email" type="email" required/>
+              <div class="label-text">Email</div>
+            </label>
+        </div>
+        <div class="prettyinput">
+            <label>
+              <input class="password" type="password" required/>
+              <div class="label-text">Password</div>
+            </label>
+        </div>
+        <div style="padding:5px;text-align:center;font-size:12px;color:white;display:none;font-weight:bold" class="x_response"></div>
+        <div class="truebox" style="padding:10px 0px;text-align:right">
+            <div style="display:inline-block;text-align:center;padding:10px;color:white" class="x_loginbtn truebox revicon">
+                <b><i class="icon-connect-in loginicon"></i> Sign In</b>
+            </div>
+        </div>
+    </div>
+    <div style="position:absolute;bottom:10px;left:0;right:0;text-align:center;vertical-align:bottom">
+        <i class="icon-nectar textshadow bottomimg" style="font-size:200px;color:white;pointer-events: none;"></i>
+    </div>
+</div>
+@@@logpage@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:4">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Logs</b> 
+                <i class="icon-refresh" id="refreshlogs" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;">
+                    <div style="padding:5px;text-align:right" class="navselect" data-filter="bookmark"><i class="icon-bookmark"></i> Bookmarked</div>
+                </div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="all">All Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="links">Links</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="php">PHP Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="jserror">JS Error Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="node">Node Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="cron">Cron logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="stripe">Stripe Logs</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="other">Other Logs</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+    </div>
+    <div style="position: absolute;top:0;left:0;right:0;height:40px;z-index: 3">
+        <div style="padding-left:210px;width:800px;margin:auto;">
+            <table style="width:100%;height:100%">
+                <tr>
+                    <td style="position: relative;width:160px;">
+                        <div class="usersearcharea"></div>
+                         <div class="usersearch l-corner-all shadow_br" style="position: absolute;top:100%;left:0;width:200px;max-height:300px;background:white;display: none;border:1px solid #ccc;">
+                            <div class="usersearchcontent" style="padding:10px 0px"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="position: relative;width:200px">
+                            <input type="text" id="logcontent" class="s-corner-all" style="border:1px solid #aaa;padding:3px;width:200px" placeholder="Search Log Text">
+                            <i class="icon-cancel" id="clearsearch" style="display:none;color:#888;padding:5px;position: absolute;top:-3px;right:-5px;"></i>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="sfit" style="z-index:2;overflow-y:auto;top:40px;">
+        <div style="padding-left:210px;width:800px;margin:auto;" id="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@supportpage@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:3">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Logs</b> 
+                <i class="icon-refresh" id="refreshsupport" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="all">All Support Items</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+    </div>
+    <div class="sfit" style="z-index:2;;overflow-y:auto;">
+        <div style="padding-left:210px;width:800px;margin:auto;" id="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@business_item@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center;vertical-align: top">
+                <div style="width:50px;height:50px;<%if(data.user){%>background-image: url(<%=modules.tools.getImg(data.user.pic,'small')%>)<%}else{%>border:1px solid #ccc;<%}%>" class="coverimg s-corner-all"></div>
+            </td>
+            <td style="padding-left:5px;">
+                <%if(data.user){%><div style="font-size:16px"><b><%=data.user.name%></b></div><%}%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=data.description%></div>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px" class="selectable"><span data-href="<%=data.url%>"><%=data.url%></span></div>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@skills_item@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <%=data.name%>
+</div>
+@@@user_item@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center;vertical-align: top">
+                <div style="width:50px;height:50px;<%if(data.pic){%>background-image: url(<%=modules.tools.getImg(data.pic,'small')%>)<%}else{%>border:1px solid #ccc;<%}%>" class="coverimg s-corner-all"></div>
+            </td>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px"><b><%=data.name%></b> joined <%=modules.moment.format(data._id,'ago')%></div>
+                <%if(data.referal&&data.referal.user){%><div style="padding-top:3px;padding-left:5px;font-size:13px">Refered by <b><%=data.referal.user.name%></b></div><%}%>
+                <%if(data.referal&&data.referal.oracle_info){%><div style="padding-top:3px;padding-left:5px;font-size:13px"><i class="icon-oracle"></i> Oracle <b><%=data.referal.oracle_info.name%></b></div><%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@datapage@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:3">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Data</b> 
+                <i class="icon-refresh refresh" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="pages">Pages</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="business_info">Business Info</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="user_list">User List</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="user_cancelled">Cancelled Users</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="skills">Skills List</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+    </div>
+    <div class="sfit" style="z-index:2;;overflow-y:auto;">
+        <div style="padding-left:210px;width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@user_cancelled@@@
+<%if(data.user){%>
+<div data-<%=template%>="<%=_tid%>">
+   <div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+        <div>
+            <table style="width:100%;">
+                <tr>
+                    <td style="width:50px;text-align:center;vertical-align: top">
+                        <div style="width:50px;height:50px;<%if(data.user.pic){%>background-image: url(<%=modules.tools.getImg(data.user.pic,'small')%>)<%}else{%>border:1px solid #ccc;<%}%>" class="coverimg s-corner-all"></div>
+                    </td>
+                    <td style="padding-left:5px;">
+                        <div style="font-size:16px"><b><%=data.user.name%></b> cancelled <%=modules.moment.format(data.stopped,'ago',false,1)%></div>
+                        <div class="selectable" style="padding-top:3px">Email: <%=data.user.email%></div>
+                    </td>
+                    <td style="text-align: right;">
+                         <span class="btn btn-primary preview">Info/Notes</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <%if(data.notes&&data.notes.order&&data.notes.order.length){%>
+            <div style="padding-top:10px;font-size:11px;font-weight: bold">Most Recent Note (<%=data.notes.order.length%> total)</div>
+            <div>
+                <%var note=data.notes.list[data.notes.order[0]];%>
+                <div style="border:1px solid #ccc;margin:2px;" class="s-corner-all">
+                    <div style="padding:5px;font-size:14px"><%=note.message%></div>
+                    <div style="padding:5px;font-size:11px">By <%=note.by.data.name%> &middot; <%=modules.moment.format(note._id,'ago',false)%></div>
+                </div>
+            </div>
+            <%}%>
+        </div>
+    </div>
+</div>
+<%}%>
+@@@user_cancelled_alert@@@
+<div style="padding:20px;width:400px;margin:auto;" class="truebox">
+    <div>
+        <table style="width:350px;">
+            <tr>
+                <td style="width:90px;">
+                    <img src="<%=modules.tools.getImg(data.user.pic,'profile')%>" style="width:80px;height:80px;border:1px solid #ccc;margin-top:2px;margin-left:2px" class="s-corner-all boxhoverkid"/>
+                </td>
+                <td style="vertical-align:top;text-align:left"> 
+                    <div style="font-size:18px;padding:3px;color:black;background:white;font-weight:bold" class="m-corner-all boxhoverkid">
+                        <%=data.user.name%>
+                    </div>
+                    <div class="selectable">Email: <%=data.user.email%></div>
+                    <div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">User Since: <%=modules.moment.format(data.user._id,'ago')%></div>
+                    <%if(data.user.la){%>
+                    <div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">Last Active: <%=modules.moment.format(data.user.la,'ago')%></div>
+                    <%}%>
+                    <div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">Cancelled: <%=modules.moment.format(data.stopped,'ago',false,1)%></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <div style="padding:10px 0px;text-align: left;font-size:18px;font-weight: bold">Notes</div>
+        <div class="notes" style="padding-bottom:20px;">
+            <%=$.fn.render({template:'user_cancelled_notes',data:{data:data},returntemplate:true})%>
+        </div>
+        <div>
+            <textarea style="width:100%;min-height:80px;border:1px solid #ccc;padding:5px;font-size:16px" class="m-corner-all autosize" placeholder="Enter Note"></textarea>
+            <div style="padding:5px;text-align: right;">
+                <span class="x_savenote btn btn-primary">Save Note</span>
+            </div>
+        </div>
+    </div>
+</div>
+@@@user_cancelled_notes@@@
+<div style="text-align: left;">
+    <%if(data.notes&&data.notes.order&&data.notes.order.length){
+        var rev=data.notes.order.reverse();
+    %>
+    <%for (var i = 0; i < rev.length; i++) {
+        var note=data.notes.list[rev[i]];%>
+        <div style="border:1px solid #ccc;margin:2px;" class="s-corner-all">
+            <div style="padding:5px;font-size:14px"><%=note.message%></div>
+            <div style="padding:5px;font-size:11px">By <%=note.by.data.name%> &middot; <%=modules.moment.format(note._id,'ago',false)%></div>
+        </div>
+    <%}%>
+    <%}else{%>
+    <div style="padding:10px;">No Notes Yet</div>
+    <%}%>
+</div>
+@@@scheduled_item@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="padding: 5px;" class="selectable"><%=opts.url%></div>
+    <%if(this.resp){%>
+    <div>
+        <code><%=JSON.stringify(resp).wrapJson()%></code>
+    </div>
+    <%}%>
+    <div style="font-size:9px;padding-top:2px;padding-left:10px;"><%=_id.formatTime()%></div>
+</div>
+@@@jobpage@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:3">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Jobs</b> 
+                <i class="icon-refresh refresh" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="fb_import">FB Imports</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="ensuretokens">FB AT Refresh</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="housekeeping">Housekeeping</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="broadcast">Broadcasts</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="scheduled">Scheduled</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+    </div>
+    <div class="sfit" style="z-index:2;;overflow-y:auto;">
+        <div style="padding-left:210px;width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@campaignitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="font-size:20px;padding-left:20px"><b><%=stats.id%></b></div>
+    <div style="width:90%;margin:auto;margin-top:10px;">
+        <div>
+            <div style="height:10px;background:#ccc;padding:1px;overflow:hidden" class="m-corner-all truebox">
+                <div style="height:8px;background:#f09;width:<%=(stats.read/stats.sent*100).toFixed(0)%>%" class="m-corner-all"></div>
+            </div>
+        </div>
+        <div style="padding:5px;font-size:12px">
+            <%=stats.sent%> emails sent, <%=stats.clicked%> clicks, <%=(stats.read/stats.sent*100).toFixed(0)%>% read.
+        </div>
+    </div>
+</div>
+@@@notificationpage@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:4">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Notifications</b> 
+                <i class="icon-refresh refresh" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="all">All</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="emails">Emails</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="push">Push</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Campaigns</b> 
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="campaigns">Email</div>
+            </div>
+        </div>
+    </div>
+    <div style="position: absolute;top:0;left:0;right:0;height:30px;z-index: 3">
+        <div style="padding-left:210px;width:800px;margin:auto;">
+            <table style="height:100%">
+                <tr>
+                    <td style="width:80px;">
+                        <select class="status">
+                            <option value="all">All</option>
+                            <option value="success">Success</option>
+                            <option value="error">Error</option>
+                        </select>
+                    </td>
+                    <td style="width:150px">
+                        <input type="text" style="border:1px solid #aaa;padding:3px;width:150px;" class="s-corner-all x_email" placeholder="Search Email">
+                    </td>
+                    <td style="padding-left:5px;position: relative;">
+                        <div class="usersearcharea"></div>
+                        <div class="usersearch l-corner-all shadow_br" style="position: absolute;top:100%;left:0;width:200px;max-height:300px;background:white;display: none;border:1px solid #ccc;">
+                            <div class="usersearchcontent" style="padding:10px 0px"></div>
+                        </div>
+                    </td>
+                    <td style="padding-left:5px;">
+                        <input type="text" style="border:1px solid #aaa;padding:3px;width:150px;" class="s-corner-all x_type" placeholder="Notice Type">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="sfit" style="z-index:2;;overflow-y:auto;top:30px">
+        <div style="padding-left:210px;width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@usersearcharea@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(user){%>
+    <div style="padding:5px;font-size:14px">
+        <table>
+            <tr>
+                <td style="width:30px;text-align: center;">
+                    <div style="display:inline-block;width:20px;height:20px;background-image:url(<%=modules.tools.getImg(user.pic,'small')%>)" class="coverimg circle"></div>
+                </td>
+                <td style="padding-left:5px;">
+                    <%=user.name%>
+                </td>
+                <td style="width:50px;text-align: center;" class="x_clear">
+                    <i class="icon-cancel" style="font-size:14px"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <%}else{%>
+    <input type="text" style="border:1px solid #aaa;padding:3px;width:150px;" class="s-corner-all x_user" placeholder="Search By User">
+    <%}%>
+</div>
+@@@searchusers@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(users){%>
+    <%for (var i = 0; i < users.order.length; i++) {
+        var item=users.list[users.order[i]];%>
+        <div class="item" data-id="<%=users.order[i]%>" style="padding:5px;font-size:14px">
+            <table style="width:100%">
+                <tr>
+                    <td style="width:50px;text-align: center;">
+                        <div style="display:inline-block;width:35px;height:35px;background-image:url(<%=modules.tools.getImg(item.pic,'small')%>)" class="coverimg"></div>
+                    </td>
+                    <td style="padding-left:5px;">
+                        <%=item.name%>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    <% }%>
+    <%}else{%>
+    No results
+    <%}%>
+</div>
+@@@searchloading@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100px;">
+    <table style="width:100%;height:100%;text-align: center;color:#888">
+        <tr>
+            <td>
+                <i class="icon-refresh animate-spin"></i> Loading...
+            </td>
+        </tr>
+    </table>
+</div>
+@@@previewemail@@@
+<div style="text-align:left;padding:15px;">
+    <div style="padding:10px 0px;font-size:24px;"><b>Email Preview</b></div>
+    <table style="margin-left:10px;margin-bottom:10px;" class="selectable">
+        <%if(!this.raw){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>To</b>:</td>
+            <td>
+                <%if(this.userinfo){%>
+                <div>
+                    <table>
+                        <tr>
+                            <td><div style="width:25px;height:25px;padding:5px;background-image:url(<%=modules.tools.getImg(userinfo.pic,'profile')%>)" class="coverimg s-corner-all"></div></td>
+                            <td style="font-size:14px;">
+                                <div><b><%=userinfo.name%></b></div>
+                                <div style="font-size:11px;color:#888;padding-left:10px;"><%=opts.Destination.ToAddresses.join(', ')%></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <%}else{%>
+                <div><%=opts.Destination.ToAddresses.join(', ')%></div>
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Subject</b>:</td>
+            <td><%=opts.Message.Subject.Data%></td>
+        </tr>
+        <%}%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Sent</b>:</td>
+            <td><%=ts.formatTime()%></td>
+        </tr>
+        <%if(this.resp){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Response</b>:</td>
+            <td><code><%=JSON.stringify(resp)%></code></td>
+        </tr>
+        <%}%>
+        <tr class="historyrow">
+            <td style="width:50px;text-align:right;padding-right:5px;vertical-align: top;">
+                <div><b>History</b>:
+            </td>
+            <td>
+                <div class="history truncatehistory transition" style="padding:5px;overflow:hidden"><i class="icon-refresh animate-spin"></i> Loading...</div>
+                <div class="x_showmore normallink" style="padding:5px;">Show More History</div>
+                <div class="x_showless normallink" style="display:none;padding:5px">Show Less History</div>
+            </td>
+        </tr>
+    </table>
+    <div style="text-align:center">
+        <iframe style="width:750px;margin:auto;height:450px;border:1px solid #ccc;" id="email" class="m-corner-all">
+        </iframe>
+    </div>
+</div>
+@@@email_history@@@
+<div>
+    <%if(stats){%>
+    <div style="padding:5px;margin:5px;background:#eee;padding:5px" class="s-corner-all">
+        <div style="width:90%;margin:auto;margin-top:10px;">
+            <div>
+                <div style="height:10px;background:#ccc;padding:1px;overflow:hidden" class="m-corner-all truebox">
+                    <div style="height:8px;background:#f09;width:<%=(stats.read/stats.sent*100).toFixed(0)%>%" class="m-corner-all"></div>
+                </div>
+            </div>
+            <div style="padding:5px;font-size:12px">
+                <%=stats.sent%> emails sent, <%=stats.clicked%> clicks, <%=(stats.read/stats.sent*100).toFixed(0)%>% read.
+            </div>
+        </div>
+    </div>
+    <%}%>
+    <%if(this.order){%>
+    <%for (var i = 0; i < order.length; i++) {
+        var item=list[order[i]];
+        %>
+        <div style="padding-bottom:5px">
+            <%if(item.link){%>
+            <table>
+                <tr>
+                    <td><i class="icon-link" style="font-size:16px"></i></td>
+                    <td style="padding-left:10px;">
+                        <div>Link Clicked! <span style="font-size:9px;padding-top:2px;padding-left:10px;">(<a href="<%=item.link%>"><%=item.link%></a>)</span></div>
+                        <div style="font-size:9px;padding-top:2px;padding-left:10px;"><%=item._id.formatTime()%></div>
+                    </td>
+                </tr>
+            </table>
+            <%}else{%>
+            <table>
+                <tr>
+                    <td><i class="icon-mail" style="font-size:16px"></i></td>
+                    <td style="padding-left:10px;">
+                        <div>Email Read!</div>
+                        <div style="font-size:9px;padding-top:2px;padding-left:10px;"><%=item._id.formatTime()%></div>
+                    </td>
+                </tr>
+            </table>
+            <%}%>
+        </div>
+    <%}%>
+    <%}else{%>
+    no history yet
+    <%}%>
+</div>
+@@@previewpush@@@
+<div style="text-align:left;padding:10px;overflow:hidden">
+    <div style="padding:10px 0px;font-size:24px;"><b>Push Preview</b></div>
+    <table style="margin-left:10px;margin-bottom:10px;" class="selectable">
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>To</b>:</td>
+            <td>
+                <%if(this.userinfo){%>
+                <div>
+                    <table>
+                        <tr>
+                            <td><div style="width:25px;height:25px;padding:5px;background-image:url(<%=modules.tools.getImg(userinfo.pic,'profile')%>)" class="coverimg s-corner-all"></div></td>
+                            <td style="font-size:14px;padding-left:8px">
+                                <div><b><%=userinfo.name%></b></div>
+                                <div style="font-size:11px;color:#888;padding-left:10px;"><%=opts.device.did%></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <%}else if(opts.device){%>
+                <div><%=opts.device.did%></div>
+                <%}else if(opts.title){%>
+                <div><%=opts.title%> Topic</div>
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Message</b>:</td>
+            <td><%=opts.message%></td>
+        </tr>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Sent</b>:</td>
+            <td><%=modules.moment.format(_id,'ago')%></td>
+        </tr>
+        <%if(this.opts){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;vertical-align:top"><b>Opts</b>:</td>
+            <td><code><%=JSON.stringify(opts).wrapJson()%></code></td>
+        </tr>
+        <%}%>
+        <%if(this.resp){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;vertical-align:top"><b>Response</b>:</td>
+            <td><code><%=JSON.stringify(resp).wrapJson()%></code></td>
+        </tr>
+        <%}%>
+    </table>
+</div>
+@@@logitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;position:relative;" class="truebox m-corner-all logitem selectable">
+<i style="position:absolute;top:-2px;right:8px;" class="icon-bookmark bookmarkicon <%if(this.bookmark&&bookmark){%>selected<%}%>"></i>
+<div style="font-size:12px;"><%if(typeof msg=='object'){%><%=JSON.stringify(msg).wrapJson()%><%}else{%><%=msg.wrapJson()%><%}%></div>
+<%if(this.stack){%>
+<div style="margin:5px;padding:5px;border:1px solid #ccc;font-size:11px;position: relative;" class="s-corner-all">
+    <%=stack.parseStack(msg.app_version)%>
+</div>
+<%}%>
+<%if(this.device){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    <div style="font-size:14px;padding-bottom:2px"><b>Device Info</b></div>
+    <div>
+        <table>
+            <tr>
+                <td style="vertical-align:top">
+                    <div style="font-size:11px;padding-bottom:10px;padding-left:8px">
+                        <table style="font-size:11px">
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Platform</b></td>
+                                <td><%=device.p%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Version</b></td>
+                                <td><%=device.v%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Model</b></td>
+                                <td><%=device.m%></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<%}%>
+<%if(this.ua_info){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    <div style="font-size:14px;padding-bottom:2px"><b>User Agent Info</b></div>
+    <div>
+        <table>
+            <tr>
+                <td style="vertical-align:top">
+                    <div style="font-size:11px;padding-bottom:10px;padding-left:8px">
+                        <table style="font-size:11px">
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Platform</b></td>
+                                <td><%=ua_info.p%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Browser</b></td>
+                                <td><%=ua_info.n%></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;padding-right:5px;"><b>Version</b></td>
+                                <td><%=ua_info.v%></td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<%}%>
+<%if(this.user_info){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    <div style="font-size:14px;padding-bottom:2px"><b>User</b></div>
+    <div>
+        <table>
+            <tr>
+                <td style="width:30px;"><img src="<%=modules.tools.getImg(user_info.pic,'profile')%>" style="width:25px;height:25px;" class="s-corner-all"></td>
+                <td style="vertical-align:top;padding-left:5px">
+                    <%=user_info.name%>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<%}%>
+<%if(this.did){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    Device: <%=did%>
+</div>
+<%}%>
+<%if(this.server){%>
+<div style="font-size:12px;color:#aaa;padding-top:5px">
+    Server: <%=server%>
+</div>
+<%}%>
+<div style="font-size:12px;color:#aaa;padding-top:5px"><i class="icon-warning-sign"></i> <span class="reltime" data-time="<%=_id%>"><%=_id.formatTime(false,1)%></span></div>
+</div>
+@@@massemail@@@
+<div style="text-align:left;padding:20px;">
+    <div style="padding-bottom:15px;font-size:18px;color:#888">Mass Email</div>
+    <div style="font-size:14px"><b>Segment/Filter</b></div>
+    <div style="padding-bottom:15px;">
+        <div class="segment"></div>
+    </div>
+    <div style="font-size:14px"><b>Subject</b></div>
+    <div style="padding-top:3px;padding-bottom:10px">
+        <input type="text" style="width:400px;padding:5px;border:1px solid #ccc;" id="subject" class="m-corner-all" value="<%=subject%>">
+    </div>
+    <div style="font-size:14px"><b>Campaign</b> (internal)</div>
+    <div style="padding-top:3px;padding-bottom:10px">
+        <input type="text" style="width:400px;padding:5px;border:1px solid #ccc;" id="campaign" class="m-corner-all" value="<%=campaign%>">
+    </div>
+    <div style="font-size:14px;margin-bottom:10px"><b>Send Preview To</b>
+        <select class="previewid" style="margin-left:5px">
+            <option value="UC9QP6XFW">Tom</option>
+            <option value="U9LASX1KG">Eros</option>
+            <option value="UPWZ37LK9">Zoe (test)</option>
+        </select>
+    </div>
+    <div style="font-size:14px;padding-bottom:3px"><b>Message</b></div>
+    <div style="min-height:80px;padding:5px;max-height:40vh;border:1px solid #ccc" class="truebox redactorbox s-corner-all" id="emailbox"><%=html%></div>
+</div>
+@@@selectuser@@@
+<div style="padding:5px;font-size:20px;margin:5px;border-bottom:1px solid #aaa;text-align:left" class="headerheight calcheight">
+    Select User
+    <span class="searchinputbox" data-id="searchbox" style="position:relative;float:right;margin-right:25px;">
+        <input type="text" style="padding:3px 8px 3px 30px;color:white;border:1px solid #ccc;width:140px;" class="m-corner-all searchinput truebox" placeholder="Search Users" data-id="users">
+        <i class="icon-search searchicon" style="position:absolute;top:5px;left:8px;font-size:12px;"></i>
+        <i class="icon-cancel searchcancel menuicon" style="position:absolute;top:1px;right:2px;font-size:16px;display:none;color:#333;cursor:pointer;padding:3px;"></i>
+    </span>
+    <!-- <span style="float:right">
+        <span class="btn filterbtn" data-id="device" style="padding:2px 5px;">Device(s)</span>
+        <span class="btn filterbtn" data-id="la" style="padding:2px 5px;margin-left:5px;margin-right:5px"><i class="icon-clock"></i> LA</span>
+    </span> -->
+</div>
+<div style="min-height:300px;position:relative;" data-id="user_scroller">
+    <div class="calcheight">
+        <div class="list"></div>
+        <div class="clearfloat"></div>
+    </div>
+</div>
+@@@userlist@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(users&&users.order.length){%>
+    <%for (var i = 0; i < users.order.length; i++) {
+        var u=users.list[users.order[i]];%>
+         <div style="width:250px;height:70px;float:left;color:black;position:relative;border:1px solid #ccc;margin:2px" class="s-corner-all useritem" data-id="<%=users.order[i]%>">
+        <span style="position:absolute;top:0;right:0;padding:2px;z-index:5;font-size:11px;background:white" class="m-corner-all">
+            <%if(u.devices){%>
+            <%=u.devices%> <i class="icon-mobile"></i>&nbsp;&nbsp;
+            <%}%>
+            <i class="icon-money" style="<%if(u.stripe_id&&u.stripe_id!='temp'){%>color:green<%}else{%>color:red<%}%>"></i>
+        </span>
+        <table style="width:230px;height:100%;">
+            <tr>
+                <td style="width:60px;">
+                    <img src="<%=modules.tools.getImg(u.pic,'profile')%>" style="width:60px;height:60px;border:1px solid #ccc;margin-top:2px;margin-left:2px" class="s-corner-all boxhoverkid"/>
+                </td>
+                <td style="vertical-align:top;text-align:left"> 
+                    <div style="font-size:15px;padding:3px;color:black;background:white;font-weight:bold" class="m-corner-all boxhoverkid">
+                        <%=u.name%>
+                    </div>
+                    <%if(u.la){%><div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">Last Active: <%=u.la.formatTime(1)%></div><%}%>
+                    <div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">User Since: <%=modules.moment.format(u._id)%></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <%};%>
+    <%}else{%>
+    no results
+    <%}%>
+</div>
+@@@userview@@@
+<div data-<%=template%>="<%=_tid%>" class="selectable" style="text-align:left;padding:20px">
+    <div style="color:black;position:relative;padding-bottom:10px;" >
+        <table style="width:350px;">
+            <tr>
+                <td style="width:90px;">
+                    <img src="<%=modules.tools.getImg(pic,'profile')%>" style="width:80px;height:80px;border:1px solid #ccc;margin-top:2px;margin-left:2px" class="s-corner-all boxhoverkid"/>
+                </td>
+                <td style="vertical-align:top;text-align:left"> 
+                    <div style="font-size:18px;padding:3px;color:black;background:white;font-weight:bold" class="m-corner-all boxhoverkid">
+                    <%=name%>
+                    </div>
+                    <%if(this.la){%><div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">Last Active: <%=la.formatTime(1)%></div><%}%>
+                    <div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">User Since: <%=modules.moment.format(_id)%></div>
+                    <div style="text-align:center;padding-bottom: 10px;padding-top:10px;">
+                        <div class="btn x_loginas" style="display: inline-block;"><i class="icon-lock"></i> Login</div>
+                        <div class="btn x_fblink" style="display: inline-block;margin-left:10px;"><i class="icon-link"></i> FB Link</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="font-size:16px;padding-top:10px;"><b>Email</b></div>
+    <div style="margin:2px;padding:5px;background:#eee;border:1px solid #ccc;" class="m-corner-all"><%=email%></div>
+    <div style="font-size:16px;padding-top:10px;"><b>UID</b></div>
+    <div style="margin:2px;padding:5px;background:#eee;border:1px solid #ccc;" class="m-corner-all"><%=id%></div>
+    <div id="moreuserinfo">
+        <div style="padding:20px;text-align: center;font-size:18px"><i class="icon-refresh animate-spin"></i> Loading...
+        </div>
+    </div>
+    <div style="text-align:center;">
+        <div class="btn btn-danger x_delete"><i class="icon-trash-empty"></i> Delete User</div>
+    </div>
+</div>
+@@@testpush@@@
+<div style="padding:20px;text-align:left;">
+    <div style="font-size:22px;padding-bottom:10px;color:#555">Send Push Message</div>
+    <div style="padding:5px;font-size:16px;"><b>Message</b></div>
+    <textarea style="width:100%;min-height:80px;padding:5px;border:1px solid #ccc;resize:none" placeholder="Enter Message..." id="pushmessage" class="s-corner-all"></textarea>
+    <div style="padding:5px;font-size:16px;margin-top:10px;"><b>Intent</b></div>
+    <div>
+        <input type="text" style="width:300px;padding:5px;border:1px solid #ccc;" class="s-corner-all" id="intent" placeholder="Intent">
+    </div>
+    <div>
+        <input type="checkbox" class="x_call"> Call
+    </div>
+</div>
+@@@device@@@
+<div data-<%=template%>="<%=_tid%>" style="border:1px solid #ccc;margin-bottom:2px;padding:2px;position:relative" class="s-corner-all truebox userdevice" data-id="<%=id%>">
+    <table>
+        <tr>
+            <td style="width:50px;text-align:center">
+                <i class="icon-mobile" style="font-size:40px;"></i>
+            </td>
+            <td>
+                <div style="font-size:16px;padding-bottom:2px;padding-top:2px">
+                    <%if(this.a&&parseInt(a,10)){%>
+                    Android Device
+                    <%}else{%>
+                    iOS Device
+                    <%}%>
+                </div>
+                <div style="font-size:11px;color:#aaa;padding-bottom:2px">Last Active: <%=la.formatTime()%></div>
+                <div style="font-size:11px;color:#aaa">ID: <%=id.limitlength(20)%></div>
+                <%if(this.version){%><div style="font-size:11px;color:#aaa">VOIP</div><%}%>
+            </td>
+        </tr>
+    </table>
+    <i class="icon-trash-empty menuicon x_deletedevice" data-id="<%=id%>" style="color:black;display:block;padding:5px;position:absolute;top:0;right:0;font-size:20px"></i>
+</div>
+@@@user_app@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:5px;font-size:14px;position:relative;border:1px solid #ccc;margin:5px 0px;" class="s-corner-all">
+    <div>
+         <table>
+            <tr>
+                <td style="width:40px;"><i class="icon-key" style="font-size:24px"></i></td>
+                <td style="padding-left:5px">
+                    <div style="font-size:15px;text-align:left"><b><%=app.name%></b></div>
+                    <div style="font-size:11px;padding-left:5px">
+                        <div><b>Created</b> <%=_id.formatTime()%></div>
+                        <%if(scope){%><div><b>Scope</b> <%=scope.join(', ')%></div><%}%>
+                        <div style="pading-top:3px;"><b>Appid</b> <span class="selectable"><%=appid%></span></div>
+                        <div style="pading-top:3px;"><b>Token</b> <span class="selectable"><%=id%></span></div>
+                        <%if(this.ua_info){%>
+                        <div style="font-size:12px;color:#aaa;padding-top:5px">
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td style="vertical-align:top">
+                                            <div style="font-size:11px;padding-bottom:10px;">
+                                                <table style="font-size:11px">
+                                                    <tr>
+                                                        <td style="text-align:left;padding-right:5px;"><b>Platform</b></td>
+                                                        <td><%=ua_info.platform%></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:left;padding-right:5px;"><b>Browser</b></td>
+                                                        <td><%=ua_info.browser%></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:left;padding-right:5px;"><b>Version</b></td>
+                                                        <td><%=ua_info.version%></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <%}%>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <i class="icon-trash-empty x_revoke_app" data-id="<%=id%>" style="position:absolute;top:0px;right:0px;padding:4px;"></i>
+</div>
+@@@oracle_invite@@@
+<div data-<%=template%>="<%=_tid%>">
+    <div style="text-align:center">Please provide a short URL for their invite code.</div>
+    <div style="padding-top:20px;padding-bottom:30px;">
+        <span>https://nectar.earth/o/</span>
+        <span>
+            <input type="text" placeholder="Short URL" id="shorturl" style="width:100px;border-bottom:1px solid #ccc;">
+        </span>
+    </div>
+</div>
+@@@moreuserinfo@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(this.error){%>
+    <span class="x_retry btn btn-primary"><i class="icon-refresh"></i> Retry</span>
+    <%}else{%>
+    <div style="font-size:16px;padding-top:10px;"><b>Plan</b></div>
+    <div style="padding:10px;">
+        <div>
+            <%=user.plan.plan%>
+            <div style="display: inline-block;margin-left:5px">
+            <%if(user.plan.stopped){%>
+            Plan Stopped: <%=modules.moment.format(user.plan.stopped,'ago',false,1)%>
+            <%}else if(user.subscription){%>
+            <div class="btn btn-warning x_stopmembership"><i class="icon-stop"></i> Stop Membership</div>
+            <%}%>
+        </div>
+        <%if(!user.plan.oracle&&!user.plan.oracle_invite){%>
+        <div style="padding-top:5px;">
+            <div class="btn x_inviteoracle">Invite Oracle</div>
+        </div>
+        <%}else if(user.plan.oracle){%>
+        <div style="padding-top:5px;">
+            Already an oracle!
+        </div>
+        <%}else if(user.plan.oracle_invite){%>
+        <div style="padding-top:5px;">
+            Invited to be an oracle!
+        </div>
+        <%}%>
+        <%if(user.plan.pollinator){%>
+        <div style="padding-top:5px;">
+            Pollinator Status ACTIVATED!
+        </div>
+        <%}%>
+        <%if(user.plan.freeUntil){%>
+        <div style="padding-top:5px">
+        Free Until <%=modules.moment.format(user.plan.freeUntil,'simpledate',false,1)%> <span style="font-size:11px">(<%=modules.moment.format(user.plan.freeUntil,'ago',false,1)%>)</span>
+        <%}%>
+        </div>
+        </div>
+    </div>
+    <div style="font-size:16px;padding-top:10px;"><b>Devices</b></div>
+    <div style="padding:5px;">
+        <div id="devices">
+            <div style="padding:5px;font-size:14px">
+                <%if(user.devices){%>
+                <%for (var i=0;i<user.devices.order.length;i++) {
+                    var device=user.devices.list[user.devices.order[i]];
+                    %>
+                    <%=$.fn.render({template:'device',data:device,returntemplate:true})%>
+                    <%}%>
+                <%}else{%>
+                <div style="padding:5px;text-align: center">No Devices</div>
+                <%}%>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+    <div style="font-size:16px;padding-top:10px;"><b>Tokens</b> <i class="icon-plus menuicon x_addapp" style="color:black;font-size:13px;display:none"></i></div>
+    <div style="padding:5px;">
+        <div id="apps">
+            <div style="padding:5px;font-size:14px">
+                <%if(user.apps){%>
+                <%for (var i=0;i<user.apps.order.length;i++) {
+                    var app=user.apps.list[user.apps.order[i]];
+                    %>
+                    <%=$.fn.render({template:'user_app',data:app,returntemplate:true})%>
+                    <%}%>
+                <%}%>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+    <%}%>
+</div>
+@@@testnotice@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:20px;text-align:left">
+    <div style="font-size:20px;padding-bottom:10px;">Notice Testing</div>
+    <div>
+        <%for (var i = 0; i < notices.length; i++) {
+            var notice=notices[i];%>
+            <div style="margin:2px;padding:2px;border:1px solid #ccc;width:220px;float:left;" class="s-corner-all truebox x_selector" data-id="<%=notice.id%>">
+                <table>
+                    <tr>
+                        <td style="width:25px">
+                            <i class="icon-bell" style="font-size:20px;"></i>
+                        </td>
+                        <td>
+                            <div><%=notice.name%></div>
+                            <div style="padding-top:3px;font-size:11px;color:#888"><%=notice.subtitle%></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        <%};%>
+        <div class="clearfloat"></div>
+    </div>
+</div>
+@@@changelog_items@@@
+<%if(this.data&&data.order){%>
+<%for (var i = 0; i < data.order.length; i++) {
+    var item=data.list[data.order[i]];%>
+    <div style="text-align: left;padding:10px;margin:3px;border:1px solid #ccc;" class="s-corner-all">
+        <div style="padding-bottom:4px;font-size: 16px"><%if(item.type=='push'){%><i class="icon-bell"></i><%}else{%><i class="icon-share"></i><%}%> <%=item.content%></div>
+        <div style="font-size:11px"><%=modules.moment.format(item._id,'ago')%> by <b><%=item.user.name%></b></div>
+    </div>
+<%}%>
+<%}else{%>
+<div>Nothing here yet</div>
+<%}%>
+@@@changelog@@@
+<div style="text-align: left;padding:20px;">
+    <div style="font-size:20px;padding-bottom:20px;">Changelog!</div>
+    <div>
+        <div style="padding-bottom:10px">
+            <div class="btn x_toggleview active" data-view="change">Add Change</div>
+            <div class="btn x_toggleview" data-view="push" style="margin-left:5px">Broadcast Change</div>
+        </div>
+        <div class="changepages" data-page="change">
+            <div>
+                <textarea style="width:90%;height:80px;padding:5px;border:1px solid #ccc;resize: none;font-size:18px" class="s-corner-all" placeholder="Add Update..."></textarea>
+            </div>
+            <div style="padding-top:10px;">
+                <div class="btn btn-primary x_add"><i class="icon-plus"></i> Add Change</div>
+            </div>
+        </div>
+        <div class="changepages" style="display: none;" data-page="push">
+            <div>
+                <textarea style="width:90%;height:80px;padding:5px;border:1px solid #ccc;resize: none;font-size:18px" class="s-corner-all" placeholder="Push Message..."></textarea>
+            </div>
+            <div style="padding-top:10px;">
+                <div class="btn btn-primary x_add"><i class="icon-plus"></i> Push Message</div>
+            </div>
+        </div>
+    </div>
+    <div style="padding-top:10px">
+        <div style="font-size:16px"><b>History</b></div>
+        <div class="historylist">
+            <i class="icon-refresh animate-spin"></i> Loading
+        </div>
+    </div>
+</div>
+@@@selectcollection@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:20px;">
+    <div style="font-size:20px;padding-bottom:15px">Sync Collection</div>
+    <%
+        var list=app.loadData.collections;
+        list.sort()
+    %>
+    <select id="collselect">
+    <option value="">---Select Collection---</option>
+    <%for (var i = 0; i < list.length; i++) {
+        var item=list[i]%>
+        <option valu="<%=item%>"><%=item%></option>
+    <%}%>
+    </select>
+</div>
+@@@actionpage@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page">
+    <div style="padding-left:100px;padding-top:50px">
+        <div style="font-size:16px;padding-top:10px;padding-bottom:3px;color:#555"><b>Actions</b></div>
+        <div>
+            <%if(app.user.profile.scopes=='*'){%>
+            <div style="padding:5px;margin:5px;float:left">
+                <span style="width:100px;" class="specialaction btn" data-action="changelog">
+                    <div style="padding:10px;"><i class="icon-share" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td> Changelog</td></tr></table></div>
+                </span>
+            </div>
+            <%}%>
+            <%if(app.user.profile.scopes=='*'||app.user.profile.scopes.indexOf('massemail')){%>
+            <div style="padding:5px;margin:5px;float:left">
+                <span data-action="massemail" style="width:100px;" class="specialaction btn">
+                    <div style="padding:10px;"><i class="icon-mail" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td>Mass Email</td></tr></table></div>
+                </span>
+            </div>
+            <%}%>
+            <div style="padding:5px;margin:5px;float:left">
+                <span style="width:100px;" class="specialaction btn" data-action="users">
+                    <div style="padding:10px;"><i class="icon-users" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td>Users</td></tr></table></div>
+                </span>
+            </div>
+            <%if(app.user.profile.scopes=='*'){%>
+            <div style="padding:5px;margin:5px;float:left">
+                <span style="width:100px;" class="specialaction btn" data-action="testnotice">
+                    <div style="padding:10px;"><i class="icon-bell" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td>Test Notice</td></tr></table></div>
+                </span>
+            </div>
+            <%}%>
+            <div style="padding:5px;margin:5px;float:left">
+                <span style="width:100px;" class="normalaction btn" data-action="leads" data-self="1">
+                    <div style="padding:10px;"><i class="icon-users" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td> Leads CSV</td></tr></table></div>
+                </span>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+    <%if(window.isdev){%>
+    <div style="padding-left:100px;padding-top:50px">
+        <div style="font-size:16px;padding-top:10px;padding-bottom:3px;color:#555"><b>Actions (Dev Only)</b></div>
+        <div>
+            <div style="padding:5px;margin:5px;float:left">
+               <span data-action="syncdb" style="width:100px;" class="normalaction btn" data-confirm="1">
+                    <div style="padding:10px;"><i class="icon-refresh" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td>Sync DB</td></tr></table></div>
+                </span>
+            </div>
+            <div style="padding:5px;margin:5px;float:left">
+               <span data-action="synccoll" style="width:100px;" class="specialaction btn">
+                    <div style="padding:10px;"><i class="icon-refresh" style="font-size:30px;"></i></div>
+                    <div style="height:40px;" class="truebox"><table style="width:100%;height:100%;text-align:center"><tr><td>Sync Collection</td></tr></table></div>
+                </span>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+    <%}%>
+</div>
+@@@statspage@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page">
+    <div style="position:relative;max-width:1000px;margin:auto;height:100%;">
+        <div style="position:absolute;top:5;left:0;right:0;height:50px;background:#eee;" class="l-corner-all">
+            <table style="width:100%;height:100%;font-size:20px;">
+                <tr>
+                    <td style="width:40px;text-align:center"><i class="icon-refresh" id="refreshstats" style="font-size:24px;"></i></td>
+                    <td>Stats</td>
+                </tr>
+            </table>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;top:55px;">
+            <div style="font-size:16px;padding-top:10px;padding-bottom:3px;" >
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="active">Activity</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="users">Users</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="posts">Posts</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="messages">Messages</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="notifications">Notifications</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="friends">Friends</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="fb_share">FB Shares</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="page_activity">Page Activity</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="api">API</div>
+                            <div style="display: inline-block;padding:5px;" class="s-corner-all x_view" data-view="api_timeline">APIT</div>
+                        </td>
+                        <td style="width:300px;text-align: right;">
+                            <div class="btn-group" style="display: inline-block;">
+                                <div class="btn x_type" data-type="hour">Hours</div>
+                                <div class="btn x_type" data-type="day">Day</div>
+                                <div class="btn x_type" data-type="week">Week</div>
+                                <div class="btn x_type" data-type="month">Month</div>
+                                <div class="btn x_type" data-type="3month">3 Month</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="usergraph" style="height:300px;position:relative;border:1px solid #aaa;margin:10px 0px" class="s-corner-all"></div>
+            <div id="statspage"></div>
+        </div>
+    </div>
+</div>
+@@@api_data@@@
+<div data-<%=template%>="<%=_tid%>">
+    api data
+</div>
+@@@statsdata@@@
+<div data-<%=template%>="<%=_tid%>">
+    <div>
+        <%for (var i = 0; i < stats.boxes.order.length; i++) {
+            var stat=stats.boxes.list[stats.boxes.order[i]];%>
+            <div style="position:relative;width:150px;height:120px;border:1px solid #ccc;display:inline-block;margin:5px;" class="l-corner-all">
+                <div style="position:absolute;top:30;left:0;right:0;bottom:0px;background:white;" class="l-corner-bottom">
+                    <table style="width:100%;height:100%;text-align:center">
+                        <tr>
+                            <td style="font-size:30px"><%=stat.value.addCommas()%></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="position:absolute;top:0;left:0;right:0;height:30px;background-image:url(<%=app.header%>);color:white" class="coverimg l-corner-top">
+                    <table style="width:100%;height:100%;text-align:center">
+                        <tr>
+                            <td style="font-size:12px;color:white"><b><%=stat.name%></b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+       <% };%>
+       <div style="padding:10px;font-size:18px"><b>Memberships</b></div>
+       <%for (var i = 0; i < stats.memberships.order.length; i++) {
+            var stat=stats.memberships.list[stats.memberships.order[i]];%>
+            <div style="position:relative;width:150px;height:120px;border:1px solid #ccc;display:inline-block;margin:5px;" class="l-corner-all">
+                <div style="position:absolute;top:30;left:0;right:0;bottom:0px;background:white;" class="l-corner-bottom">
+                    <table style="width:100%;height:100%;text-align:center">
+                        <tr>
+                            <td style="font-size:30px"><%=stat.value.addCommas()%></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="position:absolute;top:0;left:0;right:0;height:30px;background-image:url(<%=app.header%>);color:white" class="coverimg l-corner-top">
+                    <table style="width:100%;height:100%;text-align:center">
+                        <tr>
+                            <td style="font-size:12px;color:white"><b><%=stat.name%></b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+       <% };%>
+       <div style="padding:10px;font-size:18px;margin-bottom:10px"><b>Referal Leaderboard</b></div>
+       <div>
+            <table>
+                <tr>
+                    <th style="width:50px;"></th>
+                    <th style="width:200px;text-align: left">Name</th>
+                    <th style="width:200px;">Referals</th>
+                    <th style="width:200px;">Landing Page Loads</th>
+                </tr>
+               <%for (var i = 0; i < stats.referals.order.length; i++) {
+                    var stat=stats.referals.list[stats.referals.order[i]];%>
+                <tr>
+                    <td style="width:50px;text-align: center;padding:5px">
+                        <div class="coverimg s-corner-all" style="background-image: url(<%=modules.tools.getImg(stat.user.pic,'small')%>);width:40px;height:40px"></div>
+                    </td>
+                    <td style="width:200px;"><%=stat.user.name%></td>
+                    <td style="width:200px;text-align: center;"><%=stat.referals%></td>
+                    <td style="width:200px;text-align: center;"><%=stat.landing%></td>
+                </tr>
+               <% };%>
+           </table>
+       </div>
+    </div>
+</div>
+@@@profile@@@
+<div data-<%=template%>="<%=_tid%>">
+     <table style="float:right;">
+        <tr>
+            <td style="padding-right:10px">
+                <i class="icon-hero normalicon x_all" style="font-size:30px;color:white;"></i>
+            </td>
+            <td>
+                <div class="m-corner-all truebox coverimg profilepicimgsmall tooltip x_link" data-type="stripe" style="position:relative;width:65px;height:43px;border:1px solid white;cursor:pointer;padding:1px;margin-top:2px;margin-right:8px;background-image:url(<%=stripe%>)" alt="profilepic" id="stripe" title="View Analytics"></div>
+            </td>
+            <td>
+                <div class="m-corner-all truebox coverimg profilepicimgsmall tooltip x_link" data-type="aws" style="position:relative;width:65px;height:43px;border:1px solid white;cursor:pointer;padding:1px;margin-top:2px;margin-right:8px;background-image:url(<%=aws%>)" alt="profilepic" id="aws" title="View Analytics"></div>
+            </td>
+            <td>
+                <div class="m-corner-all truebox coverimg profilepicimgsmall tooltip x_link" data-type="atlas" style="position:relative;width:65px;height:43px;border:1px solid white;cursor:pointer;padding:1px;margin-top:2px;margin-right:8px;background-image:url(<%=atlas%>)" alt="profilepic" id="atlas" title="View Analytics"></div>
+            </td>
+            <td>
+                <div style="padding:2px 8px;margin-right:5px;border:1px solid white" class="x_link s-corner-all" data-type="gitlab" id="gotogitlab">
+                    <svg width="36" height="36" class="tanuki-logo">
+                      <path class="tanuki-shape tanuki-left-ear" fill="#e24329" d="M2 14l9.38 9v-9l-4-12.28c-.205-.632-1.176-.632-1.38 0z"></path>
+                      <path class="tanuki-shape tanuki-right-ear" fill="#e24329" d="M34 14l-9.38 9v-9l4-12.28c.205-.632 1.176-.632 1.38 0z"></path>
+                      <path class="tanuki-shape tanuki-nose" fill="#e24329" d="M18,34.38 3,14 33,14 Z"></path>
+                      <path class="tanuki-shape tanuki-left-eye" fill="#fc6d26" d="M18,34.38 11.38,14 2,14 6,25Z"></path>
+                      <path class="tanuki-shape tanuki-right-eye" fill="#fc6d26" d="M18,34.38 24.62,14 34,14 30,25Z"></path>
+                      <path class="tanuki-shape tanuki-left-cheek" fill="#fca326" d="M2 14L.1 20.16c-.18.565 0 1.2.5 1.56l17.42 12.66z"></path>
+                      <path class="tanuki-shape tanuki-right-cheek" fill="#fca326" d="M34 14l1.9 6.16c.18.565 0 1.2-.5 1.56L18 34.38z"></path>
+                    </svg>
+                </div>
+            </td>
+            <td>
+                <div class="m-corner-all truebox coverimg profilepicimgsmall tooltip x_link" data-type="ga" style="position:relative;width:65px;height:43px;border:1px solid white;cursor:pointer;padding:1px;margin-top:2px;margin-right:8px;background-image:url(<%=gaimg%>)" alt="profilepic" id="ga" title="View Analytics"></div>
+            </td>
+            <td>
+                <div class="m-corner-all truebox coverimg profilepicimgsmall tooltip" style="position:relative;width:46px;height:46px;border:1px solid white;cursor:pointer;padding:1px;margin-top:2px;margin-right:8px;background-image:url(<%=modules.tools.getImg(pic,'profile')%>)" alt="profilepic" id="usermenutoggle" title="View Profile"></div>
+            </td>
+        </tr>
+    </table>
+     <div style="position:absolute;top:60px;right:5px;display:none;padding:5px 0px;width:150px;text-align:left;background:#eee;border-left:1px solid #aaa;border-bottom:1px solid #aaa;color:#555" class="m-corner-bottom menuview" id="usermenu">
+        <div style="padding:5px;font-size:18px;cursor:pointer;"><div class="menunav logoutbutton"><i class="icon-logout"></i> Log Out</div></div>
+    </div>
+</div>

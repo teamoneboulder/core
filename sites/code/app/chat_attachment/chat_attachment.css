@@ -1,0 +1,16 @@
+@media only screen and (min-device-width: 802px) {
+	.attachmentpage .pane{
+		left:50% !important;
+		width:600px !important;
+		margin-left:-300px !important;
+	}
+	.chatattachmentitem{
+		width:100% !important;
+	}
+	.x_viewattachment .feedimg{
+		height:300px !important;
+	}
+}
+.chatattachmentitem{
+	width:100vw;
+}

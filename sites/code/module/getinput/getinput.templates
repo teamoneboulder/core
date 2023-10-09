@@ -1,0 +1,19 @@
+@@@getinput_container@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:20px;">
+	<div class="formcontent"></div>
+</div>
+@@@getinput_mobile@@@
+<div data-<%=template%>="<%=_tid%>" style="background: white;position: absolute;top:0;left:0;width:100%;height:100%;">
+		<%=$.fn.render({template:'app_header',data:{
+			data:{
+				page:true,
+				name:(this.name)?name:' ',
+				back:'<i class="icon-cancel"></i>',
+				submit:"Update",
+				submitClass:'x_save'
+			}
+		},returntemplate:true})%>
+	<div class="formcontent apppage" style="position:absolute;bottom:0px;left:0;right:0;top:65px;text-align:center;z-index:1;background:white;overflow: hidden;border-top:1px solid #ccc;">
+		<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+	</div>
+</div>

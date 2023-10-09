@@ -1,0 +1,9 @@
+@@@fileupload@@@
+<div data-<%=template%>="<%=_tid%>">
+    <div style="padding-bottom:4px">Uploading File: <span class="uploadsize"></span></div>
+    <div>
+        <div style="padding:1px;border:1px solid white;" class="s-corner-all">
+            <div style="height:4px;width:0;backgroune:white" class="s-corner-all progbar"></div>
+        </div>
+    </div>
+</div>

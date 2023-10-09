@@ -1,0 +1,4 @@
+#!/bin/bash
+sudo rm /etc/lighttpd/lighttpd.conf --force
+php ${ROOT}/_manage/parselighttpd.php
+service lighttpd reload

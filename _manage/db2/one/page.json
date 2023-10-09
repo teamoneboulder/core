@@ -1,0 +1,72 @@
+[{
+	"id":"one_riverside",
+	"name":"ONE|Riverside",
+	"pic":"https://one-light.s3.amazonaws.com/static/riverside.jpg",
+	"admins":["UIAMPLAYER1","UCQ13TO59M6D","UTF17BXWSM6R","UQBJ46ED30R2","UUSTQC80LZIO"]
+},{
+	"id":"ministry_of_movement",
+	"name":"Ministry of Movement",
+	"pic":"https://s3.amazonaws.com/one-light/static/ministery_of_movement.jpeg",
+	"admins":["UIAMPLAYER1","UJBMEHP0KVG9","UUSTQC80LZIO"]
+},{
+	"id":"thrive",
+	"name":"Thrive",
+	"pic":"https://s3.amazonaws.com/one-light/static/thrive.png",
+	"pic_text":"https://s3.amazonaws.com/one-light/static/thrive_text_black.png",
+	"admins":["UIAMPLAYER1"],
+	"onepass":1
+},{
+	"id":"lux",
+	"name":"Lux",
+	"pic":"https://s3.amazonaws.com/one-light/static/lux.png",
+	"admins":["UIAMPLAYER1"],
+	"onepass":1
+},{
+	"id":"umba",
+	"name":"Umba",
+	"pic":"https://s3.amazonaws.com/one-light/static/umba.png",
+	"admins":["UIAMPLAYER1"],
+	"onepass":1
+},{
+	"id":"tonic",
+	"name":"Tonic",
+	"pic":"https://s3.amazonaws.com/one-light/img/6d690b2fe756e4/small.png",
+	"admins":["UIAMPLAYER1"],
+	"onepass":1
+},{
+	"id":"the_stand",
+	"name":"The Stand",
+	"pic":"https://one-light.s3.amazonaws.com/static/stand.jpg",
+	"admins":["UIAMPLAYER1","UCQ13TO59M6D","UTF17BXWSM6R"]
+},{
+	"id":"the_farm",
+	"name":"The Farm",
+	"pic":"https://one-light.s3.amazonaws.com/static/farm.jpg",
+	"admins":["UIAMPLAYER1","UCQ13TO59M6D","UTF17BXWSM6R"]
+},{
+	"id":"one_corps",
+	"name":"ONE|Corps",
+	"pic":"https://one-light.s3.amazonaws.com/static/oneicon_large.jpg",
+	"admins":["UIAMPLAYER1","ULS0WURH4EG3"]
+},{
+	"id":"tech_collective",
+	"name":"The Tech Collective",
+	"pic":"https://one-light.s3.amazonaws.com/static/tech_collective.png",
+	"admins":["UIAMPLAYER1"]
+},{
+	"id":"stripe",
+	"name":"Stripe",
+	"pic":"https://s3.amazonaws.com/one-light/static/stripe_social.png",
+	"admins":["UIAMPLAYER1"],
+	"hidden":true
+},{
+	"id":"GX3FBIDAPJ0CK",
+	"name":"Daily Camera",
+	"pic":"https://s3.amazonaws.com/one-light/static/dailycamera.png",
+	"admins":[]
+},{
+	"id":"G7AOYW53EFZCK",
+	"name":"City of Boulder",
+	"pic":"https://s3.amazonaws.com/one-light/static/boulderlogo.png",
+	"admins":[]
+}]

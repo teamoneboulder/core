@@ -1,0 +1,103 @@
+@@@infinitescroll_sticky@@@
+<div class="infinitescroll_sticky_container" style="position: fixed;min-height:20px;z-index: 5;left:0;right:0;"></div>
+@@@module_infinitescroll_page@@@
+<div data-<%=template%>="<%=_tid%>" <%if(height){%>style="height:<%=height%>;display: inline-block;position: relative;vertical-align: top;"<%}%>>
+	<%if(!height||firstLoad){%>
+	<div class="extradata">
+		<div class="extracontent"></div>
+	</div>
+	<%}%>
+	<%if(this.data&&data&&data.order&&data.order.length){%>
+		<%if(this.reverse){
+			data.order.reverse();%>
+		<div class="waypoint"></div>
+		<%}%>
+		<div class="infinitescroll_elements" <%if(height){%>style="vertical-align:top;display:inline-block;height:<%=height%>;"<%}%>>
+		<%for (var i = 0; i < data.order.length; i++) {
+			var tdata=data.list[data.order[i]];
+			%>
+			<%if(header){
+				var d=tdata[header.key];
+			%>
+			<%=checkHeader(d,tdata,header)%>
+			<%}%>
+			<%if(addListData){%>
+			<%=$.fn.render({template:render_template,data:{data:tdata,id:data.order[i],opts:opts,list:data.list,renderData:(this.renderData)?renderData:false,extraData:(extraData)?data[extraData]:''},uid:data.order[i],returntemplate:true})%>
+			<%}else{%>
+			<%=$.fn.render({template:render_template,data:{data:tdata,id:data.order[i],opts:opts,renderData:(this.renderData)?renderData:false,extraData:(extraData)?data[extraData]:''},uid:data.order[i],returntemplate:true})%>
+			<%}%>
+		<%};%>
+		</div>
+		<%if(!height){%>
+		<div class="clearfloat"></div>
+		<%}%>
+		<%if(!this.reverse){%>
+		<div class="waypoint" <%if(height){%>style="margin-left:-1px;display:inline-block;"<%}%>></div>
+		<%}%>
+	<%}else if(!newest){%>
+		<%if(!loaded){%>
+		<%if(this.search){%>
+		<div style="text-align:center;padding:20px;font-size:20px;color:black;<%if(height){%>display:inline-block;height:<%=height%>;width:100vw;<%}%>" class="no_data truebox <%if(this.snapTo){%><%=snapTo.replace('.','')%><%}%>"><%=noResults%></div>
+		<%}else if(showNoData){%>
+		<div style="text-align:center;padding:20px;font-size:20px;color:black;<%if(height){%>display:inline-block;height:<%=height%>;width:100vw;<%}%>" class="no_data truebox <%if(this.snapTo){%><%=snapTo.replace('.','')%><%}%>"><%=nodata%></div>
+		<%}%>
+		<%}else if(endOfList){%>
+		<div style="text-align:center;padding:20px;font-size:20px;<%if(endOfListColor){%>color:<%=endOfListColor%><%}else{%>color:black;<%}%><%if(height){%>display:inline-block;height:<%=height%>;width:100vw;<%}%>" class="no_data truebox <%if(this.snapTo){%><%=snapTo.replace('.','')%><%}%>"><%=endOfList%></div>
+		<%}%>
+	<%}%>
+</div>
+@@@infinitescroll_inline@@@
+<%if(data){%>
+<%if(firstLoad){%>
+<div class="extradata">
+	<div class="extracontent"></div>
+</div>
+<%}%>
+<%if(this.data&&data.order&&data.order.length){%>
+<%for (var i = 0; i < data.order.length; i++) {
+	var tdata=data.list[data.order[i]];
+	%>
+	<%=$.fn.render({template:render_template,data:{data:tdata,id:data.order[i],opts:opts,renderData:(this.renderData)?renderData:false,extraData:(extraData)?data[extraData]:''},uid:data.order[i],returntemplate:true})%>
+<%};%>
+<%}%>
+<div class="waypoint" style="display: inline-block;width:1px;margin-left:-1px;"></div>
+<%}else{%>
+<div style="text-align:center;padding:20px;font-size:20px;<%if(endOfListColor){%>color:<%=endOfListColor%><%}else{%>color:black;<%}%><%if(height){%>display:inline-block;height:<%=height%>;width:100vw;<%}%>" class="no_data truebox <%if(this.snapTo){%><%=snapTo.replace('.','')%><%}%>"><%=endOfList%></div>
+<%}%>
+@@@infinitescroll_single@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%=$.fn.render({template:render_template,data:{data:data,id:data.id,opts:opts},returntemplate:true})%>
+</div>
+@@@module_infinitescroll_loading@@@
+<%if(horizontal){%>
+<div style="height:100%;width:150px;" data-<%=template%>="<%=_tid%>" class="<%if(this.snapTo){%><%=snapTo.replace('.','')%><%}%>">
+	<table style="width:100%;height:100%">
+		<tr>
+			<td>
+				<div style="text-align:center;font-size:20px;color:black" class="s-corner-all">
+					<i class="icon-refresh animate-spin"></i> Loading More...
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+<%}else{%>
+<div data-<%=template%>="<%=_tid%>" style="padding:15px;margin:5px;border:1px solid #ccc;text-align:center;font-size:20px;color:black" class="s-corner-all">
+	<i class="icon-refresh animate-spin"></i> Loading More...
+</div>
+<%}%>
+@@@module_infinitescroll_buttonload@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:15px;margin:5px;border:1px solid #ccc;text-align:center;font-size:20px;color:black" class="s-corner-all x_button">
+	<i class="icon-refresh"></i> Load More
+</div>
+@@@infinitescroll_load_error@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="text-align:center;padding:20px 10px;color:#888">
+		<div style="font-size:18px"><i class="<%=icon%>"></i> <%=message%></div>
+		<%if(retry){%>
+		<div style="padding-top:10px">
+			<div class="nectarbtn s-corner-all x_retry" style="display:inline-block"><i class="icon-refresh"></i> Retry</div>
+		</div>
+		<%}%>
+	</div>
+</div>

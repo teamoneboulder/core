@@ -1,0 +1,176 @@
+@@@module_links_preview@@@
+<div data-<%=template%>="<%=_tid%>" aria-label="Link Item" role="link">
+	<%if(media.editing){%>
+	<div style="padding:<%if(media.small){%>4px<%}else{%>10px<%}%>;position: relative;font-size:16px;font-weight: bold;" class="navheader">
+		<div>
+		<i class="icon-link"></i> Share Link
+		</div>
+		<i class="icon-cancel x_remove normalicon linkcancel" style="font-size:20px;padding:5px;position: absolute;<%if(media.small){%>top:-2px;<%}else{%>top:2px;<%}%>right:0;color:white"></i>
+	</div>
+	<%}%>
+	<%if(!media.url&&!media.load){%>
+	<div style="text-align: center;">
+		<input type="text" style="width:300px;margin:5px auto;padding:5px;font-size:16px;border:1px solid #ccc" class="s-corner-all truebox normalinput" placeholder="Paste URL...">
+	</div>
+	<%}else if(media.load){%>
+	<div style="height:100px;position: relative;">
+		<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+	</div>
+	<%}else if(media.url){%>
+	<%if(media.pretty){%>
+	<div class="linknav" data-intent="<%=media.url%>" style="color:black;background: white;margin-left:-5px;margin-right:-5px">
+		<div style="height:250px;position: relative;margin-bottom:15px;">
+			<div style="width:100%;height:100%;background: #eee;" class="s-corner-all">
+				<div style="border:1px solid #ccc;position: absolute;top:-5px;left:-5px;right:-5px;bottom:-5px;background-image:url(<%=modules.tools.getImg(media.image,'small')%>);" class="coverimg s-corner-all"></div>
+			</div>
+			<div style="padding:5px;position: absolute;bottom:-20px;left:5px;right:5px;background: white;padding:5px;border:1px solid #ccc" class="s-corner-all">
+				<div style="font-size:16px;font-weight: bold;"><%if(!media.image){%><i class="icon-link"></i> <%}%><%=media.title%></div>
+				<%if(media.description&&false){%><div class="description" style="padding:4px;font-size:13px;"><%=media.description%></div><%}%>
+				<div style="padding:2px 5px;color:#888;font-size:11px">
+					<%=modules.tools.getLinkDomain(media.url)%>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%}else if(media.pretty2){%>
+	<div class="linknav s-corner-top" data-intent="<%=media.url%>" style="color:black;background: white;margin-left:-5px;margin-right:-5px">
+		<div style="height:250px;position: relative;margin-top:-14px;">
+			<div style="position: absolute;top:0;left:0;right:0;height:190px;">
+				<div style="background-image:url(<%=modules.tools.getImg(media.image,'small')%>);" class="coverimg sfit s-corner-top">
+					<div style="padding:2px 5px;font-size:11px;position: absolute;bottom:0;left:0;right:0;color:white" class="upgradient">
+						<%=modules.tools.getLinkDomain(media.url)%>
+					</div>
+				</div>
+			</div>
+			<div style="padding:5px;position: absolute;bottom:0px;left:0px;right:0px;height:50px;background: white;padding:5px;">
+				<div style="font-size:16px;font-weight: bold;"><%if(!media.image){%><i class="icon-link"></i> <%}%><%=media.title%></div>
+			</div>
+		</div>
+	</div>
+	<%}else if(media.pretty3){%>
+	<div class="linknav" data-intent="<%=media.url%>" style="color:black;background: white;margin-left:-5px;margin-right:-5px">
+		<div style="height:360px;position: relative;margin-top:-14px;">
+			<div style="position: absolute;top:0;left:0;right:0;height:300px;">
+				<div style="background-image:url(<%=modules.tools.getImg(media.image,'small')%>);" class="coverimg sfit">
+					<div style="padding:2px 5px;font-size:11px;position: absolute;bottom:0;left:0;right:0;color:white" class="upgradient">
+						<%=modules.tools.getLinkDomain(media.url)%>
+					</div>
+				</div>
+			</div>
+			<div style="padding:5px;position: absolute;bottom:0px;left:0px;right:0px;height:50px;background: white;padding:5px;">
+				<div style="font-size:16px;font-weight: bold;"><%if(!media.image){%><i class="icon-link"></i> <%}%><%=media.title%></div>
+			</div>
+		</div>
+	</div>
+	<%}else if(media.small){%>
+	<div class="linknav" data-intent="<%=media.url%>" style="border-top:1px solid #ccc;<%if(!media.inlinepost){%>border-bottom:1px solid #ccc;<%}%>color:black;max-height:80px;overflow: hidden;background: white;<%if(media.feed){%>margin-left:-5px;margin-right:-5px;<%}%>">
+		<table style="width:100%;color:black;max-height: 80px;overflow: hidden;">
+			<tr>
+				<%if(media.image&&media.image!='false'){%>
+				<td style="width:50px;"><div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(media.image,'small')%>)" class="coverimg"></div>
+				</td>
+				<%}%>
+				<td>
+					<div style="<%if(!media.image){%>padding:10px 5px;<%}else{%>padding-left:5px;<%}%>max-height: 80px;">
+						<div style="font-size:16px;font-weight: bold;"><%if(!media.image){%><i class="icon-link"></i> <%}%><%=media.title%></div>
+						<%if(media.description){%><div style="padding:4px;font-size:13px;" class="description"><%=media.description%></div><%}%>
+					</div>
+				</td>
+				<%if(media.editing){%>
+				<td style="width:30px;text-align: right;padding-right:5px">
+					<i class="icon-cancel x_remove normalicon linkcancel" style="font-size:14px;color:#555"></i>
+				</td>
+				<%}%>
+			</tr>
+		</table>
+	</div>
+	<%}else if(media.pretty_small){%>
+	<div class="linknav" data-intent="<%=media.url%>" style="border-top:1px solid #ccc;<%if(!media.inlinepost){%>border-bottom:1px solid #ccc;<%}%>color:black;max-height:50vw;overflow: hidden;background: white;<%if(media.feed){%>margin-left:-5px;margin-right:-5px;<%}%>">
+		<table style="width:100%;color:black;max-height: 80px;overflow: hidden;">
+			<tr>
+				<%if(media.image&&media.image!='false'){%>
+				<td style="width:40vw;vertical-align: top"><div style="width:40vw;height:40vw;background-image:url(<%=modules.tools.getImg(media.image,'small')%>)" class="coverimg"></div>
+				</td>
+				<%}%>
+				<td style="vertical-align: top;padding-top:10px;">
+					<div style="<%if(!media.image){%>padding:10px 5px;<%}else{%>padding-left:5px;<%}%>max-height: 50vw;">
+						<%if(media.pretty_small_data){%>
+						<div style="padding-bottom:10px">
+							<table>
+								<tr>
+									<td style="width:20px;"><div style="display:inline-block;width:20px;height:20px;background-image:url(<%=modules.tools.getImg(media.pretty_small_data.data.pic,'small')%>)" class="coverimg circle"></div>
+									</td>
+									<td style="padding-left:5px"><%=media.pretty_small_data.data.name%>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<%}%>
+						<div style="font-size:14px;font-weight: bold;"><%if(!media.image){%><i class="icon-link"></i> <%}%><%=media.title%></div>
+						<%if(media.ts){%>
+						<div style="padding-top:2px;font-size:11px"><%=modules.moment.format(media.ts,'ago')%></div>
+						<%}%>
+					</div>
+				</td>
+				<%if(media.editing){%>
+				<td style="width:30px;text-align: right;padding-right:5px">
+					<i class="icon-cancel x_remove normalicon linkcancel" style="font-size:14px;color:#555"></i>
+				</td>
+				<%}%>
+			</tr>
+		</table>
+	</div>
+	<%}else{%>
+	<div style="border-top:1px solid #ccc;<%if(!media.inlinepost){%>border-bottom:1px solid #ccc;<%}%>color:black;<%if(media.feed){%>margin-left:-5px;margin-right:-5px;<%}%>" class="<%if(!modules.links_global.isPlayable(media.url)){%>linknav<%}%>" data-intent="<%=media.url%>">
+		<%if(media.image&&media.image!='false'){%>
+		<div style="position:relative;height:<%=modules.tools.getImgHeight(media.image,{maxWidth:100,maxHeight:60,units:'%',container:container})%>px;" class="videocontainer">
+			<%if(modules.links_global.isPlayable(media.url)&&false){
+				var info=modules.links_global.getEmbedUrl(media.url);
+			%>
+			<%if(info.progressive){%>
+			<div class="videoitem sfit" data-embed="1" <%if(info.provider=='youtube'){%>data-youtube-id="<%=info.id%>"<%}%>>
+				<div class="videotop" data-id="<%=media.postid%>"></div>
+				<div class="videobottom" style="position: absolute;bottom:0;left:0;right:0;" data-id="<%=media.postid%>"></div>
+				<div class="plyr__video-embed videoplayer">
+				    <iframe src="<%=info.embed_base%>?origin=https://plyr.io&amp;iv_load_policy=3&amp;modestbranding=1&amp;playsinline=1&amp;showinfo=0&amp;rel=0&amp;enablejsapi=1" allowfullscreen allowtransparency allow="autoplay"></iframe>
+				</div>
+			</div>
+			<%}else{%>
+			<div class="videoitem sfit" data-embed="1" <%if(info.provider=='youtube'){%>data-youtube-id="<%=info.id%>"<%}%>>
+				<div class="videotop" data-id="<%=media.postid%>"></div>
+				<div class="videobottom" style="position: absolute;bottom:0;left:0;right:0;" data-id="<%=media.postid%>"></div>
+				<div class="sfit videoplayer" data-plyr-provider="<%=info.provider%>" data-plyr-embed-id="<%=info.id%>"></div>
+			</div>
+			<%}%>
+			<%}else{%>
+				<%if(modules.tools.isFullImage(media.image,{maxWidth:100,maxHeight:40,units:'%',container:container})){%>
+				<img src="<%=modules.tools.getImg(media.image,'small')%>" class="linknav" data-intent="<%=media.url%>" style="<%if(modules.tools.isWebLayout()){%>max-width:100%;max-height:40%;<%}else{%>max-width:100vw;max-height:40vh;<%}%>min-height: 100%">
+				<%}else{%>
+				<div style="width:100%;height:100%;background: #ccc;" class="linknav" data-intent="<%=media.url%>">
+					<div style="width:100%;height:100%;background-image:url(<%=modules.tools.getImg(media.image,'small')%>);" class="fitimg"></div>
+				</div>
+				<%}%>
+			<%}%>
+		</div>
+		<%}%>
+		<div style="padding:5px;" class="<%if(modules.links_global.isPlayable(media.url)){%>linknav<%}%>" data-intent="<%=media.url%>">
+			<div style="font-size:16px;font-weight: bold;"><%if(!media.image){%><i class="icon-link"></i> <%}%><%=media.title%></div>
+			<%if(media.description){%><div class="description" style="padding:4px;font-size:13px;"><%=media.description%></div><%}%>
+			<div style="padding:2px 5px;color:#888;font-size:11px">
+				<%=modules.tools.getLinkDomain(media.url)%>
+			</div>
+		</div>
+	</div>
+	<%}%>
+	<%}%>
+</div>
+@@@module_links_embed@@@
+<%if(embed.type=='spotify_track'){%>
+	<div data-<%=template%>="<%=_tid%>" style="height:80px;">
+		<iframe src="<%=embed.src%>" frameborder="0" allowtransparency="true" allow="encrypted-media" allowfullscreen sandbox="allow-scripts allow-same-origin" webkit-playsinline playsinline style="width:100%;height:100%"></iframe>
+	</div>
+<%}else{%>
+	<div data-<%=template%>="<%=_tid%>" style="height:40vh;">
+		<iframe src="<%=embed.src%>" frameborder="0" allowtransparency="true" allow="encrypted-media" style="width:100%;height:100%"></iframe>
+	</div>
+<%}%>

@@ -1,0 +1,61 @@
+@@@themepicker@@@
+<div data-<%=template%>="<%=_tid%>" data-ui="themepicker" <%if(data.id){%>data-id="<%=data.id%>"<%}%> style="margin:5px">
+	<table style="width:100%;">
+		<tr>
+			<td style="font-size:18px;padding-left:5px;"><%=data.name%></td>
+			<td style="width:180px;text-align: right;">
+				<%=$.fn.render({template:'themepicker_preview',data:{data:data},returntemplate:true})%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@themepicker_preview@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if(this.data){%>
+	<%if(data.current.color){%>
+	<div style="display:inline-block;width:80px;height:30px;border:1px solid #ccc;background:<%=data.current.color%>"></div>
+	<%}else if(data.current.url){%>
+	<img src="<%=data.current.url%>" style="height:30px;max-width:200px;"></div>
+	<%}%>
+	<%}else{%>
+	No Settings
+	<%}%>
+</div>
+@@@mobilealert_picker@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;">
+	<div style="position: absolute;top:0%;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;">
+			<div style="padding:10px;text-align: left;font-size:20px;">
+				<%if(opts.types.indexOf('color')>=0){%>
+				<div style="padding:10px;" class="navitem" data-id="color"><i class="icon-nectar-bucks"></i> Color</div>
+				<%}%>
+				<%if(opts.types.indexOf('image')>=0&&app.isdev){%>
+				<div style="padding:10px;" class="navitem" data-id="image"><i class="icon-images"></i> Image</div>
+				<%}%>
+				<div style="padding:10px;" class="navitem" data-id="reset"><i class="icon-cw"></i> Reset</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@mobilealert_colorpicker@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;">
+	<div style="position: absolute;top:0%;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;">
+			<div class="headercolor" style="height:30px;">
+				<table style="width:100%;height:100%;">
+					<tr>
+						<td style="width:60px;text-align:left;padding-left:5px" class="x_closer">Close</td>
+						<td style="text-align:center;">Pick Color</td>
+						<td style="width:60px;text-align:right;padding-right:5px" class="highlighttext x_set">Set</td>
+					</tr>
+				</table>
+			</div>
+			<div style="padding:10px;text-align: left;font-size:20px;">
+				<div style="text-align: center;">
+					<input type="text" value="<%=opts.current.color%>" class="x_picker m-corner-top" style="width:239px;padding-left:10px">
+				</div>
+				<div class="area"></div>
+			</div>
+		</div>
+	</div>
+</div>

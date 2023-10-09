@@ -1,0 +1,119 @@
+@@@people_page@@@
+<div data-<%=template%>="<%=_tid%>" <%if(inline){%>class="sfit"<%}else{%>style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden"<%}%>>
+	<div class="subpagewrapper" style="position: absolute;top:0;left:0;width:100%;height:100%">
+		<div style="position: absolute;top:0;left:0;width:100%;height:100%" class="connectionspage pagebg">
+			<div style="position: absolute;top:0;left:0;right:0;height:50px;display:none" class="headercolor topnavheader feeditems">
+				<table style="width:100%;height:100%">
+					<tr>
+						<td class="topnav" data-nav="home">
+							<div style="padding-top:3px" class="topicon">
+								<i class="icon-home" style="font-size:26px"></i>
+							</div>
+							<div style="font-size:11px;padding-top:2px" class="helptext">Home</div>
+						</td>
+						<td class="topnav" data-nav="browse">
+							<div style="padding-top:3px" class="topicon">
+								<i class="icon-browse_new" style="font-size:26px"></i>
+							</div>
+							<div style="font-size:11px;padding-top:2px" class="helptext">Browse</div>
+						</td>				
+						<td class="topnav" data-nav="myposts">
+							<div style="padding-top:3px" class="topicon">
+								<i class="icon-user-outline" style="font-size:26px"></i>
+							</div>
+							<div style="font-size:11px;padding-top:2px" class="helptext">My Posts</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="position: absolute;top:0px;left:0;right:0;bottom:0;overflow: hidden;" class="topnavcontent"><!-- topnavcontent -->
+				<div style="display: none;" class="pages sfit" data-page="find">
+					<div class="sfit scrollcontainer" style="z-index:1">
+						<div class="sfit scroller" style="z-index:1">
+							<div class="content feeditems "></div>
+						</div>
+					</div>
+					<div class="websidepane" style="z-index: 2"></div>
+				</div>
+				<div style="display: none;" class="pages sfit" data-page="browse">
+				</div>
+				<div style="display: none;" class="pages sfit" data-page="activity">
+					<div class="sfit" style="z-index:1;">
+						<div class="activity"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@people_page_page@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden">
+	<%=$.fn.render({template:'app_header',data:{
+		data:{
+			name:name,
+			back:'<i class="icon-left-open"></i>',
+			submit:' '
+		}
+	},returntemplate:true})%>
+	<div style="position: absolute;top:65px;left:0;right:0;bottom:0;overflow: hidden;background:#eee" class=""><!-- topnavcontent -->
+		<div style="display: none;" class="pages sfit" data-page="find">
+			<div class="mobileheaderbar"></div>
+			<div class="sfit appcontentbg mobilepagecontent" style="z-index:1">
+				<div class="content sfit"></div>
+			</div>
+			<div class="websidepane"></div>
+		</div>
+	</div>
+</div>
+@@@people_find_user@@@
+<div data-<%=template%>="<%=_tid%>" class="rowitem" data-id="<%=data.id%>" style="background: white;border-bottom:1px solid #ddd;border-top:1px solid #ddd;margin-bottom:8px;">
+	<table style="width:100%">
+		<tr>
+			<td style="text-align: left" class="prettywidth">
+				<div style="background-image:url(<%=modules.tools.getImg(data.pic,'small')%>)" class="coverimg prettypic"></div>
+				<div class="highlightbutton2" style="font-size:13px;padding:4px;color:white"><%if(data.name){%><%=data.name.firstName()%><%}%></div>
+			</td>
+			<td style="padding-left:5px;vertical-align: top;padding-top:5px">
+				<%if(data.callout){%>
+				<div class="highlighttext2" style="padding-bottom:10px;font-size:14px"><%=data.callout.callout.limitlength(100)%></div>
+				<%}%>
+				<%if(data.birthday_ts||data.gender||data.rs){%>
+				<table style="width:100%;font-size:15px">
+					<tr>
+						<td style="width:30px;text-align: center;">
+							<i class="icon-user-outline" style="font-size:18px"></i>
+						</td>
+						<td>
+							<div><%if(data.birthday_ts){%><%=modules.moment.getAge(data.birthday_ts,1)%>, <%}%><%if(data.gender){%><%=app.loc(data.gender.gender)%> <%}%><%if(data.rs){%><%=data.rs%><%}%></div>
+						</td>
+					</tr>
+				</table>
+				<%}%>
+				<%if(data.location_info){%>
+				<table style="width:100%;font-size:15px;margin-top:8px">
+					<tr>
+						<td style="width:30px;text-align: center;">
+							<i class="icon-home" style="font-size:18px"></i>
+						</td>
+						<td>
+							<div><%=app.location.getName(data.location_info,'city')%> <%=app.getDistance(data.dist.calculated,1)%></div>
+						</td>
+					</tr>
+				</table>
+				<%}%>
+				<%if(data.mutual){%>
+				<table style="width:100%;font-size:15px;margin-top:8px">
+					<tr>
+						<td style="width:30px;text-align: center;">
+							<i class="icon-friends-nectar" style="font-size:18px"></i>
+						</td>
+						<td>
+							<div><%=data.mutual%> Mutual Friends</div>
+						</td>
+					</tr>
+				</table>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>

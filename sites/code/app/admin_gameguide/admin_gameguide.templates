@@ -1,0 +1,63 @@
+@@@admin_gameguide@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="top:0;left:0;right:0;height:50px;background:#888;color:white" class="itable">
+        <div class="tcell" style="text-align: left;padding-left:10px;font-weight: bold;">Game Guide Editor</div>
+        <div class="tcell"></div>
+        <div class="tcell" style="text-align:right;padding-right:10px">
+            Language: EN
+        </div>
+    </div>
+    <div style="position: absolute;top:50px;left:0;right:0;bottom:0" class="content">
+        <%=_ui.pageloader.render({})%>
+    </div>
+</div>
+@@@gameguide_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="color:black">
+    <%if(resp.success){%>
+    <div style="position:absolute;top:0;left:0;width:400px;bottom:0" class="scrollY">
+        <div>
+            <div style="height:40px;background: #888;color:white;position:relative;text-align: left;">
+                <div class=" x_goto" style="display: inline-block;vertical-align: top;padding:5px;text-align:left;" data-id=""><i class="icon-home"></i> Home</div>
+                <%if(current){
+                    function getList(id,list){
+                        var c=resp.data.list[id];
+                        if(c.parent){
+                            getList(c.parent,list);
+                        }
+                        list.push(id);
+                        return list;
+                    }
+                    var list=getList(current,[]);
+                    for (var i = 0; i < list.length; i++) {
+                        var item=resp.data.list[list[i]];%>
+                         <div class=" x_goto" style="display: inline-block;vertical-align: top;padding:5px;text-align:left;" data-id="<%=item._id%>"><%=item.title%></div>
+                   <% }
+                %>
+                <%}%>
+            </div>
+            <div class="edititems">
+            <%if(resp.data&&resp.data.order&&resp.data.order.length){%>
+            <%for (var i = 0; i < resp.data.order.length; i++) {
+                var item=resp.data.list[resp.data.order[i]];
+                if((!current&&!item.parent)||(item.parent&&item.parent==current)){
+            %>
+            <div style="margin: 5px;vertical-align: top;position: relative;overflow: hidden;color: #555;background:white;display: inline-block;width:180px;height:100px" class="x_edit x_drag guideitem m-corner-all"  data-id="<%=item._id%>">
+                <div style="font-size:18px;font-weight: bold;text-align: left;padding:5px"><%=item.title%></div>
+            </div>
+            <%}%>
+            <%}%>
+            <%}%>
+            
+            </div>
+            <div style="margin:10px;vertical-align: top;position: relative;background:white;padding:5px;text-align: center;" class="s-corner-all x_add">
+                <i class="icon-add-clean"></i> Add to this section
+            </div>
+        </div>
+    </div>
+    <div style="position:absolute;top:0;left:400px;right:0;bottom:0;" class="formcontent"></div>
+    <%}else{%>
+    <div style="padding:30px;">
+        <div class="x_reload button1" style="display:inline-block">Reload</div>
+    </div>
+    <%}%>
+</div>

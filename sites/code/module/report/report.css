@@ -1,0 +1,23 @@
+.immediate.toggled .onchecked{
+	display: inline-block;
+}
+.immediate.toggled .nocheck{
+	display: none;
+}
+.immediate .onchecked{
+	display: none;
+}
+.reportpage textarea{
+	border:1px solid #eee !important;
+	-webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    outline: none;
+}
+@media only screen and (min-device-width: 802px) {
+	.reportcontent{
+		left:50% !important;
+		width:600px !important;
+		margin-left:-300px !important;
+	}
+}

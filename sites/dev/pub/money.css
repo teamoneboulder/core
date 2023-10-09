@@ -1,0 +1,10 @@
+.linkitem{
+	cursor: pointer;
+}
+.linkitem:hover{
+	background: #eee;
+}
+.x_toggle.selected{
+	background: blue;
+	color: white;
+}

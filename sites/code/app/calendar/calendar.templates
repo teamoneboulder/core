@@ -1,0 +1,120 @@
+@@@module_calendar_page@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;left:<%=left%>%;top:0;position: absolute;">
+	<div style="position: absolute;top:0;left:0;right:0;" class="streamnav headercolor topnavheader">
+		<table style="width:100%;height:100%">
+			<tr>
+				<%for (var i = 0; i < pages.order.length; i++) {
+					var page=pages.list[pages.order[i]];%>
+				<td class="topnav" data-nav="<%=page.id%>" style="width:<%=(1/pages.order.length)*100%>%;">
+					<div style="padding-top:3px" class="topicon">
+						<i class="<%=page.icon%>" style="font-size:26px"></i>
+					</div>
+					<div style="font-size:11px;padding-top:2px" class="helptext"><%=page.name%></div>
+				</td>
+				<%}%>
+			</tr>
+		</table>
+	</div>
+	<div style="position: absolute;top:0;left:0;bottom:0px;padding-top:10px;" class="websubmenu">
+		<%for (var i = 0; i < pages.order.length; i++) {
+			var item=pages.list[pages.order[i]];
+			if(item.notOnWeb) continue;
+		%>
+		<div class="topnav webnav" data-nav="<%=item.id%>">
+			<i class="<%=item.icon%>" style="font-size:16px"></i>
+			<span style="font-size:14px;padding-left:5px;"><%=item.name%></span>
+		</div>
+		<%}%>
+	</div>
+	<div style="position: absolute;left:0;right:0;bottom:0px;" class="pagecontent topnavcontent">
+	</div>
+</div>
+@@@calendar_list@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div class="content feeditems"></div>
+</div>
+@@@calendar_calendar@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit calendarview">
+	<div class="sfit">
+		<div style="padding:5px;min-height: 100%" class="truebox">
+			<div class="calendar">
+			</div>
+		</div>
+	</div>
+</div>
+@@@calendar_event_listitem@@@
+<div data-<%=template%>="<%=_tid%>" style="margin:13px 0px;background:white;border-top:1px solid #aaa;border-bottom:1px solid #aaa;background: white;" class="rowitem" data-id="<%=data._id%>">
+	<div style="position:relative;width:100vw;height:30vh;background-image:url(<%=modules.tools.getImg(data.pic,'small')%>)" class="coverimg">
+		<div class="upgradient" style="height:30px;;color:white;position: absolute;bottom:0;left:0;right:0;font-size:12px;font-weight: bold;height:40px;">
+			<div style="position:absolute;bottom:0px;left:0;right:0;padding-left:60px;padding-bottom:5px;font-size:16px">
+				<%=data.user.name%>
+			</div>
+			<div style="position:absolute;bottom:-20px;left:5px;width:50px;height:50px;border:1px solid white;display: inline-block;background-image:url(<%=modules.tools.getImg(data.user.pic,'small')%>)" class="circle coverimg"></div>
+		</div>
+	</div>
+	<div style="padding:35px 20px 20px 20px">
+		<div><%=modules.moment.format(data.start,'event_full_short',data.end,1)%></div>
+		<div style="padding-top:8px;font-size:18px"><%=data.name%></div>
+		<%if(data.tags&&data.tags.length){%>
+		<div style="padding-top:8px;font-size:14px" class="highlightcolor">
+			<%for (var i = data.tags.length - 1; i >= 0; i--) {
+				var tag=data.tags[i];%>
+				<div style="margin:4px;display: inline-block;font-weight: bold;"># <%=tag%></div>
+			<%}%>
+		</div>
+		<%}%>
+		<%if(data.info&&(data.info.mutual_going||data.info.mutual_interested)){%>
+		<div style="padding-top:10px">
+			<%if(data.info.mutual_going){%>
+			<%=data.info.mutual_going%> friends going
+			<%}%>
+			<%if(data.info.mutual_going&&data.info.mutual_interested){%>
+			,
+			<%}%>
+			<%if(data.info.mutual_interested){%>
+			<%=data.info.mutual_interested%> interested
+			<%}%>
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@calendar_listitem@@@
+<div data-<%=template%>="<%=_tid%>" class="calendarrow" data-id="<%=data._id%>" style="padding:5px 0px;background: white;">
+	<table style="width:100%;min-height:40px;">
+		<tr>
+			<td style="padding-left:10px;width:80px;text-align: right;padding-right:5px">
+				<div style="font-size:18px;">
+					<%=modules.moment.format(data.event.start,'times',data.event.end,1)%>
+				</div>
+			</td>
+			<td style="padding-left:5px" class="calendarborder">
+				<div style="font-size:18px;font-weight: bold;"><%=data.event.name%></div>
+				<%if(data.event.location&&data.event.location.info){%>
+				<div style="font-size:14px;padding-top:5px;"><%=data.event.location.info.name%></div>
+				<%}%>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@calendar_header@@@
+<div style="padding:5px;font-size:16px" class="headercolor"><%=modules.moment.format(data.event.start,'eventheader',false,1)%></div>
+@@@calendar_invites@@@
+<div data-<%=template%>="<%=_tid%>" class="pages sfit" data-page="invites">
+	<div style="position: absolute;top:0px;left:0;right:0;bottom:0;">
+		<div class="content feeditems"></div>
+	</div>
+</div>
+@@@calendar_listitem_invite@@@
+<div data-<%=template%>="<%=_tid%>" style="margin:13px 0px;background:white;border-top:1px solid #aaa;border-bottom:1px solid #aaa;" class="rowitem" data-id="<%=data.id%>">
+	<div style="position:relative;background-image:url(<%=modules.tools.getImg(data.event.pic,'small')%>)" class="coverimg prettypic_wide">
+	</div>
+	<div style="padding:20px 20px 20px 20px">
+		<div class="highlighttext2"><%=modules.moment.format(data.event.start,'event_full_short',data.event.end,1)%></div>
+		<div style="padding-top:8px;font-size:18px"><%=data.event.name%></div>
+		<%if(data.from_info){%>
+		<div style="padding-top:10px">
+			Invited by <%=data.from_info.name%>
+		</div>
+		<%}%>
+	</div>
+</div>

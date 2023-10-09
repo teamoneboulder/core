@@ -1,0 +1,21 @@
+<p style="padding-top:20px;"><b>Referral Stats</b></p>
+<p>
+<table>
+	<tr>
+		<td style="width:100px;text-align: right;padding-right: 10px;font-weight: bold">Members</td>
+		<td>[data.members]</td>
+	</tr>
+	<tr>
+		<td style="width:100px;text-align: right;padding-right: 10px;font-weight: bold">Posts</td>
+		<td>[data.posts]</td>
+	</tr>
+	<tr>
+		<td style="width:100px;text-align: right;padding-right: 10px;font-weight: bold">Events</td>
+		<td>[data.events]</td>
+	</tr>
+	<tr>
+		<td style="width:100px;text-align: right;padding-right: 10px;font-weight: bold">Pages</td>
+		<td>[data.pages]</td>
+	</tr>
+</table>
+</p>

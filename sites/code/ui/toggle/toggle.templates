@@ -1,0 +1,7 @@
+@@@ui_toggle@@@
+<div class="onoffswitch onoffbox <%if(this.selected&&selected){%>selected<%}%><%if(this.status&&status){%>selected<%}%>" style="text-align:left;margin:0" data-ui="toggle" <%if(this.id){%>id="<%=id%>"<%}%> <%if(this.type){%>data-type="<%=type%>"<%}%> <%if(this.pid){%>data-id="<%=pid%>"<%}%>>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="ontext">ON</span>
+        <span class="offtext">OFF</span>
+    </label>
+</div>

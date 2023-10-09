@@ -1,0 +1,185 @@
+@@@admin_jobs@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:3">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Jobs</b> 
+                <i class="icon-refresh refresh" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="fb_import">FB Imports</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="housekeeping">Housekeeping</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="broadcast">Broadcasts</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="scheduled">Scheduled</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+    </div>
+    <div class="sfit scroller" style="z-index:2;;overflow-y:auto;">
+        <div style="padding-left:210px;width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_jobs_housekeeping@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px">Housekeeping</div>
+                <%if(data.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=data.response%></div>
+                <%}%>
+                <%if(data.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=data._id%>"><%=data._id.formatTime()%></span></div>
+                <%}%>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(data.status&&data.status!=-1){%>
+                <span class="btn btn-primary preview" data-id="<%=data._id%>">View</span>
+                <%}else if(data.status&&data.status==-1){%>
+                <span class="btn btn-danger preview" data-id="<%=data._id%>">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview" data-id="<%=data._id%>">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@admin_jobs_scheduled_item@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <%if(data.opts.url){%>
+    <div style="padding: 5px;" class="selectable"><%=data.opts.url%></div>
+    <%}else if(data.opts.type=='hook'){%>
+    <div>HOOK: <code><%=JSON.stringify(data.opts).wrapJson()%></code></div>
+    <%}%>
+    <%if(data.resp){%>
+    <div>
+        <code><%=JSON.stringify(data.resp).wrapJson()%></code>
+    </div>
+    <%}%>
+    <div style="font-size:9px;padding-top:2px;padding-left:10px;"><%=data._id.formatTime()%></div>
+</div>
+@@@admin_jobs_broadcastitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center;vertical-align: top">
+                <%if(data.user_info){%>
+                <div style="width:50px;height:50px;background-image: url(<%=modules.tools.getImg(data.user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+                <%}%>
+            </td>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px"><%if(data.user_info){%><%=data.user_info.name%><%}else{%>Deleted User<%}%></div>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><b>Broadcast</b>::<%if(data.broadcast){%>Admin<%}else{%>User<%}%></div>
+                <%if(data.resp&&data.resp.message){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=data.resp.message%></div>
+                <%}%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=data._id%>"><%=data._id.formatTime()%></span></div>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(data.status&&data.status!=-1){%>
+                <span class="btn btn-primary preview" data-id="<%=data._id%>">View</span>
+                <%}else if(data.status&&data.status==-1){%>
+                <span class="btn btn-danger preview" data-id="<%=data._id%>">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview" data-id="<%=data._id%>">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@admin_jobs_jobitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center;vertical-align: top">
+                <%if(data.user_info){%>
+                <div style="width:50px;height:50px;background-image: url(<%=modules.tools.getImg(data.user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+                <%}%>
+            </td>
+            <td style="padding-left:5px;">
+                <div style="font-size:16px"><%if(data.user_info){%><%=data.user_info.name%><%}else{%>Deleted user<%}%></div>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><b><%=data.job%></b>::<%=data.type%></div>
+                <%if(data.response){%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=data.response%></div>
+                <%}%>
+                <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=data._id%>"><%=data._id.formatTime()%></span></div>
+                <div style="text-align: left">
+                    <%if(this.data&&data._data){%>
+                    <code>
+                        <%=JSON.stringify(data._data).wrapJson()%>
+                    </code>
+                    <%}%>
+                </div>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(data.status&&data.status!=-1){%>
+                <span class="btn btn-primary preview" data-id="<%=data._id%>">View</span>
+                <%}else if(data.status&&data.status==-1){%>
+                <span class="btn btn-danger preview" data-id="<%=data._id%>">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview" data-id="<%=data._id%>">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@admin_jobs_jobpreview@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:20px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="padding:10px;text-align: center;">
+        <div style="display:inline-block;width:100px;height:100px;background-image: url(<%=modules.tools.getImg(user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+    </div>
+    <div style="font-size:16px"><%=user_info.name%></div>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><b><%=job%></b>::<%=type%></div>
+    <%if(this.response){%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=response%></div>
+    <%}%>
+    <div style="text-align: left">
+        <%if(this._data){%>
+        <code>
+            <%=JSON.stringify(this._data).wrapJson()%>
+        </code>
+        <%}%>
+        <%if(this.data){%>
+        <code>
+            <%=JSON.stringify(this.data).wrapJson()%>
+        </code>
+        <%}%>
+    </div>
+</div>
+@@@admin_jobs_fbpreview@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:20px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><b><%=job%></b></div>
+    <%if(this.response){%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=response%></div>
+    <%}%>
+    <div style="text-align: left">
+        <%if(this._data){%>
+        <code>
+            <%=JSON.stringify(this._data).wrapJson()%>
+        </code>
+        <%}%>
+        <%if(this.data){%>
+        <code>
+            <%=JSON.stringify(this.data).wrapJson()%>
+        </code>
+        <%}%>
+    </div>
+</div>
+@@@admin_jobs_broadcastpreview@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;padding:20px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="padding:10px;text-align: center;">
+        <div style="display:inline-block;width:100px;height:100px;background-image: url(<%=modules.tools.getImg(user_info.pic,'small')%>)" class="coverimg s-corner-all"></div>
+    </div>
+    <div style="font-size:16px"><%=user_info.name%></div>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><b>Broadcast</b>::<%if(this.broadcast){%>Admin<%}else{%>User<%}%></div>
+    <%if(this.resp&&resp.message){%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><%=resp.message%></div>
+    <%}%>
+    <div style="font-size:13px;padding-left:5px;padding-top:3px"><span class="reltime" data-time="<%=_id%>"><%=_id.formatTime()%></span></div>
+    <div style="text-align: left;" class="selectable">
+        <code>
+            <%=JSON.stringify(this).wrapJson()%>
+        </code>
+    </div>
+</div>

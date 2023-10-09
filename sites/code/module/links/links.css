@@ -1,0 +1,8 @@
+.linknav{
+	font-weight: bold;
+	font-size:14px;
+	color:#0645AD;
+}
+.linknav .description{
+	font-weight: normal;
+}

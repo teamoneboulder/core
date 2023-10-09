@@ -1,0 +1,49 @@
+@@@admin_apptext@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+     <div style="position: absolute;top:0;right:0;bottom:0;width:600px">
+        <div style="width:500px;height:700px;position: relative;">
+            <iframe src="<%=app.siteurl%>?apptexteditor=1" style="border:0;width:400px;height:600px;margin-top:40px;margin-left:80px"></iframe>
+            <div class="sfit coverimg" style="display: none;pointer-events: none;z-index: 1;background-image:url(https://s3.amazonaws.com/one-light/static/ios_frame.png)"></div>
+        </div>
+     </div>
+     <div style="position: absolute;top:0;right:600px;bottom:0;left: 0;border-right:2px solid black" id="mainwindow">
+        <div style="position: absolute;top:0;left:0;right:0;height:50px;background:white;display:none">
+            <div class="table">
+                <div class="tcell" style="text-align: left;padding-left:5px">App Text Editor</div>
+                <div class="tcell"><input type="text" style="width:200px;padding:5px;border:1px solid #ccc" class="s-corner-all" placeholder="Search By Text"></div>
+            </div>
+        </div>
+        <div style="position:absolute;top:50px;left:0;right:0;bottom:0;">
+            <div class="sfit scroller" style="z-index:2;;overflow-y:auto;">
+                    <div style="width:400px;margin:auto;display: none;" class="listbox">
+                        <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+                    </div>
+                    <div style="padding:20px;background:white;font-size:16px;margin:10px;text-align: center;">
+                        <div>
+                            <i class="icon-info-circled-alt" style="font-size:70px"></i>
+                        </div>
+                        <div style="text-align:center;margin-top:30px;">
+                            <div class="btn-group" style="margin:auto;display:inline-block;">
+                                <div class="btn x_changemode" data-mode="editing">Edit Mode</div>
+                                <div class="btn x_changemode" data-mode="preview">Preview Mode</div>
+                            </div>
+                        </div>
+                        <div style="padding-top:20px;" class="x_viewitem" data-view="editing">Hover over rainbow text in the app to edit text</div>
+                        <div style="padding-top:20px;" class="x_viewitem" data-view="preview">Preview the app in its normal mode of operation.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+</div>
+@@@admin_apptext_item@@@
+<div data-<%=template%>="<%=_tid%>" data-id="<%=data._id%>" style="margin:2px;background: white;padding:5px;position:relative" class="selectable">
+    <%if(opts.type=='full'){%>
+    <i class="icon-pencil x_edit" data-iid="<%=data._id%>" style="position:absolute;top:5px;right:5px;padding:5px;cursor:pointer"></i>
+    <%}%>
+    <div>
+        <div style="font-size:20px;border-bottom:1px solid #ccc"><b><%=data.name%></b></div>
+        <div class="redactorcontent" style="padding:10px;"><%=data.content%></div>
+    </div>
+    <div style="font-size:12px;color:#aaa;padding-top:5px"><span class="reltime" data-time="<%=data._id%>"><%=data._id.formatTime(false,1)%></span></div>
+</div>

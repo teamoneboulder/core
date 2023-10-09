@@ -1,0 +1,15 @@
+.navitem:not(:last-child){
+	border-bottom:1px solid #ccc;
+}
+.mobilealert_title{
+	padding:20px;font-size:18px;
+	border-bottom:1px solid #ccc;
+	font-weight: bold;
+}
+.mobilealert_subtitle{
+	padding:20px;font-size:14px;
+	border-bottom:1px solid #ccc;
+}
+.navitem{
+	font-size:22px;
+}

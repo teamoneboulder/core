@@ -1,0 +1,149 @@
+@@@video_view@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:1000">
+	<div class="sfit" style="z-index: 2">
+		<table style="width:100%;height:100%">
+			<tr>
+				<td>
+					<video class="videoplayer" controls preload="auto"
+					  poster="<%=modules.tools.getImg(media.poster,'small')%>" data-setup="{}" style="width:100%;<%if(media.ar){%>height:<%=((1/parseFloat(media.ar))*100)%>vw;<%}else{%>height:40vh;<%}%>" playsinline webkit-playsinline>
+					    <%if(media.uri){%><source src="<%=media.uri%>" type="<%=_.getMime(media.ext)%>"><%}%>
+					    <%if(media.path){%><source src="<%=modules.tools.getImg(media,'media_full')%>" type="<%=_.getMime(media.ext)%>"><%}%>
+					</video>
+				</td>
+			</tr>
+		</table>
+		<div style="position: absolute;top:20px;right:5px;background:rgba(0,0,0,.5);padding:5px" class="x_close l-corner-all">
+			<i class="icon-cancel" style="font-size:26px;color:white;"></i>
+		</div>
+	</div>
+	<div class="sfit bg" style="z-index: 1;background:black"></div>
+</div>
+@@@video_upload_tray@@@
+<div data-<%=template%>="<%=_tid%>" style="position: absolute;bottom:0;left:0;right:0;z-index: 6" id="uploadtray"></div>
+@@@uploader_prompt@@@
+<div style="padding:20px;font-size:18px;text-align: left;">
+	Your video is uploading!  We will send you a notification when your post is ready.<br/><br/>Please <b>do not close</b> the app while the video is uploading, however you can hide it and view other apps.
+</div>
+@@@uploader_prompt_web@@@
+<div style="padding:20px;font-size:18px;text-align: left;">
+	✅ Your video is uploading!<br/><br/>We will send you a notification when your video is ready.<br/><br/>⚠️ Please <b>do not close</b> this app while the video is <b>transcoding</b>. You may put your phone to sleep when the <b>upload</b> begins.
+</div>
+@@@audio_progress@@@
+<div data-<%=template%>="<%=_tid%>" style="height:30px;position: relative;" class="themebg bottom">
+	<div style="position: absolute;top:0;left:0;right:30px;bottom:0">
+		<table style="width:100%;height:100%;">
+			<tr>
+				<td style="padding-left:5px;">
+					<div style="padding:1px;border:1px solid #555" class="s-corner-all">
+						<div class="progress s-corner-all" style="width:0%;background:#555;height:8px"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="position: absolute;top:0;right:0;bottom:0;width:30px;" class="x_cancel">
+		<table style="width:100%;height:100%;">
+			<tr>
+				<td><i class="icon-cancel" style="font-size:12px;padding:5px;"></i></td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@video_progress@@@
+<div data-<%=template%>="<%=_tid%>" style="height:30px;position: relative;" class="themebg bottom">
+	<div style="position: absolute;top:0;left:0px;width: 100px;bottom:0;text-align: right;font-size:9px;font-weight: bold;" >
+		<div class="table"><div class="tcell" id="progresstype" style="text-align: right;padding-right:5px"></div></div>
+	</div>
+	<div style="position: absolute;top:0;left:100px;right:30px;bottom:0">
+		<table style="width:100%;height:100%;">
+			<tr>
+				<td style="padding-left:5px;">
+					<div style="padding:1px;border:1px solid #555" class="s-corner-all">
+						<div class="progress s-corner-all" style="width:0%;background:#555;height:8px"></div>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="position: absolute;top:0;right:0;bottom:0;width:30px;" class="x_cancel">
+		<table style="width:100%;height:100%;">
+			<tr>
+				<td><i class="icon-cancel" style="font-size:12px;padding:5px;"></i></td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@video_preview@@@
+<div style="position:relative;<%if(media.fit){%>width:100%;height:100%;<%}else if(media.size&&media.size.fitWidth){%><%=modules.tools.getImgHeight(media,media.size,1)%><%}%><%if(media.feed){%>border-top:1px solid #ccc;border-bottom:1px solid #ccc; margin-left:-5px;margin-right:-5px;<%}else{%>border-bottom:1px solid #ccc;<%if(media.editing){%>border-top:1px solid #ccc;<%}%><%}%><%if(media.center){%>margin:auto;<%}%>" class="media videocontainer" data-id="<%=media.id%>" <%if(media.postid){%>data-postid="<%=media.postid%>"<%}%>>
+	<%if(media.editing){%>
+	<%if(media.overlay){%>
+	<div style="position:absolute;top:0px;left:0px;right:0px;margin:10px;z-index:1;padding:10px;font-size:16px;font-weight: bold;background:rgba(55,55,55,.8);color:white;" class="s-corner-all">
+		<div>
+		Video Preview
+		</div>
+		<%if(!media.processed){%>
+		<div style="padding:5px;margin-top:5px" class="extra">
+			<div style="border:1px solid white;padding:1px" class="s-corner-all progress">
+				<div style="background: white;height:6px;width:0%;" class="s-corner-all progbar"></div>
+			</div>
+			<div class="message" style="padding-top:8px"></div>
+		</div>
+		<%}%>
+			<i class="icon-cancel x_remove normalicon" style="font-size:20px;padding:5px;position: absolute;top:2px;right:0"></i>
+	</div>
+	<%}else{%>
+	<div style="padding:10px;position: relative;font-size:16px;font-weight: bold" class="navheader">
+		<div>
+		Video Preview
+		</div>
+		<%if(!media.processed){%>
+		<div style="padding:5px;margin-top:5px" class="extra">
+			<div style="border:1px solid white;padding:1px" class="s-corner-all progress">
+				<div style="background: white;height:6px;width:0%;" class="s-corner-all progbar"></div>
+			</div>
+			<div class="message" style="padding-top:8px"></div>
+		</div>
+		<%}%>
+			<i class="icon-cancel x_remove normalicon" style="font-size:20px;padding:5px;position: absolute;top:2px;right:0"></i>
+	</div>
+	<%}%>
+	<%}%>
+	<div style="<%if(media.background){%>background:<%=media.background%>;<%}else{%>background:black;<%}%><%if(true){%>height: 40vh;<%}else if(media.height){%>height:<%=media.height%>;width:100%;<%}else if(media.fit){%>width:100%;height:100%;<%}else if(media.size&&media.size.fitWidth){%><%=modules.tools.getImgHeight(media,media.size,1)%><%}else{%>height:<%=modules.tools.getImgHeight(media,((media.size)?media.size:{maxWidth:100,maxHeight:40,units:'%',container:media.container}))%>px;<%}%>" class="videoitem <%if(media.fit||(media.size&&media.size.fitWidth)){%>plyr_fullheight<%}%>" data-id="<%=media.postid%>">
+		<div class="videotop" data-id="<%=media.postid%>"></div>
+		<div style="position: relative;<%if(media.fit||(media.size&&media.size.fitWidth)||media.height||true){%>height:100%;<%}%>">
+			<div style="<%if(media.fit||(media.size&&media.size.fitWidth)||media.height||true){%>height:100%;<%}%>" <%if(media.fit||(media.size&&media.size.fitWidth)||media.height){%>class="plyr_fullheight"<%}%>>
+				<video class="videoplayer" controls <%if(media.dontpreload){%>preload="none"<%}else{%>preload="auto"<%}%>
+				  poster="<%=modules.tools.getImg(media.poster,'small')%>" data-setup="{}" style="<%if(media.height||true){%>height:100%;width:100%;<%}else if(media.fit){%>width:100%;height:100%;<%}else if(media.size&&media.size.fitWidth){%><%=modules.tools.getImgHeight(media,media.size,1)%><%}else{%>width:100%;height:<%=modules.tools.getImgHeight(media,((media.size)?media.size:{maxWidth:100,maxHeight:40,units:'%',container:media.container}))%>px;<%}%>" playsinline webkit-playsinline>
+				    <%if(media.uri){%><source src="<%=media.uri%>" type="<%=_.getMime(media.ext)%>"><%}%>
+				    <%if(media.path){%><source src="<%=modules.tools.getImg(media,'media_full')%>" type="<%=_.getMime(media.ext)%>"><%}%>
+				</video>
+			</div>
+			<div class="sfit controls" style="z-index: 1;display: none;">
+				<div class="stopped" style="width:100%;height:100%">
+					<table style="width:100%;height: 100%;text-align: center;" class="x_play">
+						<tr>
+							<td>
+								<div style="display:inline-block;padding:10px 15px;border:1px solid white;background: rgba(55,55,55,.6)" class="l-corner-all">
+									<div>
+										<i class="icon-play" style="font-size:22px;color:white;"></i>
+									</div>
+									<%if(media.length){%>
+									<div style="padding-top:5px;color:white;">
+										<%=media.length.toTime()%>
+									</div>
+									<%}%>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="playing" style="width:100%;height:100%;display: none">
+					<div style="position: absolute;bottom:0;left:0;right:0;padding:5px;background:rgba(55,55,55,.6)">
+						Controls
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="videobottom" data-id="<%=media.postid%>"></div>
+	</div>
+</div>

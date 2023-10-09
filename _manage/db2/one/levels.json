@@ -1,0 +1,21 @@
+[{
+	"id":"explorer",
+	"name":"1 - Explorer",
+	"pretty_name":"Explorers",
+	"pretty_name_simple":"Explorer"
+},{
+	"id":"player",
+	"name":"2 - Player",
+	"pretty_name":"Players",
+	"pretty_name_simple":"Player"
+},{
+	"id":"regenerator",
+	"name":"3 - Regenerator",
+	"pretty_name":"Regenerators",
+	"pretty_name_simple":"Regenerator"
+},{
+	"id":"steward",
+	"name":"4 - Steward",
+	"pretty_name":"Stewards",
+	"pretty_name_simple":"steward"
+}]

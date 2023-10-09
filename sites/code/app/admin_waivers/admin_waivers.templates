@@ -1,0 +1,46 @@
+@@@admin_waivers@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="top:0;left:0;right:0;height:50px;background:#888;color:white" class="itable">
+        <div class="tcell" style="text-align: left;padding-left:10px;font-weight: bold;">Waivers Editor</div>
+        <div class="tcell"></div>
+        <div class="tcell" style="text-align:right;padding-right:10px">
+            Language: EN
+        </div>
+    </div>
+    <div style="position: absolute;top:50px;left:0;right:0;bottom:0" class="content">
+        <%=_ui.pageloader.render({})%>
+    </div>
+</div>
+@@@waivers_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page scrollY" style="color:black">
+    <%if(resp.success){%>
+    <div class="edititems">
+    <%if(resp.data&&resp.data.order&&resp.data.order.length){%>
+    <%for (var i = 0; i < resp.data.order.length; i++) {
+        var item=resp.data.list[resp.data.order[i]];%>
+    <div style="width:200px;height:400px;margin:10px;display: inline-block;vertical-align: top;position: relative;overflow: hidden;color: #555;background:white" class="l-corner-all x_edit x_drag" data-id="<%=item._id%>">
+        <div style="text-align:center;padding:5px;margin-top:15px"><i class="<%=item.icon%>" style="font-size:40px;"></i></div>
+        <div style="font-size:18px;font-weight: bold;text-align: center;"><%=item.title%></div>
+        <div class="redactorcontent" style="padding:10px;font-size:12px"><%=item.content%></div>
+    </div>
+    <%}%>
+    <%}%>
+    <div style="width:200px;height:400px;margin:10px;display: inline-block;vertical-align: top;position: relative;background:white" class="l-corner-all x_add">
+        <div class="table">
+            <div class="tcell">
+                <div>
+                    <i class="icon-add-clean"></i>
+                </div>
+                <div style="padding-top:20px">
+                    Add Waiver
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <%}else{%>
+    <div style="padding:30px;">
+        <div class="x_reload button1" style="display:inline-block">Reload</div>
+    </div>
+    <%}%>
+</div>

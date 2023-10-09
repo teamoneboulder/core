@@ -1,0 +1,23 @@
+.apppage{
+	top:65px;
+}
+.iphoneX .apppage{
+	top:90px !important;
+}
+.iphoneX .appheader{
+	top:35px !important;
+}
+.iphoneX .pageheader{
+	height:85px !important;
+}
+.iphoneX .mobileapppage{
+	bottom:20px !important;
+}
+.webpagecontainer{
+	width:600px;
+	position: absolute;
+	top:100px;
+	left:50%;
+	bottom:0;
+	margin-left:-300px;
+}

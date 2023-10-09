@@ -1,0 +1,11 @@
+<div style="padding:5px;">Services Down!</div>
+<div style="padding:5px;">
+{foreach $data['data']['services'] as $item}
+    <div>{$item['data']['name']} - {$item['data']['ip']}</div>
+    <div>
+        {foreach $item['missing'] as $tkey}
+        <div style="padding:2px;color:#f02">{$tkey}</div>
+        {/foreach}
+    </div>
+{/foreach}
+</div>

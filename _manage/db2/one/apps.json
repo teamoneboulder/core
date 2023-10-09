@@ -1,0 +1,63 @@
+[{
+	"id":"2366d44c84409765d9a00619aea4c1234",
+	"name":"One App",
+	"autoreg":1,
+	"secret":"13662ad4404765d9aa4615ad8c1234",
+	"scope":["self::read::*","self::write::*"],
+	"availableScopes":["self::read::*","self::write::*","self::action::*","self::read::emailsettings","self::write::emailsettings","self::read::account","self::write::account","admin"],
+	"scopes":{
+		"UIAMPLAYER1":["admin"]
+	},
+	"app":{
+		"logo":"https://s3-us-west-2.amazonaws.com/groot/common/life.png",
+		"name":"ONE|App"
+	},
+	"creator":{
+		"name":"onelocal",
+		"link":"https://onelocal.foundation"
+	}
+},{
+	"id":"2366244c84401765d9a00615aea4c1224",
+	"name":"Boulder App",
+	"autoreg":1,
+	"secret":"13662ad4404765d9aa4615ad8c1234",
+	"scope":["self::read::*","self::write::*"],
+	"availableScopes":["self::read::*","self::write::*","self::action::*","self::read::emailsettings","self::write::emailsettings","self::read::account","self::write::account","admin"],
+	"scopes":{
+		"UIAMPLAYER1":["admin"]
+	},
+	"app":{
+		"logo":"https://s3-us-west-2.amazonaws.com/groot/common/life.png",
+		"name":"ONE|App"
+	},
+	"creator":{
+		"name":"onelocal",
+		"link":"https://onelocal.foundation"
+	}
+},{
+	"id":"33ee6d44c844xx9765d9220619ae8c152f",
+	"name":"One Admin",
+	"autoreg":1,
+	"admin":1,
+	"byList":1,
+	"availableScopes":["*","consierge","engagement","stats","infastructure","data","notifications","logs","massemail","admin","apptext","finances","onboard","gameguide","cms"],
+	"roles":{
+		"media":["engagement","stats"],
+		"consierge":["consierge"],
+		"copy":["apptext","cms"],
+		"marketing":["consierge","engagement","stats","finances","apptext","onboard","cms"],
+		"admin_stats":["stats"],
+		"finances":["finances"],
+		"coreteam":["consierge","engagement","stats","finances","apptext","onboard","gameguide"],
+		"steward":["consierge","engagement","stats","apptext","finances","gameguide","onboard","cms"],
+		"admin":["*"]
+	},
+	"app":{
+		"logo":"https://s3-us-west-2.amazonaws.com/groot/common/life.png",
+		"name":"One App"
+	},
+	"creator":{
+		"name":"onelocal",
+		"link":"https://onelocal.foundation"
+	}
+}]

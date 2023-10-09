@@ -1,0 +1,17 @@
+@@@ui_swipeselect@@@
+<div data-ui="swipeselect" <%if(this.id){%>id="<%=id%>"<%}%> style="width:<%=width%>px;margin:auto;position:relative;overflow:hidden">
+	<div style="position:relative;overflow:hidden;text-align:left" class="swipeselect_parent">
+		<!-- <div class="swipeselect_item swipeselect_width"></div> -->
+		<div class="swipeselect_item swipeselect_width" style="width:<%=width/2%>px;margin-left:-22px"></div>
+		<%for (var i = 0; i < options.length; i++) {
+			var o=options[i];%>
+		<div class="swipeselect_item swipeselect_width" data-val="<%=o.val%>"><%=o.name%></div>
+		<%};%>
+		<!-- <div class="swipeselect_item swipeselect_width"></div>
+		<div class="swipeselect_item swipeselect_width"></div>
+		<div class="swipeselect_item swipeselect_width"></div> -->
+	</div>
+	<div style="position:absolute;top:0;left:0;bottom:0;width:100px" class="swipeselect_fadeleft"></div>
+	<div style="position:absolute;top:0;right:0;bottom:0;width:100px" class="swipeselect_faderight"></div>
+	<div style="position:absolute;top:5px;left:50%;width:40px;height:50px;margin-left:-20px;background:rgba(200,200,255,.4);" class="s-corner-all snapto"></div>
+</div>

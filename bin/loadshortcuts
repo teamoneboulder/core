@@ -1,0 +1,19 @@
+#!/bin/bash
+# ensure ${ROOT} is set
+if [[ "${ROOT}" = "" ]] ; then
+echo "...ENV Variable ROOT needs to be set.";
+exit;
+fi
+echo ${ROOT}
+FILES=${ROOT}/bin/*
+for f in $FILES
+do
+  #echo "Loading $f..."
+  # take action on each file. $f store current file name
+  #cat $f
+  sudo cp $f '/usr/local/bin/'
+done
+sudo chmod -R 0777 '/usr/local/bin/'
+cp ${ROOT}/_manage/conf/bashrc ~/.bashrc
+cp ${ROOT}/_manage/conf/aliases ~/.bash_aliases
+echo "Shortcuts Loaded! run [source ~/.bashrc] to apply any bash updates"

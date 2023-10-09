@@ -1,0 +1,45 @@
+.scrollX{
+	overflow-x:scroll !important;
+	-webkit-overflow-scrolling: touch;
+	overflow-y:hidden;
+	box-sizing: content-box;
+}
+.scrollX::-webkit-scrollbar-track
+{
+    background-color: transparent;
+}
+
+.scrollX::-webkit-scrollbar
+{
+	width:0;
+	height:0;
+    background-color: transparent;
+}
+
+.scrollX::-webkit-scrollbar-thumb
+{
+    background-color: transparent;
+}
+.scrollY{
+	overflow-x: hidden;
+	overflow-y:scroll !important;
+	-webkit-overflow-scrolling: touch;
+}
+.scroller_rendering{
+	overflow-y:hidden !important;
+}
+.mobilescrollcontent{
+	padding-top:60px;
+}
+.snappingscroll{
+	overflow: hidden;
+}
+.infinitescroll_sticky_container{
+	top:55px;
+}
+.hasNotch .infinitescroll_sticky_container{
+	top:85px !important;
+}
+.isPhoneGap .infinitescroll_sticky_container{
+	top:75px;
+}

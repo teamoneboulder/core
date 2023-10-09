@@ -1,0 +1,11 @@
+@@@ui_comingsoon@@@
+<div class="sfit" style="text-align:left;margin:0" data-ui="comingsoon">
+    <table style="width:100%;height:100%;text-align:center;'">
+    	<tr>
+    		<td>
+    			<div><i class="icon-metadrop" style="font-size:100px;"></i></div>
+    			<div style="padding-top:20px;font-size:18px;">Coming Soon!</div>
+    		</td>
+    	</tr>
+    </table>
+</div>

@@ -1,0 +1,4061 @@
+<?php
+	class ONE_ADMIN{
+		public static $noreply='One App <app@onebecoming.one>';
+		public static $adminemail='One App <app@onebecoming.one>';
+		public static $ver=1;
+		public static $hasInitData=1;
+		public static $rootdir='';
+		//public static $s3='https://s3-us-west-2.amazonaws.com/groot';
+		public static $defaulttz='America/Denver';
+		public static $admintoken='adm54200ADFvadf';
+		public static function checkUpdatePermissions($r,$scope){
+			$r=self::authUser($r,'33ee6d44c844xx9765d9220619ae8c152f');
+			if($r['auth']) return true;//ensure
+			return false;
+		}
+		public static function notifyAdminHack($r){
+			if($r['auth']) phi::alertAdmin('user ['.$r['auth']['uid'].'] tried to hack admin console!'.json_encode(phi::getSecurityInfo()));
+			else phi::alertAdmin('an anonymous person tried to hack admin console! '.json_encode(phi::getSecurityInfo()));
+			API::toHeaders(array('error'=>'Attempeted Hack!  This request has been logged!'));
+		}
+		public static function getHeartbeat($r){
+			$twominago=time()-(60*2);
+			$dayago=time()-(60*60*24);
+			$weekago=time()-(60*60*24*7);
+			$monthago=time()-(60*60*24*7*30);
+			$pa=0;
+			$pipeline[]=array(
+				'$match'=>array(
+					'_id'=>array('$gte'=>db2::getIdFromTime($dayago))
+				)
+			);
+			$pipeline[]=array(
+				'$group'=>array(
+					'_id'=>array(
+						'page'=>'test'//placehlder really
+					),
+					'sum'=>array(
+						'$sum'=>'$time'
+					)
+				)
+			);
+			$resp=db2::aggregate(DB,'user_stat',$pipeline);
+			if(isset($resp[0]['sum'])){
+				$pa=round($resp[0]['sum']/(60*60),2);//put into hours!
+			}else{
+				$pa=0;
+			}
+			//phi::time('Heartbeat');
+			db2::save(DB,'heartbeat',[
+				'a'=>db2::count(DB,'user',array('la'=>array('$gte'=>$twominago))),
+				'created_on'=>db2::tsToTime(time()),
+				'a_24'=>db2::count(DB,'user',array('la'=>array('$gte'=>$dayago))),
+				'a_week'=>db2::count(DB,'user',array('la'=>array('$gte'=>$weekago))),
+				'a_month'=>db2::count(DB,'user',array('la'=>array('$gte'=>$monthago))),
+				'page_activity_24'=>$pa
+			]);
+			//phi::time('Heartbeat');
+			return array(
+				'success'=>true
+			);
+		}
+		public static function handleRequest($r){
+			include_once(phi::$conf['root'].'/sites/one_core/one_core.api');
+			self::$rootdir=phi::$conf['root'].'/sites/app';
+			if(!isset($r['qs']['appid'])) $r['qs']['appid']='';
+			//$r['app']=phi::getApp($r['qs']['appid']);
+			$r=self::authUser($r,'33ee6d44c844xx9765d9220619ae8c152f');
+			$allow=array('/one_admin/user/login','/one_admin/user/setpw');
+			if(!$r['auth']&&!db2::$queryBackup&&!in_array($r['request_path'], $allow)) return array('error'=>'invalid_token');
+			try{
+				switch ($r['path'][2]){
+					case "heartbeat"://internal...
+						if(API::isInternal($r)) $out=self::getHeartbeat($r);
+						else self::notifyAdminHack($r);
+					break;
+					case "finances":
+						switch ($r['path'][3]) {
+							case 'refundsubscription':
+								$out=self::refundSubscription($r);
+							break;
+							case 'cashflow':
+								$out=self::cashFlowFinancesAll($r);
+							break;
+							case 'cashflow2':
+								$out=self::cashFlowFinancesAll2($r);
+							break;
+							case 'balance':
+								$out=self::getBalance($r);
+							break;
+						}
+					break;
+					case "export":
+						switch ($r['path'][3]) {
+							case 'json':
+								$out=self::exportJSON($r);
+							break;
+							case 'csv':
+								$out=self::exportCSV($r);
+							break;
+						}
+					break;
+					case "action":
+						switch ($r['path'][3]) {
+							case 'updateonboardorder':
+								$out=self::updateOnboardOrder($r);
+							break;
+							case 'updatewaiverorder':
+								$out=self::updateWaiverOrder($r);
+							break;
+							case 'loademails'://depreciated
+								$out=self::loadEmails($r);
+							break;
+							case 'cleardb':
+								$out=self::clearDB($r);
+							break;
+							case 'syncdb':
+								$out=self::syncDB($r);
+							break;
+							case 'fixemails':
+								$out=self::fixEmails($r);
+							break;
+							case 'testlist':
+								$out=self::testList($r);
+							break;
+							case 'customemail':
+								$out=self::customEmail($r);
+							break;
+							case 'fixagreement':
+								$out=self::fixAgreement($r);
+							break;
+							case 'buildsearch':
+								$out=self::buildSearch($r);
+							break;
+							case 'clearemail':
+								//$out=self::clearEmails($r);
+							break;
+							case 'cleardevices':
+								$out=self::clearDevices($r);
+							break;
+							case 'updatetokens':
+								$out=self::updateTokens($r);
+							break;
+							case 'testpush':
+								$out=self::testPush($r);
+							break;
+							case 'removedevice':
+								$out=self::removeDevice($r);
+							break;
+							case 'revoketoken':
+								$out=self::revokeToken($r);
+							break;
+							case 'fixtags':
+								$out=self::fixTags($r);
+							break;
+							case 'export':
+								$out=self::export($r);
+							break;
+							case "leads":
+								self::getLeads($r);
+							break;
+							case "user_csv":
+								self::userCSV($r);
+							break;
+							case "anon_ticket_csv":
+								self::anonTicketCsv($r);
+							break;
+							case "user_stat_csv":
+								self::makeUsersStatCSV($r);
+							break;
+						}
+					break;
+					case "getfreebirds";
+						$out=self::getFreebirds();
+					break;
+					case "alertadmin";
+						$out=self::alertAdmin($r);
+					break;
+					case "statuscheck";
+						$out=self::statusCheck($r);
+					break;
+					case "synccoll":
+						$out=self::syncColl($r);
+					break;
+					case "testnotice":
+						$out=self::testNotice($r);
+					break;
+					case "calcreferals":
+						$out=self::calcReferals($r);
+					break;
+					case "engagement":
+						switch ($r['path'][3]) {
+							case 'count':
+								phi::ensure($r,array(),true,array('massemail'));
+								$out=self::countMassEmail($r);
+							break;
+							case 'send':
+								phi::ensure($r,array(),true,array('massemail'));
+								$out=self::sendMassEmail($r);
+							break;
+							case 'preview':
+								phi::ensure($r,array(),true,array('massemail'));
+								$out=self::previewNotification($r);
+							break;
+							case 'previewemail':
+								phi::ensure($r,array(),true,array('massemail'));
+								$out=self::previewAdminNotification($r);
+							break;
+							case 'get':
+								$out=self::getAdminNotifications($r);
+							break;
+						}
+					break;
+					case "log":
+						switch ($r['path'][3]) {
+							case 'get':
+								$out=self::getLogs($r);
+							break;
+							case 'bookmark':
+								$out=self::toggleBookmark($r);
+							break;
+						}
+					break;
+					case "support":
+						switch ($r['path'][3]) {
+							case 'get':
+								$out=self::getSupport($r);
+							break;
+						}
+					break;
+					case "changelog":
+						switch ($r['path'][3]) {
+							case 'add':
+								$out=self::addChangelog($r);
+							break;
+							case 'load':
+								$out=self::loadChangelog($r);
+							break;
+						}
+					break;
+					case "notifications":
+						switch ($r['path'][3]) {
+							case 'get':
+								$out=self::getNotifications($r);
+							break;
+							case 'history':
+								$out=self::getNotificationHistory($r);
+							break;
+							case 'resend':
+								$out=self::resend($r);
+							break;
+						}
+					break;
+					case "search":
+						switch ($r['path'][3]) {
+							case 'tags':
+								$out=self::searchTags($r);
+							break;
+							case 'user':
+								$out=self::searchUsers($r);
+							break;
+							case 'system_tags':
+								$out=self::searchSystemTags($r);
+							break;
+							case 'gameguide':
+								$out=self::searchGameguide($r);
+							break;
+						}
+					break;
+					case "jobs":
+						switch ($r['path'][3]) {
+							case 'get':
+								$out=self::getJobs($r);
+							break;
+							case 'retry':
+								$out=self::retryJob($r);
+							break;
+						}
+					break;
+					case "data":
+						switch ($r['path'][3]) {
+							case 'load':
+								$out=self::getData($r);
+							break;
+							case 'collectioninfo':
+								$out=self::collectionInfo($r);
+							break;
+						}
+					break;
+					case "stats":
+						switch ($r['path'][3]) {
+							case 'get':
+								$out=self::getStats($r);
+							break;
+							case 'app':
+								$out=self::getAppStats($r);
+							break;
+							case 'timeline':
+								$out=self::getTimeline($r);
+							break;
+						}
+					break;
+					case "user":
+						switch ($r['path'][3]) {
+							case 'load':
+								$out=self::loadUser($r);
+							break;
+							case 'magiclink':
+								$out=self::magicLink($r);
+							break;
+							case 'note':
+								$out=self::note($r);
+							break;
+							case 'delete':
+								$out=self::deleteUser($r);
+							break;
+							case 'inviteoracle':
+								$out=self::inviteOracle($r);
+							break;
+							case 'stopmembership':
+								$out=self::stopMembership($r);
+							break;
+							case 'login':
+								include_once(ROOT.'/sites/one_core/one_core.api');
+								$out=ONE_CORE::login($r);
+							break;
+							case 'setpw':
+								include_once(ROOT.'/sites/one_core/one_core.api');
+								$out=ONE_CORE::setPW($r);
+							break;
+						}
+					break;
+					case "accountinfo":
+						$out=self::loadAccountInfo($r);
+					break;
+					case "test":
+						$out=self::getUserVotes($r);
+					break;
+					case "invoice":
+						$out=self::invoice($r);
+					break;
+					case "status":
+						$out=self::status($r);
+					break;
+					case "referal":
+						$out=self::testReferal($r);
+					break;
+					case "publish":
+						$out=self::testPublish($r);
+					break;
+					case "userstats":
+						$out=self::userStats($r);
+					break;
+					case "loadcheckins":
+						$out=self::loadCheckins($r);
+					break;
+					case "loadlocations":
+						$out=self::loadLocations($r);
+					break;
+				}
+			}catch(Exception $e){
+				$out=array('error'=>'internal_error');
+    			if(phi::$adminDebug||!phi::$conf['prod']){
+    				$out['message']=$e->getMessage();
+    				$out['trace']=explode('#',$e->getTraceAsString());
+    			}
+    			phi::alertAdmin('API ERROR!!! ['.$e->getMessage().'] ['.$e->getTraceAsString().']');
+    			phi::log('<div>Internal Error: '.$e->getMessage().'</div>'.'<div>'.$e->getTraceAsString().'</div><div class="request"><a href="'.phi::getReplayUrl().'" target="_blank">'.phi::makeUrl().'</a></div>');
+    		}
+			if(!isset($out)) $out=array('error'=>'invalid method');
+			return $out;
+		}
+		public static function makeUsersStatCSV($r){
+			$u=db2::toOrderedList(db2::find(DB,'user',[]));
+			foreach($u['order'] as $k=>$v){
+				$user=$u['list'][$v];
+				$data=self::makeUserStatCSV($user['id']);
+				phi::log($data);
+				die();
+			}
+		}
+		public static function makeUserStatCSV($uid){
+
+		}
+		public static function exportJSON($r){
+			$coll=$r['path'][4];
+			$data=db2::toOrderedList(db2::find(DB,$coll,[]));
+			foreach($data['list'] as $k=>$v){
+				$out[]=$v;
+			}
+			phi::exportjson($out,$coll.'.json');
+		}
+		public static function exportCSV($r){
+			$coll=$r['path'][4];
+			// $map = new MongoCode("for (var myKey in this) { emit(myKey, null); }");
+			// $reduce = new MongoCode("function(myKey, s) { return null; }");
+			$keys=db2::getKeysFromCollection(DB,$coll,1);
+			//die(var_dump($keys));
+			//db[myMapReduce.result].distinct("_id");
+			$data=db2::toOrderedList(db2::find(DB,$coll,[]));
+			//get collection info to get fields!
+			$ri=0;
+			foreach($keys as $tk=>$tv){
+				$map[$tv]=$tv;
+			}
+			$csv=db2::toCSV($data,$map);
+			//die(json_encode($csv));
+			// $rows[$ri]=implode(',', $rows[$ri]);
+			// $ri++;
+			// foreach($data['order'] as $k=>$v){
+			// 	$item=$data['list'][$v];
+			// 	foreach($keys as $tk=>$tv){
+			// 		$rows[$ri][$tv]=phi::dotGet($tv,$item,'');
+			// 		if(is_array($rows[$ri][$tv])&&isset($rows[$ri][$tv][0])) $rows[$ri][$tv]='"'.implode(',',$rows[$ri][$tv]).'"';
+			// 		//detect for , in row
+			// 	}
+			// 	$rows[$ri]=implode(',', $rows[$ri]);
+			// 	$ri++;
+			// }
+			// //die(json_encode($rows));
+			phi::exportCSV($csv,$coll.'.csv');
+		}
+		public static function refundSubscription($r){
+			//refund!
+			$d=phi::ensure($r,['id']);
+			include_once(ROOT.'/api/stripe.php');
+			$info=db2::findOne(DB,'payment_info',array('id'=>$d['id']));
+			if(!$info) return array('error'=>'invalid_payment');
+			if(isset($info['refunded'])) return array('error'=>'already_refunded');
+			if(isset($info['charge_info']['id'])){
+				$refund_amount=$info['total'];
+				if(isset($r['qs']['refund_amount'])&&$r['qs']['refund_amount']) $refund_amount=(int) $r['qs']['refund_amount'];
+				$refund_amount=(int) $refund_amount;
+				if($refund_amount>$info['total']){
+					return ['error'=>'Refund amount cant be greater than the receipt cost $'.phi::formatMoney($info['total'])];
+				}
+				//die('refund : '.$info['charge_info']['id'].  ' '.$refund_amount);
+				if($info['charge_info']['type']=='subscription'){
+					$data=db2::findOne(DB,'paid_subscription',['id'=>$info['charge_info']['id']]);
+					phi::log('got '.json_encode($data));
+					$charge_info=$data['charge'];
+				}else{
+					$charge_info=$info['charge_info']['id'];
+				}
+				$out=stripe::refund($charge_info,$refund_amount);
+				if(isset($out['success'])){//update bank transaction
+					ONE_CORE::update('payment_info',['id'=>$info['id']],[
+						'new_net'=>$info['total']-$refund_amount-$info['fees']['cc_processing']['amount'],
+						'refunded'=>array('by'=>array('id'=>$r['auth']['uid'],'type'=>'user'),'ts'=>time(),'amount'=>$refund_amount)
+					]);
+				}else{
+					return $out;
+				}
+			}else{
+				phi::log('shouldnt get here');
+			}
+			return ['success'=>true];
+		}
+		public static function searchGameguide($r){
+			if(isset($r['qs']['search'])){
+				$regex = new MongoDB\BSON\Regex($r['qs']['search'],'i');//could be a major page, or feed within
+				$q['title']=$regex;
+			}else{
+				$q=array();
+			}
+			if(isset($r['qs']['dontInclude'])){
+				$q['id']['$nin']=[$r['qs']['dontInclude']];
+			}
+			$data=db2::toOrderedList(db2::find(DB,'gameguide',$q));
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function updateWaiverOrder($r){
+			$d=phi::ensure($r,['order']);
+			$count=0;
+			foreach($d['order'] as $k=>$v){
+				$update[]=array(array('_id'=>db2::toId($v)),array('$set'=>['order'=>$count]));
+				$count++;
+			}
+			db2::bulkUpdate(DB,'waiver',$update);
+			return ['success'=>true];
+		}
+		public static function updateOnboardOrder($r){
+			$d=phi::ensure($r,['order','schema']);
+			$count=0;
+			foreach($d['order'] as $k=>$v){
+				$update[]=array(array('_id'=>db2::toId($v)),array('$set'=>['order'=>$count]));
+				$count++;
+			}
+			db2::bulkUpdate(DB,$d['schema'],$update);
+			return ['success'=>true];
+		}
+		public static function collectionInfo($r){
+			if(!isset($r['qs']['coll'])||!$r['qs']['coll']) return ['error'=>'invalid_collection'];
+			$pipeline = [
+			    [
+			        '$collStats' => [
+			            'storageStats' =>
+			                ['scale' => 1024*1024]//in MB
+			        ]
+			    ]
+			];
+			$storageStats = db2::aggregate(DB,$r['qs']['coll'],$pipeline);
+			if(isset($storageStats[0]['storageStats']['indexDetails'])) unset($storageStats[0]['storageStats']['indexDetails']);
+			if(isset($storageStats[0]['storageStats']['wiredTiger'])) unset($storageStats[0]['storageStats']['wiredTiger']);
+			return ['success'=>true,'data'=>$storageStats[0]['storageStats']];
+		}
+		public static function calcReferals($r){
+			$pipeline[]=[
+				'$group'=>array(
+					"_id"=>array(
+						'k'=>'$refered_by'
+					),
+				    "count"=>array(
+				    	'$sum'=>1
+				    )
+				)
+			];
+			$pipeline[]=[
+				'$sort'=>['count'=>-1]
+			];
+			$resp=db2::aggregate(DB,'user',$pipeline);
+			foreach($resp as $k => $v) {
+				if($v['_id']['k']){
+					$id=$v['_id']['k'];
+					$v['id']=$v['_id']['k'];
+					unset($v['_id']);
+					$out['order'][]=$id;
+					$out['list'][$id]=$v;
+				}
+			}
+			$out=db2::graph(DB,$out,[
+				'id'=>[
+					'coll'=>'user',
+					'to'=>'user',
+					'match'=>'id',
+					'fields'=>['id'=>1,'name'=>1,'pic'=>1]
+				]
+			]);
+			return ['success'=>true,'data'=>$out];
+		}
+		public static function getBalance($r){
+			include_once(ROOT.'/api/stripe.php');
+			$res=stripe::getBalance();
+			//get how much we owe to others!
+			$cf=self::cashFlowInvoices([
+				'auth'=>$r['auth'],
+				'qs'=>[
+					'range'=>[
+						'start'=>(time()-(60*60*24*45)),
+						'end'=>time()+(60*60*24)
+					]
+				]
+			],false,'invoice','Payouts');
+			$pending=0;
+			foreach($cf['list'] as $k=>$v){
+				if($k!='one_boulder'&&$k!='stripe'&&isset($v['pending'])&&$v['pending']){
+					$pending+=$v['pending'];
+				}
+			}
+			$current=$res['available'][0]['amount']-$pending;
+			$current_pending=$current+$res['pending'][0]['amount'];
+			return ['success'=>true,'data'=>[
+				'stripe'=>[
+					'balance_current'=>$res['available'][0]['amount'],
+					'balance_pending'=>$res['available'][0]['amount']+$res['pending'][0]['amount'],
+					'deposit_pending'=>$res['pending'][0]['amount']
+				],	
+				'one_boulder'=>[
+					'pending'=>$pending,
+					'balance_current'=>$current,
+					'balance_pending'=>$current_pending
+				]
+			]];
+		}
+		public static function getAggregateGraph($table,$pipeline,$info,$key='count'){
+			$out=false;
+			//die(json_encode($pipeline));
+			// $pipe[0]=$pipeline[0];
+			// $pipe[1]=$pipeline[1];
+			// $pipe[]=[
+			// 	'$sort'=>['_id'=>-1]
+			// ];
+			$resp=db2::aggregate(DB,$table,$pipeline);
+			#die(json_encode($resp));
+			if($resp){
+				$start=self::getTimeFromId(self::getIdFromTime($info['start'],$info['id']));
+				$end=$info['end'];
+				$interval=$info['expected'];
+				$ct=$start;
+				$ci=0;
+				$tz = new DateTimeZone('America/Denver'); 
+				$transition = $tz->getTransitions($ct, $ct); 
+				$startdst=$transition;
+				$diff=0;
+				while($ct<$end){
+					if(isset($resp[$ci])) $currentTs=self::getTimeFromId($resp[$ci]['_id']);
+					else $currentTs=false; 
+					//phi::log(json_encode($transition));
+					#phi::log($currentTs. ' a '.$ct. ' '.$diff);
+					if($currentTs==$ct){
+						$out[]=$resp[$ci];
+						$ci++;
+					}else{
+						$out[]=array(
+							'_id'=>self::getIdFromTime($ct,$info['id']),
+							$key=>0
+						);
+					}
+					$ct+=$interval;
+					$transition = $tz->getTransitions($ct, $ct);
+					if(isset($lastDST)&&$lastDST[0]['isdst']!=$transition[0]['isdst']){
+						if($startdst[0]['isdst']==$transition[0]['isdst']){
+							//$diff=0;
+							$diff=$transition[0]['offset']-$lastDST[0]['offset'];
+							$ct-=$diff;
+						}else{
+							$diff=$transition[0]['offset']-$lastDST[0]['offset'];
+							$ct-=$diff;
+							#die('diff.'.$diff);
+							//die('diff!'.$diff);
+						}
+					}
+					$lastDST=$transition;
+				}
+			}
+			#die(json_encode($out));
+			return $out;
+		}
+		public static function cashFlowFinancesAll2($r,$type=false,$range=false){
+			$r['qs']['range']['start']=(int) $r['qs']['range']['start'];
+			$r['qs']['range']['end']=(int) $r['qs']['range']['end'];
+			$fees=self::addFeeData(false,$r['qs']['range']);
+			return [
+				'success'=>true,
+				'data'=>[
+					'invoice'=>self::cashFlowInvoices($r,false,'invoice','Payouts'),
+					'fees'=>$fees,
+					'event_ticket'=>self::cashFlowFinances($r,false,'event_ticket','Ticket Sales'),
+					'donation_page'=>self::cashFlowFinances($r,false,'donation_page','Page Donations'),
+					'total'=>self::cashFlowFinances($r,false,false,'Total Sales'),
+					'subscription'=>self::cashFlowFinances($r,false,'subscription','Subscriptions'),
+					'fundraiser'=>self::cashFlowFinances($r,false,'fundraiser_contribution','Fundraiser')
+				]
+			];
+		}
+		public static function cashFlowFinancesAll($r,$type=false){
+			return [
+				'success'=>true,
+				'data'=>[
+					'event_ticket'=>self::cashFlowFinances($r,false,'event_ticket','Ticket Sales'),
+					'total'=>self::cashFlowFinances($r,false,false,'Total Sales'),
+					'subscription'=>self::cashFlowFinances($r,false,'subscription','Subscriptions'),
+					'fundraiser'=>self::cashFlowFinances($r,false,'fundraiser_contribution','Fundraiser')
+				]
+			];
+		}
+		public static function cashFlowInvoices($r,$type=false,$tag=false,$graphname='Total Sales'){
+			//ensure sub invoices are up to date!
+			include_once(ROOT.'/classes/admin.php');
+			ADMIN_API::calculateInvoices();
+			if(isset($r['qs']['range'])&&$r['qs']['range']){
+				$r['qs']['range']['start']=(int) $r['qs']['range']['start'];
+				$r['qs']['range']['end']=(int) $r['qs']['range']['end'];
+				$match=array(
+					"updated"=>array('$gt'=>$r['qs']['range']['start'],'$lte'=>$r['qs']['range']['end'])
+				);
+				$summarypipeline[]=array(
+					'$match'=>$match
+				);
+				$summarypipeline[]=array(
+					'$group'=>array(
+						"_id"=>array(
+							'id'=>'$page.id',
+							'type'=>'$page.type',
+							'paid'=>'$paid'
+						),
+					   	"total"=>array(
+				    		'$sum'=>'$total'
+				    	)
+					)
+				);
+				$summary=db2::aggregate(DB,'invoice',$summarypipeline);
+				#die(json_encode($summary));
+				$paid=0;
+				$pending=0;
+				$total=0;
+				foreach ($summary as $k => $v){
+					$id=$v['_id']['id'];
+					if(!isset($data['list'][$id])) $data['list'][$id]=[
+						'_id'=>['id'=>$id,'type'=>$v['_id']['type']],
+						'total'=>0
+					];
+					if(isset($v['_id']['paid'])&&$v['_id']['paid']){
+						if(!isset($data['list'][$id]['paid'])) $data['list'][$id]['paid']=0;
+						$data['list'][$id]['paid']+=$v['total'];
+						$paid+=$v['total'];
+						$total+=$v['total'];
+					}else{
+						//dont include one_boulder in pending!
+						if($id=='one_boulder'&&false){
+							if(!isset($data['list'][$id]['paid'])) $data['list'][$id]['paid']=0;
+							$data['list'][$id]['paid']+=$v['total'];
+							$paid+=$v['total'];
+							$total+=$v['total'];
+						}else{
+							if(!isset($data['list'][$id]['pending'])) $data['list'][$id]['pending']=0;
+							$data['list'][$id]['pending']+=$v['total'];
+							$pending+=$v['total'];
+							$total+=$v['total'];
+						}
+					}
+					$data['list'][$id]['total']+=$v['total'];
+					$v['id']=$v['_id']['id'];
+					//$data['order'][]=$id;
+				}
+				// $info=[
+				// 	'total'=>0,
+				// 	'paid'=>0,
+				// 	'pending'=>0
+				// ];
+				// foreach($data['list'] as $k => $v){
+				// 	if(isset($v['paid'])) $info['paid']+=$v['paid'];
+				// 	if(isset($v['total'])) $info['total']+=$v['total'];
+				// 	if(isset($v['pending'])) $info['pending']+=$v['pending'];
+				// }
+				//die(json_encode($info));
+				//sort by total!
+				$t=phi::sort($data['list'],[
+					'key'=>'total',
+					'reverse'=>1,
+					'type'=>'number'
+				]);
+				foreach($t as $k=>$v){
+					$data['order'][]=$v['_id']['id'];
+				}
+				$data['paid']=$paid;
+				$data['pending']=$pending;
+				$data['total']=$total;
+				$data=db2::graph(DB,$data,[
+					'_id.id'=>[
+						"coll"=>[
+		                    "field"=>"_id.type",
+		                    "id"=>"_id.id"
+		                ],
+		                "to"=>"page",
+		                "opts"=>[
+		                    "user"=>[
+		                        "coll"=>"user",
+		                        "match"=>"id",
+		                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+		                    ],
+		                    "page"=>[
+		                        "coll"=>"page",
+		                        "match"=>"id",
+		                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+		                    ],
+		                    "event"=>[
+		                        "coll"=>"event",
+		                        "match"=>"id",
+		                        "fields"=>["id"=>1,"pic"=>1,"name"=>1,"start"=>1]
+		                    ]
+		                ],
+		                "match"=>"id"
+					]
+				]);
+				return $data;
+				//die(json_encode($data));
+			}
+		}
+		public static function cashFlowFinances($r,$type=false,$tag=false,$graphname='Total Sales'){
+			if(isset($r['qs']['range'])&&$r['qs']['range']){
+				$r['qs']['range']['start']=(int) $r['qs']['range']['start'];
+				$r['qs']['range']['end']=(int) $r['qs']['range']['end'];
+				$info=self::getTimeFilterInfo2($r['qs']['range']);
+				//$info['id']['k']='$split.k';
+				$match=array(
+					"_id"=>array('$gte'=>db2::timeToId($r['qs']['range']['start']),'$lt'=>db2::timeToId($r['qs']['range']['end'])),
+					//'refunded.by.id'=>['$exists'=>false]
+				);
+				if($tag){
+					$match['tag']=$tag;
+				}
+				$summarypipeline[]=array(
+					'$match'=>$match
+				);
+				$match2=array(
+					'$match'=>array(
+						"_id"=>array('$gte'=>db2::timeToId($r['qs']['range']['start']),'$lt'=>db2::timeToId($r['qs']['range']['end']))
+					)
+				);
+				if($tag){
+					$match2['$match']['tag']=$tag;
+				}
+				$totalpipeline[]=$match2;
+				if($tag){
+					$match[]['tag']=$tag;
+				}
+			}
+			
+
+			// $summarypipeline[]=array(
+			// 	'$project'=>array(
+			// 		'split'=>array('$objectToArray'=>'$split')
+			// 	)
+			// );
+			// $summarypipeline[]=array(
+			// 	'$unwind'=>'$split'
+			// );
+			if($type=='stats'){
+				$summarypipeline[]=array(
+					'$project'=>array(
+						'split'=>array('$objectToArray'=>'$split')
+					)
+				);
+				$summarypipeline[]=array(
+					'$unwind'=>'$split'
+				);
+				$summarypipeline[]=array(
+					'$group'=>array(
+						"_id"=>array(
+							'k'=>'$split.k'
+						),
+					    "count"=>array(
+					    	'$sum'=>'$split.v'
+					    )
+					)
+				);
+			}else{
+				$summarypipeline[]=array(
+					'$group'=>array(
+						"_id"=>array(
+							'to'=>'$to.id',
+							'type'=>'$to.type'
+						),
+					    "count"=>array(
+					    	'$sum'=>'$net'
+					    )
+					)
+				);
+			}
+			$summarypipeline[]=array(
+				'$sort'=>array('count'=>-1)
+			);
+			$totalpipeline[]=array(
+				'$group'=>array(
+					"_id"=>$info['id'],
+				    "count"=>array(
+				    	'$sum'=>'$total'
+				    )
+				)
+			);
+			$totalpipeline[]=array(
+				'$sort'=>array('_id.year'=>1,'_id.day'=>1)
+			);
+			//die(json_encode($summarypipeline));
+			$summary=db2::aggregate(DB,'payment_info',$summarypipeline);
+			//die(json_encode($summary));
+			//graph on 
+			if($summary){
+				$data=false;
+				$total=0;
+				foreach ($summary as $k => $v) {
+					$total+=$v['count'];
+					if($type=='stats'){
+						$data['list'][$v['_id']['k']]=$v;
+						$v['id']=$v['_id']['k'];
+						$v['_id']['type']=ONE_CORE::getIdType($v['id']);
+						$data['order'][]=$v['_id']['k'];
+					}else{
+						if(isset($v['_id']['to'])){
+							$data['list'][$v['_id']['to']]=$v;
+							$v['id']=$v['_id']['to'];
+							$v['_id']['type']=ONE_CORE::getIdType($v['id']);
+							$data['order'][]=$v['_id']['to'];
+						}else{
+							// $data['list']['one_boulder']=$v;
+							// $v['id']='one_boulder';
+							// $v['_id']['type']=ONE_CORE::getIdType($v['id']);
+							// $data['order'][]='one_boulder';
+							//phi::log('not found: '.json_encode($v));
+						}
+					}
+				}
+				//die(json_encode($data));
+				if($type=='stats'){
+					
+				}else{
+					if($data) $data=db2::graph(DB,$data,[
+						'_id.to'=>[
+							"coll"=>[
+			                    "field"=>"_id.type",
+			                    "id"=>"_id.to"
+			                ],
+			                "to"=>"page",
+			                "opts"=>[
+			                    "user"=>[
+			                        "coll"=>"user",
+			                        "match"=>"id",
+			                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+			                    ],
+			                    "page"=>[
+			                        "coll"=>"page",
+			                        "match"=>"id",
+			                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+			                    ]
+			                ],
+			                "match"=>"id"
+						]
+					]);
+				}
+				if($type=='stats') return self::addFeeData($data,$r['qs']['range']);
+			}
+			if($type=='stats') return $summary;
+			#die(json_encode($totalpipeline));
+			$totalgraph=self::getAggregateGraph('payment_info',$totalpipeline,$info);
+			//die(json_encode($totalgraph));
+			$graphs[]=array(
+				'data'=>$totalgraph,
+				'name'=>$graphname
+			);
+			if(!isset($total)) $total=0;
+			return ['success'=>true,'data'=>array(
+				'total'=>$total,
+				'stats'=>$summary,
+				'graph'=>array(
+					'data'=>$graphs
+				),
+				'data'=>(isset($data))?$data:false
+			)];
+			//return data
+		}
+		public static function addFeeData($data,$range){
+			$summarypipeline[]=array(
+				'$match'=>array(
+					"_id"=>array('$gte'=>db2::timeToId($range['start']),'$lt'=>db2::timeToId($range['end'])),
+					//'refunded.by.id'=>['$exists'=>false]
+				)
+			);
+			$summarypipeline[]=array(
+				'$project'=>array(
+					'id'=>'id',
+					'fees'=>array('$objectToArray'=>'$fees')
+				)
+			);
+			$summarypipeline[]=array(
+				'$unwind'=>'$fees'
+			);
+			$summarypipeline[]=array(
+				'$group'=>array(
+					"_id"=>array(
+						'id'=>'$fees.v.id',
+						'type'=>'$fees.v.type',
+						'tag'=>'$fees.v.tag'
+					),
+				    "count"=>array(
+				    	'$sum'=>'$fees.v.amount'
+				    )
+				)
+			);
+			//die(json_encode($summarypipeline));
+			$summary=db2::aggregate(DB,'payment_info',$summarypipeline);
+			//die(json_encode($summary));
+			if($summary){
+				foreach($summary as $k=>$v){
+					if(!isset($data['list'][$v['_id']['id']])){
+						$data['list'][$v['_id']['id']]=[
+							'_id'=>[
+								'type'=>'page',
+								'k'=>$v['_id']['id']
+							],
+							'count'=>0,
+							'id'=>$v['_id']['id']
+						];
+						$data['order'][]=$v['_id']['id'];
+					}
+					//add in info!
+					$data['list'][$v['_id']['id']]['count']+=$v['count'];
+					$data['list'][$v['_id']['id']]['fees'][$v['_id']['tag']]=$v['count'];
+				}
+				$data=db2::graph(DB,$data,[
+					'_id.k'=>[
+						"coll"=>[
+		                    "field"=>"_id.type",
+		                    "id"=>"_id.k"
+		                ],
+		                "to"=>"page",
+		                "opts"=>[
+		                    "user"=>[
+		                        "coll"=>"user",
+		                        "match"=>"id",
+		                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+		                    ],
+		                    "page"=>[
+		                        "coll"=>"page",
+		                        "match"=>"id",
+		                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+		                    ]
+		                ],
+		                "match"=>"id"
+					]
+				]);
+				#die(json_encode($data));
+				return $data;
+			}else{
+				$data=db2::graph(DB,$data,[
+					'_id.k'=>[
+						"coll"=>[
+		                    "field"=>"_id.type",
+		                    "id"=>"_id.k"
+		                ],
+		                "to"=>"page",
+		                "opts"=>[
+		                    "user"=>[
+		                        "coll"=>"user",
+		                        "match"=>"id",
+		                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+		                    ],
+		                    "page"=>[
+		                        "coll"=>"page",
+		                        "match"=>"id",
+		                        "fields"=>["id"=>1,"pic"=>1,"name"=>1]
+		                    ]
+		                ],
+		                "match"=>"id"
+					]
+				]);
+				return $data;
+			}
+		}
+		public static function loadLocations($r){
+			//$l=(isset($r['qs']['location']))?$r['qs']['location']:'';
+			include_once(ROOT.'/api/class/formbuilder.php');
+			$res=formbuilder::feed(array(
+				'auth'=>$r['auth'],
+				'qs'=>array(
+					'schema'=>'checkin_locations',
+					'last'=>(isset($r['qs']['last']))?$r['qs']['last']:'',
+					'after'=>(isset($r['qs']['after']))?$r['qs']['after']:'',
+					'search'=>(isset($r['qs']['search']))?$r['qs']['search']:''
+				)
+			),false,false,'tsu');
+			return $res;
+		}
+		public static function loadCheckins($r){
+			$l=(isset($r['qs']['location']))?$r['qs']['location']:'';
+			switch($l){
+				case 'all':
+					$q=array();
+				break;
+				default:
+					$q=array('location.id'=>$l);
+				break;
+			}
+			include_once(ROOT.'/api/class/formbuilder.php');
+			return formbuilder::feed(array(
+				'auth'=>$r['auth'],
+				'qs'=>array(
+					'schema'=>'checkin',
+					'last'=>(isset($r['qs']['last']))?$r['qs']['last']:'',
+					'after'=>(isset($r['qs']['after']))?$r['qs']['after']:''
+				)
+			),$q);
+		}
+		public static function searchTags($r){
+			if($r['qs']['search']){
+				$sp=explode(' ', $r['qs']['search']);
+				$lasttag=$sp[sizeof($sp)-1];
+				$regex = new MongoDB\BSON\Regex('^'.$lasttag,'i');
+				$regex2 = new MongoDB\BSON\Regex($lasttag,'i');
+				//first do start with!
+				$q=array('name'=>$regex);
+				$q2=array('name'=>$regex2);
+				$coll='tags';
+				if(isset($r['qs']['collection'])) $coll=$r['qs']['collection'];
+				$data=db2::toOrderedList(db2::find(DB,$coll,$q,array('limit'=>20)));
+				$data2=db2::toOrderedList(db2::find(DB,$coll,$q2,array('limit'=>20)));
+				if($data2){
+					if(!$data) $data['order']=array();//ensure in_array works
+					foreach ($data2['order'] as $k => $v) {
+						if(!in_array($v, $data['order'])){
+							$data['order'][]=$v;
+							$data['list'][$v]=$data2['list'][$v];
+						}
+					}
+				}
+			}else{
+				$data=false;
+			}
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function magicLink($r){
+			$d=phi::ensure($r,array('uid'));
+			$magic=phi::getMagicLinkId(DB,$d['uid']);
+			include_once(ROOT.'/api/app.php');
+			$scheme=APP::getScheme(DB);
+			$link=$scheme.'://login/'.$magic;
+			return array('success'=>true,'magiclink'=>$link);
+		}
+		public static function internalStatusCheck($data){
+			$resp=self::statusCheck(array());
+			#die(json_encode($resp));
+			if($resp['data']['urgent']){
+				//see if message has been sent recently
+				if(isset($data['_preview'])||!phi::rateLimitMessage('status_check_'.$data['user']['id'],(60*5))){
+					return $resp;
+				}else{
+					phi::log('rate limited message!');
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}
+		public static function ensureSystemEmailId($r,$d,$key,$opts){
+			if(isset($d['current'][$key])&&$d['current'][$key]&&isset($d['current']['system_id'])&&$d['current']['system_id']){
+				$c=db2::findOne(DB,$d['schemaConf']['id'],array('system_id'=>$d['current']['system_id'],'live'=>1));
+				if(isset($data['id'])&&$c['id']!=$data['id']){
+					db2::update(DB,$d['schemaConf']['id'],array('id'=>$c['id']),array('$unset'=>array('live'=>1)));
+				}
+			}
+			return $d;
+		}
+		public static function statusCheck($r){
+			//ensure all hook emails are taken care of!
+			$required=db2::toOrderedList(db2::find(DB,'system_hooks',array('required'=>array('$in'=>array('email')))));
+			if($required){
+				$l=db2::toList(db2::find(DB,'admin_notification',array('live'=>1,'system_id'=>array('$in'=>$required['order']))));
+				if($l){
+					foreach ($l as $k => $v) {
+						$required['order']=array_values(array_diff($required['order'],array($v['system_id'])));
+						if(isset($required['list'][$v['system_id']])) unset($required['list'][$v['system_id']]);
+					}
+				}
+				$data['email_required']=$required;
+			}
+			$required=db2::toOrderedList(db2::find(DB,'system_hooks',array('required'=>array('$in'=>array('push')))));
+			if($required){
+				$l=db2::toList(db2::find(DB,'admin_notification',array('live'=>1,'system_id'=>array('$in'=>$required['order']))));
+				if($l){
+					foreach ($l as $k => $v) {
+						$required['order']=array_values(array_diff($required['order'],array($v['system_id'])));
+						if(isset($required['list'][$v['system_id']])) unset($required['list'][$v['system_id']]);
+					}
+				}
+				$data['push_required']=$required;
+			}
+			$required=db2::toOrderedList(db2::find(DB,'system_hooks',array('required'=>array('$in'=>array('app')))));
+			if($required){
+				$l=db2::toList(db2::find(DB,'admin_notification',array('live'=>1,'system_id'=>array('$in'=>$required['order']))));
+				if($l){
+					foreach ($l as $k => $v) {
+						$required['order']=array_values(array_diff($required['order'],array($v['system_id'])));
+						if(isset($required['list'][$v['system_id']])) unset($required['list'][$v['system_id']]);
+					}
+				}
+				$data['app_required']=$required;
+			}
+			//check last update time!
+			$running_services=db2::toOrderedList(db2::find(DB,'service_history',array('_id'=>array('$gte'=>db2::timeToId(time()-70)))));
+			$info=self::getServiceInfo();
+			#die(json_encode($running_services));
+			$data['urgent']=0;
+			foreach ($info as $localip => $opts) {
+				$original_services=$services=array_keys($opts['services']);
+				if($running_services) foreach ($running_services['list'] as $k => $v) {
+					if(in_array($v['service'], $services)){
+						$services=array_values(array_diff($services,array($v['service'])));
+					}
+				}
+				$data['services'][$localip]['data']=$opts['data'];
+				if(sizeof($services)){
+					$data['urgent']+=sizeof($services);
+					$data['services'][$localip]['missing']=$services;
+					$data['services'][$localip]['active']=array_values(array_diff($original_services,$services));
+				}else{
+					$data['services'][$localip]['active']=$original_services;
+				}
+			}
+			$data['activeusers']=db2::count(DB,'user',array('status.active'=>true));
+			$data['paidactive']=db2::count(DB,'user',array('status.active'=>true,'status.paid'=>true));
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function getServiceInfo(){
+			$services=array('notifier.js','chat.io.js','api2.js','watcher.js','jobs.js','cron.js');
+			$local_ip=phi::getLocalIp();
+			$data[$local_ip]['data']=array('name'=>'Server Name','ip'=>$local_ip);
+			foreach ($services as $k => $v) {
+				$data[$local_ip]['services'][$v]=array('otheropts'=>1);
+			}
+			return $data;
+		}
+		public static function searchSystemTags($r){
+			if(isset($r['qs']['search'])){
+				$regex = new MongoDB\BSON\Regex($r['qs']['search'],'i');//could be a major page, or feed within
+				$q['name']=$regex;
+			}else{
+				$q=array();
+			}
+			#die(json_encode($q));
+			$data=db2::toOrderedList(db2::find(DB,'system_hooks',$q));
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function alertAdmin($r){
+			#phi::log($r['qs']);
+			if(isset($r['qs']['msg'])&&$r['qs']['msg']) phi::alertAdmin($r['qs']['msg']);
+			return array('success'=>true);
+		}
+		public static function getAdminNotifications($r){
+			if($r['qs']['type']=='system'){
+				$q=array();
+				if(isset($r['qs']['search'])&&isset($r['qs']['search_field'])){
+					$regex = new MongoDB\BSON\Regex('^'.$r['qs']['search'],'i');//could be a major page, or feed within
+					$q[$r['qs']['search_field']]=$regex;
+				}
+				if(isset($r['qs']['mine'])){
+					$q['uid']=$r['auth']['uid'];
+				}
+				if(isset($r['qs']['last'])&&$r['qs']['last']){
+					$l=db2::findOne(DB,'admin_notification',array('_id'=>db2::toId($r['qs']['last'])));
+					if(!$l) return array('error'=>'invalid_last_post');
+					$q['_id']=array('$lt'=>db2::toId($l['_id']));
+					//$q['tsu']=array('$lt'=>db2::tsToTime($l['tsu']['$date'],false));
+				}
+				if(isset($r['qs']['after'])&&$r['qs']['after']){
+					$a=db2::findOne(DB,'admin_notification',array('_id'=>db2::toId($r['qs']['after'])));
+					if(!$a) return array('error'=>'invalid_after_post');
+					$q['_id']=array('$gt'=>db2::toId($a['_id']));
+					//$q['tsu']=array('$gt'=>db2::tsToTime($a['tsu']['$date'],false));
+				}
+				$opts=array('sort'=>array('_id'=>-1));
+				if(isset($r['qs']['max'])){
+					$max=(int) $r['qs']['max'];
+				}
+				if(!isset($max)||!$max) $max=10;
+				$data=db2::toOrderedList(db2::find(DB,'admin_notification',$q,$opts),false,true,'id');
+				$data=db2::graph(DB,$data,array(
+					'id'=>array(
+						'coll'=>'email_campaign',
+						'match'=>'id',
+						'to'=>'campaign'
+					),
+					'system_id'=>array(
+						'coll'=>'system_hooks',
+						'to'=>'system_info',
+						'match'=>'id',
+						'clearOnNull'=>true
+					),
+					'notification_type'=>array(
+						'coll'=>'notification_types',
+						'to'=>'notification_type_info',
+						'match'=>'id'
+					)
+				));
+				return array('success'=>true,'data'=>$data);
+			}
+			if($r['qs']['type']=='custom'){
+				$q=array();
+				if(isset($r['qs']['search'])&&isset($r['qs']['search_field'])){
+					$regex = new MongoDB\BSON\Regex('^'.$r['qs']['search'],'i');//could be a major page, or feed within
+					$q[$r['qs']['search_field']]=$regex;
+				}
+				if(isset($r['qs']['mine'])){
+					$q['uid']=$r['auth']['uid'];
+				}
+				if(isset($r['qs']['last'])&&$r['qs']['last']){
+					$l=db2::findOne(DB,'admin_email',array('_id'=>db2::toId($r['qs']['last'])));
+					if(!$l) return array('error'=>'invalid_last_post');
+					$q['_id']=array('$lt'=>db2::toId($l['_id']));
+					//$q['tsu']=array('$lt'=>db2::tsToTime($l['tsu']['$date'],false));
+				}
+				if(isset($r['qs']['after'])&&$r['qs']['after']){
+					$a=db2::findOne(DB,'admin_email',array('_id'=>db2::toId($r['qs']['after'])));
+					if(!$a) return array('error'=>'invalid_after_post');
+					$q['_id']=array('$gt'=>db2::toId($a['_id']));
+					//$q['tsu']=array('$gt'=>db2::tsToTime($a['tsu']['$date'],false));
+				}
+				$opts=array('sort'=>array('_id'=>-1));
+				if(isset($r['qs']['max'])){
+					$max=(int) $r['qs']['max'];
+				}
+				if(!isset($max)||!$max) $max=10;
+				$data=db2::toOrderedList(db2::find(DB,'admin_email',$q,$opts),false,true,'id');
+				$data=db2::graph(DB,$data,array(
+					'id'=>array(
+						'coll'=>'email_campaign',
+						'match'=>'id',
+						'to'=>'campaign'
+					)
+				));
+				return array('success'=>true,'data'=>$data);
+			}
+		}
+		public static function userCSV($r){
+			$l=db2::toOrderedList(db2::find(DB,'user',array(),['projection'=>['id'=>1,'name'=>1,'email'=>1,'email_invalid'=>1]]));
+			$l=db2::graph(DB,$l,array(
+				'id'=>array(
+					'coll'=>'user_settings',
+					'to'=>'user_settings',
+					'match'=>'id'
+				)
+			));
+			foreach($l['list'] as $k=>$v){
+				if((!isset($v['user_settings']['email']['updates'])||(int) $v['user_settings']['email']['updates'])&&(!isset($v['email_invalid']))){
+					$out['list'][$v['id']]=$v;
+					$out['order'][]=$v['id'];
+				}
+			}
+			$csv=db2::toCSV($out,array('id'=>'id','name'=>'name','email'=>'email'));
+			//die(json_encode($csv));
+			phi::exportCSV($csv);
+		}
+		public static function anonTicketCsv($r){
+			$l=db2::toOrderedList(db2::find(DB,'ticket_anon',array(),['projection'=>['id'=>1,'name'=>1,'email'=>1]]));
+			$emails=[];
+			foreach($l['list'] as $k=>$v){
+				if(!in_array($v['email'],$emails)){
+					$out['list'][$v['id']]=$v;
+					$out['order'][]=$v['id'];
+					$emails[]=$v['email'];
+				}
+			}
+			$csv=db2::toCSV($out,array('id'=>'id','name'=>'name','email'=>'email'));
+			//die(json_encode($csv));
+			phi::exportCSV($csv,'anon_ticket_checkout.csv');
+		}
+		public static function getLeads($r){
+			$l=db2::toOrderedList(db2::find(DB,'business_info',array()));
+			$l=db2::graph(DB,$l,array(
+				'uid'=>array(
+					'coll'=>'user',
+					'to'=>'user',
+					'match'=>'id',
+					'clearOnNull'=>true,
+					'filter'=>array('name','pic','id','email')
+				)
+			));
+			$csv=db2::toCSV($l,array('url'=>'url','description'=>'description','user.name'=>'name','user.email'=>'email'));
+			//die(json_encode($csv));
+			phi::exportCSV($csv);
+		}
+		public static function userStats($r){
+			//aggregate users!
+			// $pipeline[]=array(
+			// 	'$match'=>array()
+			// );
+			$pipeline[]=array(
+				'$group'=>array(
+					'_id'=>array(
+						'trial'=>'$status.trial',
+						'active'=>'$status.active',
+						'overdue'=>'$status.overdue',
+						'lifetime'=>'$status.lifetime',
+						'prepaid'=>'$status.prepaid',
+						'cycle'=>'$status.cycle',
+						'stopped'=>'$status.stopped'
+					),
+					'count'=>array('$sum'=>1),
+					'list'=>array('$addToSet'=>'$id')
+				)
+			);
+			$d=db2::aggregate(DB,'user',$pipeline);
+			return $d;
+		}
+		public static function userStats2($r){
+			//aggregate users!
+			// $pipeline[]=array(
+			// 	'$match'=>array()
+			// );
+			$pipeline[]=array(
+				'$group'=>array(
+					'_id'=>array(
+						'plan'=>'$status.plan'
+					),
+					'count'=>array('$sum'=>1),
+					'trial'=>array(
+						'$sum'=>array('$cond'=>array(array('$anyElementTrue'=>array(array('$status.trial'))), 1, 0))
+					),
+					'active'=>array(
+						'$sum'=>array('$cond'=>array(array('$anyElementTrue'=>array(array('$status.active'))), 1, 0))
+					),
+					'notactive'=>array(
+						'$sum'=>array('$cond'=>array(array('$anyElementTrue'=>array(array('$status.active'))), 0, 1))
+					),
+					'paid'=>array(
+						'$sum'=>array('$cond'=>array(array('$anyElementTrue'=>array(array('$status.paid'))), 1, 0))
+					),
+					'overdue'=>array(
+						'$sum'=>array('$cond'=>array(array('$anyElementTrue'=>array(array('$status.overdue'))), 1, 0))
+					),
+					'stopped'=>array(
+						'$sum'=>array('$cond'=>array(array('$anyElementTrue'=>array(array('$status.stopped'))), 1, 0))
+					)
+				)
+			);
+			$pipeline[]=array(
+				'$sort'=>array('count'=>-1)
+			);
+			$d=db2::aggregate(DB,'user',$pipeline);
+			foreach ($d as $k => $v) {
+				if($v['_id']['plan']){
+					$plan=$v['_id']['plan'];
+					$v['id']=$v['_id']['plan'];
+					unset($v['_id']);
+					$out['order'][]=$plan;
+					$out['list'][$plan]=$v;
+				}
+			}
+			return $out;
+		}
+		public static function note($r){
+			$d=phi::ensure($r,array('note'));
+			$d['note']['by']=array(
+				'type'=>'user',
+				'id'=>$r['auth']['uid']
+			);
+			ONE_CORE::save('user_note',$d['note']);
+			$l=db2::toOrderedList(db2::find(DB,'user_note',array('uid'=>$d['note']['uid']),array('sort'=>array('_id'=>-1))));
+			$l=db2::graph(DB,$l,array(
+				'by.id'=>array(
+					'coll'=>'user',
+					'to'=>'by.data',
+					'match'=>'id',
+					'filter'=>array('name','pic','id')
+				)
+			));
+			return array('success'=>true,'notes'=>$l);
+		}
+		public static function inviteOracle($r){
+			$d=phi::ensure($r,array('uid','url'));
+			return ONE_CORE::inviteOracle($d['uid'],$d['url']);
+		}
+		public static function testPublish($r){
+			phi::publish(DB);
+		}
+		public static function testReferal($r){
+			include_once(ROOT.'/api/stripe.php');
+			$uid=$r['auth']['uid'];
+			if(isset($r['qs']['force_uid'])) $uid=$r['qs']['force_uid'];
+			return stripe::testReferal($uid);
+		}
+		public static function status($r){
+			include_once(ROOT.'/api/stripe.php');
+			phi::$debugEmail=true;
+			if(isset($r['qs']['force_uid'])){
+				$uid=$r['qs']['force_uid'];
+			}else{
+				$uid=$r['auth']['uid'];
+			}
+			$data=stripe::status($uid);
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function invoice($r){
+			include_once(ROOT.'/api/stripe.php');
+			phi::$debugEmail=true;
+			$plan=false;
+			if(isset($r['qs']['plan'])) $plan=$r['qs']['plan'];
+			if(isset($r['qs']['force_uid'])){
+				$uid=$r['qs']['force_uid'];
+				$plan=false;
+			}else{
+				$uid=$r['auth']['uid'];
+			}
+			if(isset($r['qs']['force_time'])){
+				stripe::testInvoice($uid,$plan,strtotime($r['qs']['force_time']));
+			}else{
+				stripe::testInvoice($uid,$plan);
+			}
+		}
+		public static function getFreebirds(){
+			$data=db2::toList(db2::find(DB,'plan',array('plan'=>'nectar_freebird')));
+			foreach ($data as $k => $v) {
+				$u=db2::findOne(DB,'user',array('id'=>$v['id']));
+				$tdata[$k]=phi::keepFields($u,array('id','name','email'));
+			}
+			die(json_encode($tdata));
+			//$data=array_keys($data);
+			//$data=db2::toList(db2::find(DB,'plan',array(),array('projection'=>array('plan'=>1))));
+			//$data=array('c'=>db2::count(DB,'plan',array()));
+			return array('success'=>true,'data'=>$tdata);
+		}
+		public static function stopMembership($r){
+			$d=phi::ensure($r,array('uid'));
+			include_once(ROOT.'/api/stripe.php');
+			$r['auth']['uid']=$d['uid'];
+			$resp=stripe::stopMembership($r);
+			return $resp;
+		}
+		public static function loadAccountInfo($r){
+			// $pl=db2::toList(db2::find(DB,'plan',array()));
+			include_once(ROOT.'/api/stripe.php');
+			// $l=db2::toList(db2::find(DB,'plan',array('freeUntil'=>array('$lte'=>time()))));
+			// die(json_encode($l));
+			// $l=db2::toList(db2::find(DB,'plan',array('freeUntil'=>array('$lte'=>strtotime('June 1, 2019')))));
+			// die(json_encode($l));
+			$l=db2::toList(db2::find(DB,'plan',array()));
+			$d=array('active'=>0,'inactive'=>array());
+			foreach ($l as $k => $v) {
+				$l[$k]['isActive']=ONE_CORE::isActive($v['id']);
+				if($l[$k]['isActive']) $d['active']++;
+				else $d['inactive'][]=array('id'=>$v['id'],'plan'=>$v['plan']);
+			}
+			// $pipeline[]=array(
+			// 	'$match'=>array('_id'=>array('$exists'=>true))
+			// );
+			// $pipeline[]=array(
+			// 	'$lookup'=>array(
+			// 		'from'=>'user',
+			// 		'localField'=>'id',
+			// 		'foreignField'=>'id',
+			// 		'as'=>'user_info'
+			// 	)
+			// );
+			// $pipeline[]=array(
+			// 	'$unwind'=>'$user_info'
+			// );
+			// $pipeline[]=array(
+			// 	'$lookup'=>array(
+			// 		'from'=>'subscription',
+			// 		'localField'=>'id',
+			// 		'foreignField'=>'id',
+			// 		'as'=>'subscription'
+			// 	)
+			// );
+			// $pipeline[]=array(
+			// 	'$unwind'=>'$subscription'
+			// );
+			// $resp=db2::aggregate(DB,'plan',$pipeline);
+			// foreach ($resp as $k => $v) {
+				
+			// }
+			return array('success'=>true,'data'=>$d);
+		}
+		public static function getAppStats($r){
+			$time=time()-(60*60*24*7);//last 7 days!
+			$pipeline[]=array(
+				'$match'=>array(
+					'_id'=>array('$gte'=>db2::getIdFromTime($time))
+				)
+			);
+			$pipeline[]=array(
+				'$project'=>array(
+					'id'=>'id',
+					'page'=>array('$objectToArray'=>'$page')
+				)
+			);
+			$pipeline[]=array(
+				'$unwind'=>'$page'
+			);
+			$pipeline[]=array(
+				'$group'=>array(
+					'_id'=>array(
+						'page'=>'$page.k'
+					),
+					'sum'=>array(
+						'$sum'=>'$page.v'
+					)
+				)
+			);
+			$resp=db2::aggregate(DB,'user_stat',$pipeline);
+			foreach ($resp as $k => $v) {
+				$ci=explode('_', $v['_id']['page']);
+				if(!isset($data[$ci[0]])) $data[$ci[0]]['total']=0;
+				$data[$ci[0]]['total']+=$v['sum'];
+				if(isset($ci[1])){
+					if(!isset($data[$ci[0]]['subpage'][$ci[1]])) $data[$ci[0]]['subpage'][$ci[1]]=0;
+					$data[$ci[0]]['subpage'][$ci[1]]+=$v['sum'];
+				}
+			}
+			$pipeline2[]=array(
+				'$match'=>array(
+					'_id'=>array('$gte'=>db2::getIdFromTime($time))
+				)
+			);
+			$pipeline2[]=array(
+				'$group'=>array(
+					'_id'=>array(
+						'page'=>'test'
+					),
+					'sum'=>array(
+						'$sum'=>'$time'
+					)
+				)
+			);
+			$resp2=db2::aggregate(DB,'user_stat',$pipeline2);
+
+			return array('success'=>true,'data'=>$data,'total'=>$resp2[0]['sum']);
+		}
+		public static function loadData($r){
+			include_once(phi::$conf['root'].'/sites/one_core/one_core.api');
+			$schema=json_decode(file_get_contents(ROOT.'/_manage/schema.json'),1);
+			$data['schema']=ONE_CORE::addSchemaData($r,$schema);
+			$data['collections']=self::getCollections();
+			return $data;
+		}
+		public static function incVersion($r,$d,$key,$opts){
+			//die(json_encode($d['last']));
+			if($d['last']){
+				$pv=(isset($d['last'][$opts['key']]))?$d['last'][$opts['key']]:0;
+				//$cv=(isset($d['current'][$opts['key']]))?(int) $d['current'][$opts['key']]:0;
+				$pv++;
+				// if(($cv-$pv)!=1){
+				// 	API::toHeaders(array('error'=>'Version out of sync, please reload to edit'));
+				// }
+				$d['current'][$opts['key']]=$pv;
+			}else{
+				$d['current'][$opts['key']]=1;
+			}
+			return $d;
+		}
+		public static function export($r){
+			include_once(phi::$conf['root'].'/api/oauth2.php');
+			$regex = new MongoDB\BSON\Regex('^tribalize_','i');
+			$q=array('id'=>$regex);
+			$tlist=db2::toList(db2::find(DB,'page_members',$q));
+			foreach ($tlist as $k => $v) {
+				$idp=explode('_', $v['id']);
+				$list[$idp[1]]=db2::findOne(DB,'user',array('id'=>$idp[1]));
+			}
+			$str='';
+			$fields=array('name','email');
+			$values[]=$fields;
+			$c=1;
+			foreach ($list as $k => $v) {
+				if(!$v) continue;
+				if(isset($rowdata)) unset($rowdata);
+				foreach ($fields as $tk => $tv) {
+					$rowdata[]=$v[$tv];
+				}
+				$values[]=$rowdata;
+			}
+			phi::exportCSV($values);
+			#die(json_encode($values));
+			// $uid='UC9QP6XFW';
+			// $sheet_id='1o8HJI2otP_frgGQyadM9Opy-ErezTFcF-XPifwF955o';
+			// $resp=OAUTH2::get(array(
+			// 	'url'=>'https://sheets.googleapis.com/v4/spreadsheets/'.$sheet_id.'/updateCells/Sheet1',
+			// 	'data'=>array(
+			// 		'rows'=>$values,
+			// 		'fields'=>'*',
+			// 		'start'=>array(
+			// 		  "sheetId"=> 0,
+			// 		  "rowIndex"=> 0,
+			// 		  "columnIndex"=> 0
+			// 		)
+			// 	),
+			// 	'uid'=>$uid,
+			// 	'app'=>DB,
+			// 	'app_id'=>'google',
+			// 	'id'=>'sheets'
+			// ));//should autorefresh
+			// die(json_encode($resp));
+			// die($str);
+		}
+		public static function fixTags($r){
+			$c=0;
+			$taglist=db2::toList(db2::find(DB,'user_tags',array()));
+			$map=array(
+				"peace,_safety,_\nsecurity"=>'peace_safety_security'
+			);
+			foreach ($taglist as $k => $v) {
+				foreach ($map as $tk => $tv) {
+					//die();
+					$ind=array_search($tk, $v['tags']);
+					if($ind){
+						$taglist[$k]['tags'][$ind]=$tv;
+						$c++;
+					}
+				}
+				db2::update(DB,'user_tags',array('id'=>$v['id']),array('$set'=>array('tags'=>$taglist[$k]['tags'])));
+			}
+			return array('success'=>true,'message'=>'['.$c.'] tags fixed');
+		}
+		public static function addChangelog($r){
+			$save=array(
+				'content'=>$r['qs']['content'],
+				'type'=>$r['qs']['type'],
+				'by'=>$r['auth']['uid']
+			);
+			db2::save(DB,'changelog',$save);
+			if($save['type']=='push'){
+				$msg=array(
+					'type'=>'app_broadcast',
+					'app'=>'support',
+					'message'=>$save['content'],
+					'by'=>$r['auth']['uid']
+				);
+				db2::save(DB,'broadcast',$msg);
+			}
+			return array('success'=>true);
+		}
+		public static function loadChangelog($r){
+			$cl=db2::toOrderedList(db2::find(DB,'changelog',array(),array('sort'=>array('_id'=>-1))));
+			if($cl){
+				foreach ($cl['list'] as $k => $v) {
+					$cl['list'][$k]['user']=ONE_CORE::getUser($v['by']);
+				}
+			}
+			return array('success'=>true,'data'=>$cl);
+		}
+		public static function resend($r){
+			if($r['qs']['id']&&db2::findOne(DB,'notice',array('_id'=>db2::toId($r['qs']['id'])))) db2::update(DB,'notice',array('_id'=>db2::toId($r['qs']['id'])),array('$unset'=>array('status'=>1,'resp'=>1)));
+			else return array('success'=>true,'message'=>'Invalid ID');
+			return array('success'=>true,'message'=>'Successfully queued item');
+		}
+		public static function removeDevice($r){
+			db2::remove(DB,'device',array('id'=>$r['qs']['device']));
+			return array('success'=>true);
+		}
+		public static function revokeToken($r){
+			db2::remove(DB,'token',array('id'=>$r['qs']['app_token']));
+			return array('success'=>true);
+		}
+		public static function testPush($r){
+			if(!isset($r['qs']['intent'])) $r['qs']['intent']='';
+			$device=db2::findOne(DB,'device',array('id'=>$r['qs']['device']));
+			$count=1;
+			// if($r['qs']['call']){
+			// 	phi::$action_mode='call';
+			// 	//phi::log('send VOIP!');
+			// }
+			if($r['qs']['call']){
+				$count=0;
+				//phi::log('send VOIP!');
+			}
+			phi::sendPush(array($device),$r['qs']['message'],$r['qs']['intent'],$count);
+			return array('success'=>true);
+		}
+		public static function loadUser($r){
+			include_once(phi::$conf['root'].'/api/oauth2.php');
+			$u=ONE_CORE::load($r,$r['qs']['uid'],'user',[
+				'status','la'
+			]);
+			$u['plan']=db2::findOne(DB,'current_subscription_info',['page.id'=>$u['id']]);
+			if(!$u) return array('error'=>'invalid_user');
+			//create temp login
+			$unique=md5($u['id'].'_'.AUTH_SALT.'_'.time());
+			db2::update(DB,'temp_login',array('id'=>$r['qs']['uid']),array('$set'=>array('login'=>$unique)),array('upsert'=>true));
+			$u['login']='https://app.'.phi::$conf['domain'].'/loginas/'.$unique;
+			$u['qrcode']= 'https://img.'.phi::$conf['domain'].'/qr?url='.urlencode('https://app.'.phi::$conf['domain'].'/loginas/'.$unique);
+			//$u['fblink']=$resp['url'];
+			//add in devices
+			$u['devices']=db2::toOrderedList(db2::find(DB,'device',array('uid'=>$u['id'])));
+			$regex = new MongoDB\BSON\Regex('^'.$u['id'],'i');
+			$query=array('id'=>$regex);
+	    	$list=db2::toOrderedList(db2::find(DB,'creds',$query),array('id','scopes'));
+	    	$u['accounts']=$list;
+			//add in apps
+			$u['apps']=db2::toOrderedList(db2::find(DB,'token',array('uid'=>$u['id'])));
+			if($u['apps']){
+				foreach ($u['apps']['list'] as $k => $v) {
+					$u['apps']['list'][$k]['app']=phi::getApp($v['appid']);
+				}
+			}
+			return array('success'=>true,'user'=>$u);
+		}
+		public static function testNotice($r){
+			$type=$r['qs']['notice'];
+			include_once(ROOT.'/sites/admin/notice.php');
+			return NECTAR_NOTICE::sendNotice($type,$r['auth']['uid']);
+		}
+		public static function clearDevices($r){
+			db2::drop(DB,'device');
+			return array('success'=>true,'message'=>'Successfully Cleared Devices');
+		}
+		public static function updateTokens($r){
+			$tokens=db2::toList(db2::find(DB,'user_apps',array()));
+			foreach ($tokens as $k => $v) {
+				if(isset($v['scope'])){
+					if(is_string($v['scope'])&&$v['scope']=='*'){//upgrade hack
+						$v['scope']=array('self::read::*','self::write::*');
+					}
+				}
+				db2::update(DB,'token',array('id'=>$v['id']),array('$set'=>$v),array('upsert'=>true));
+			}
+			return array('success'=>true,'message'=>'Successfully Updated Tokens');
+		}
+		public static function clearEmails($r){
+			db2::drop(DB,'notice');
+			db2::drop(DB,'email_campaign');
+			db2::drop(DB,'email_history');
+			return array('success'=>true,'message'=>'Successfully Cleared Notifications');
+		}
+		public static function buildSearch($r){
+			$u=db2::find(DB,'user',array());
+			$c=0;
+			foreach ($u as $k => $v) {
+				$tags=ONE_CORE::buildKeywords($v);
+				db2::update(DB,'user_search',array('id'=>$v['id']),array('$set'=>array('tags'=>$tags,'id'=>$v['id'])),array('upsert'=>true));
+				//die(var_dump($r));
+				$c++;
+			}
+			return array('success'=>true,'message'=>'Successfully Built ['.$c.'] Search Queries!');
+		}
+		public static function deleteUser($r){
+			$uid=$r['qs']['uid'];
+			$password=$r['qs']['password'];
+			//validate password
+			$user=array('pass'=>md5($password.AUTH_SALT));
+			$u=db2::findOne(DB,'user',$user);
+			if(!$u||$u['id']!=$r['auth']['uid']) return array('error'=>'invalid authorization');
+			if(ONE_CORE::deleteUser($uid)){
+				db2::save(DB,'admin_delete',array(
+					'uid'=>$uid,
+					'by'=>$r['auth']['uid']
+				));
+			}
+			return array('success'=>true);
+		}
+		public static function searchUsers($r){
+			//$query=API::getSearchQuery('tags',$r['qs']['search']);
+			//$query =array('tags'=>array('$regex'=>'/^'.strtolower($r['qs']['search']).'/'));
+			$regex = new MongoDB\BSON\Regex($r['qs']['search'],'i');
+			$query=array('$or'=>array(array('name'=>$regex),array('id'=>$regex),array('email'=>$regex)));
+			$query['$and'][]['deleted']=array('$exists'=>false);
+			//$query['$and'][]['la']=array('$exists'=>true);
+			//die(json_encode($query));
+			//$query=array();
+			//$opts['sort']=array('la'=>1);
+			$opts['limit']=21;
+			$list=db2::toList(db2::find(DB,'user',$query,$opts));
+			if($list) $keys=array_keys($list);
+			else $keys=array();
+			//die(json_encode(array('id'=>array('$in'=>$keys))));
+			if(sizeof($keys)) $data=db2::toOrderedList(db2::find(DB,'user',array('id'=>array('$in'=>$keys))));
+			else $data=false;
+			//add more data here if needed
+			//die(json_encode($data));
+			$total=db2::count(DB,'user',$query);
+			return array('success'=>true,'users'=>$data,'total'=>$total);
+		}
+		public static function fixAgreement($r){
+			$list=db2::find(DB,'user',array());
+			foreach ($list as $k => $doc) {
+				ONE_CORE::save('terms',array('id'=>$doc['id'],'ver'=>1,'created'=>$doc['created']));
+			}
+			return array('success'=>true,'message'=>'Successfully Fixed Terms!');
+		}
+		public static function fixEmails($r){
+			$list=db2::find(DB,'user',array());
+			foreach ($list as $k => $doc) {
+				db2::update(DB,'user',array('_id'=>$doc['_id']),array('$set'=>array('email'=>strtolower($doc['email']))));
+			}
+			$list=db2::find(DB,'focusgroup',array());
+			foreach ($list as $k => $doc) {
+				db2::update(DB,'focusgroup',array('_id'=>$doc['_id']),array('$set'=>array('email'=>strtolower($doc['email']))));
+			}
+			return array('success'=>true,'message'=>'Successfully Fixed Emails!');
+		}
+		public static function customEmail($r){
+			$nectar=db2::toList(db2::find(DB,'user',array()),array('email','name','pic'),'email');
+			$alpha=db2::toList(db2::find(DB,'focusgroup',array()),array('email','name'),'email');
+			$nvals=array_keys($nectar);
+			$avals=array_keys($alpha);
+			$lists['alphanotnectar']=array_values(array_diff($avals,$nvals));
+			$lists['nectarnotalpha']=array_values(array_diff($nvals,$avals));
+			$lists['alphaandnectar']=array_values(array_intersect($nvals,$avals));
+			$preview=1;
+			if($r['force']) $preview=0;
+			foreach ($lists['alphanotnectar'] as $k => $v) {
+				$p=$alpha[$v];
+				$p['name']=phi::getFirstName($p['name']);
+				if($preview){
+					if($k==0){
+						$c=phi::render2(array(
+							'sitepath'=>phi::$conf['root'].'/sites/nectar',
+							'template'=>'alphanotnectar.txt',
+							'vars'=>array(
+								'link'=>'https://'.phi::$conf['domain'].'/profile',
+								'user'=>$p
+							)
+						));
+						$previews['alphanotnectar']=$c;
+					}
+				}else phi::mail(DB,'alphanotnectar',array(
+					'sitepath'=>phi::$conf['root'].'/sites/nectar',
+					'template'=>'alphanotnectar.txt',
+					'vars'=>array(
+						'link'=>'https://'.phi::$conf['domain'].'/profile',
+						'user'=>$p
+					)
+				),array(
+					'to'=>array($p['email']),
+					'subject'=>'Nectar Updates!',
+					'from'=>ONE_CORE::$noreply
+				));
+			}
+			foreach ($lists['nectarnotalpha'] as $k => $v) {
+				$p=$nectar[$v];
+				$p['name']=phi::getFirstName($p['name']);
+				if($preview){
+					if($k==0){
+						$c=phi::render2(array(
+							'sitepath'=>phi::$conf['root'].'/sites/nectar',
+							'template'=>'nectarnotalpha.txt',
+							'vars'=>array(
+								'link'=>'https://'.phi::$conf['domain'].'/profile',
+								'user'=>$p
+							)
+						));
+						$previews['nectarnotalpha']=$c;
+					}
+				}else phi::mail(DB,'nectarnotalpha',array(
+					'sitepath'=>phi::$conf['root'].'/sites/nectar',
+					'template'=>'nectarnotalpha.txt',
+					'vars'=>array(
+						'link'=>'https://'.phi::$conf['domain'].'/profile',
+						'user'=>$p
+					)
+				),array(
+					'to'=>array($p['email']),
+					'subject'=>'Nectar Updates!',
+					'from'=>ONE_CORE::$noreply
+				));
+			}
+			foreach ($lists['alphaandnectar'] as $k => $v) {
+				$p=$nectar[$v];
+				$p['name']=phi::getFirstName($p['name']);
+				if($preview){
+					if($k==0){
+						$c=phi::render2(array(
+							'sitepath'=>phi::$conf['root'].'/sites/nectar',
+							'template'=>'alphaandnectar.txt',
+							'vars'=>array(
+								'link'=>'https://'.phi::$conf['domain'].'/profile',
+								'user'=>$p
+							)
+						));
+						$previews['alphaandnectar']=$c;
+					}
+				}else phi::mail(DB,'alphaandnectar',array(
+						'sitepath'=>phi::$conf['root'].'/sites/nectar',
+						'template'=>'alphaandnectar.txt',
+						'vars'=>array(
+							'link'=>'https://'.phi::$conf['domain'].'/profile',
+							'user'=>$p
+						)
+					),array(
+					'to'=>array($p['email']),
+					'subject'=>'Nectar Updates!',
+					'from'=>ONE_CORE::$noreply
+				));
+			}
+			if($preview){
+				phi::sendMail(array(
+					'to'=>array('eros@nectar.earth'),
+					'subject'=>'Nectar Updates!',
+					'message'=>$previews['nectarnotalpha'],
+					'from'=>ONE_CORE::$noreply,
+					'force'=>1
+				));
+				phi::sendMail(array(
+					'to'=>array('eros@nectar.earth'),
+					'subject'=>'Nectar Updates!',
+					'message'=>$previews['alphaandnectar'],
+					'from'=>ONE_CORE::$noreply,
+					'force'=>1
+				));
+				phi::sendMail(array(
+					'to'=>array('eros@nectar.earth'),
+					'subject'=>'Nectar Updates!',
+					'message'=>$previews['alphanotnectar'],
+					'from'=>ONE_CORE::$noreply,
+					'force'=>1
+				));
+			}
+			//die($previews['nectarnotalpha']);
+			//die(json_encode($lists));
+			return array('success'=>true,'message'=>'Successfully Sent Emails!');
+		}
+		public static function syncColl($r){
+			$from='prod';
+			#die(json_encode( self::getCollections()));
+			if(in_array($r['qs']['coll'], self::getCollections())){
+				db2::sync(DB,$r['qs']['coll'],$from);
+				return array('success'=>true,'message'=>'Successfully Synced DB');
+			}else{
+				return array('error'=>'invalid collection');
+			}
+		}
+		public static function syncDB($r){
+			$from='prod';
+			foreach (self::getCollections() as $k => $v) {
+				phi::log('syncing ['.$v.']');
+				db2::sync(DB,$v,$from);
+			}
+			return array('success'=>true,'message'=>'Successfully Synced DB');
+		}
+		public static function countMassEmail($r){
+			$list=self::getList2($r['qs']);
+			return array('success'=>true,'data'=>array('count'=>sizeof($list)));
+		}
+		public static function sendMassEmail($r){
+			if(isset($r['qs']['template_id'])){
+				$r['qs']=db2::findOne(DB,'admin_email',array('id'=>$r['qs']['template_id']));
+				if(!$r['qs']) return array('error'=>'invalid_template');
+				$r['qs']['job']=true;
+			}
+			if(!isset($r['qs']['content'])||!$r['qs']['content']) return array('error'=>'no_content','message'=>'No Content');
+			if(!isset($r['qs']['subject'])||!$r['qs']['subject']) return array('error'=>'no_subject','message'=>'No Subject');
+			if(!isset($r['qs']['id'])||!$r['qs']['id']) return array('error'=>'no_id','message'=>'No Id');
+			$campaign=$r['qs']['id'];
+			$content=$r['qs']['content'];
+			$subject=$r['qs']['subject'];
+			//get all users!
+			//$list=self::getList2($r['qs'],(!phi::$conf['prod'])?$r['auth']['uid']:false);
+			$list=self::getList2($r['qs'],false);
+			#die(json_encode($list));
+			$st=microtime(true);
+			if(isset($r['qs']['job'])){
+				//phi::log('process job');
+				#phi::log('adminuser: '.$admin_user['email']);
+				$mdata=self::getModuleData();
+				foreach ($list as $k => $user) {
+					if(isset($user['email'])){
+						$emails[]=$user['email'];
+						$ids[]=$user['id'];
+						$vdata=array(
+							'api'=>'https://'.phi::$conf['domain'],
+							'user'=>$user,
+							'htmlcontent'=>$r['qs']['content']
+						);
+						$vdata=array_merge($vdata,$mdata);
+						$last=phi::mail(DB,$campaign,array(
+							'sitepath'=>phi::$conf['root'].'/sites/one_core',
+							'template'=>'massemail.txt',
+							'vars'=>$vdata
+						),array(
+							'to'=>array($user['email']),
+							'subject'=>$subject,
+							'from'=>self::$noreply,
+							'returnEmail'=>true
+						));
+						if($last) $tosave[]=$last;
+						// phi::log($tosave);
+						// die();
+					}
+				}
+				if(isset($tosave)){
+					db2::bulkInsert(DB,'notice',$tosave);
+					$size=sizeof($tosave);
+				}else{
+					$size=0;
+				}
+				#die();
+				//save process time and set "saved" flag
+				if(isset($r['qs']['id'])){
+					$tolist=ONE_CORE::save('admin_email_list',array(
+						'id'=>$r['qs']['id'],
+						'list'=>$ids
+					));
+					$stats=array(
+						'list'=>$tolist['id'],
+						'total'=>sizeof($ids),
+						'time'=>microtime(true)-$st
+					);
+					db2::update(DB,'admin_email',array('id'=>$r['qs']['id']),array('$set'=>array('stats'=>$stats)));
+				}else{
+					if(phi::$conf['prod']) phi::log('no id set in admin_email');
+				}
+				return array('success'=>true,'message'=>'Successfully sent email to ['.$size.'] people');
+			}else{
+				$c=db2::findOne(DB,'admin_email',array('id'=>$r['qs']['id']));
+				if(!$c) return array('error'=>'invalid_email_id');
+				if(isset($c['stats'])&&phi::$conf['prod']) return array('error'=>'email_already_processed');
+				$r['qs']['job']=1;
+				if(isset($r['qs']['tsu'])) unset($r['qs']['tsu']);
+				if(isset($r['qs']['_id'])) unset($r['qs']['_id']);
+				if(isset($r['qs']['callback'])) unset($r['qs']['callback']);//ensure its JSON
+				phi::scheduleJob(md5(time().$r['qs']['id']),time(),array(
+					'url'=>'https://api.'.phi::$conf['domain'].'/one_admin/engagement/send',
+					'data'=>array('template_id'=>$r['qs']['id'],'internal'=>1,'force_uid'=>$r['auth']['uid']),
+					'type'=>'url'
+				));
+				$stats=array(
+					'total'=>sizeof($list),
+					'processing'=>true
+				);
+				db2::update(DB,'admin_email',array('id'=>$r['qs']['id']),array('$set'=>array('stats'=>$stats)));
+				return array('success'=>true,'message'=>'Queued job for sending ['.sizeof($list).'] emails');
+			}
+		}
+		public static function getList2($email,$uid=false){
+			if(!$uid) return array('count'=>0);
+			if(!$uid&&isset($email['filter'])&&sizeof($email['filter'])){
+				$filter=$email['filter'];
+				if(isset($filter['overdue'])){
+					$pipeline[0]=array('$match'=>array(
+						'status.overdue'=>true,
+						'email_invalid'=>array('$exists'=>false)
+					));
+				}else{
+					$pipeline[0]=array('$match'=>array(
+						'status.stopped'=>array('$exists'=>false),
+						'email_invalid'=>array('$exists'=>false)
+					));
+				}
+				if(isset($filter['member_settings'])&&sizeof($filter['member_settings'])){
+					if(in_array('active', $filter['member_settings'])){
+						$pipeline[0]['$match']['status.active']=true;
+					}
+					if(in_array('overdue', $filter['member_settings'])){
+						$pipeline[0]['$match']['status.overdue']=true;
+					}
+					if(in_array('trial', $filter['member_settings'])){
+						$pipeline[0]['$match']['status.trial']=true;
+					}
+					if(in_array('paid', $filter['member_settings'])){
+						$pipeline[0]['$match']['status.paid']=true;
+					}
+					if(in_array('lifetime', $filter['member_settings'])){
+						$pipeline[0]['$match']['status.lifetime']=true;
+					}
+				}
+				if(isset($filter['paid_personal'])){
+					$pipeline[0]['$match']=array(
+						'$and'=>array(
+							array(
+								'$or'=>array(
+									array('status.paid'=>true),
+									array('status.stopped'=>true)
+								)
+							),
+							array(
+								'status.plan'=>array('$nin'=>array('personal_10k','nectar_trial','personal_0','nectar_app_trial','nectar_trial')),
+								'status.pages'=>0,
+								'status.lifetime'=>array('$exists'=>false)
+							)
+						)
+					);
+					// $pipeline[0]['$match']['status.paid']=true;
+					// $pipeline[0]['$match']['status.pages']=0;
+				}else{
+					if(isset($filter['intro_video'])){
+						$pipeline[0]['$match']['intro_video']=array('$exists'=>false);
+					}
+					if(isset($filter['loc_city'])){
+						$pipeline[0]['$match']['loc_city']=array('$exists'=>false);
+					}
+					if(isset($filter['facebook_link'])){
+						$pipeline[0]['$match']['nofb']=array('$exists'=>false);
+					}
+				}
+				//die(json_encode($pipeline));
+				$pipeline[0]=db2::filterLocationPipeline($pipeline[0],$filter,array(
+					'key'=>'loc_city',
+					'limit'=>100000,
+					'distanceField'=>'dist.calculated'
+				));
+				if(isset($filter['business_info'])){
+					$pipeline[]=array(
+						'$lookup'=>array(
+							'from'=>'business_info',
+							'localField'=>'id',
+							'foreignField'=>'uid',
+							'as'=>'business_info'
+						)
+					);
+					$pipeline[]=array(
+						'$unwind'=>array(
+							'path'=>'$business_info',
+							'preserveNullAndEmptyArrays'=>true
+						)
+					);
+					$pipeline[]=array(
+						'$match'=>array('business_info._id'=>array('$exists'=>true))
+					);
+				}
+				if(isset($filter['callout'])){
+					$pipeline[]=array(
+						'$lookup'=>array(
+							'from'=>'callout',
+							'localField'=>'id',
+							'foreignField'=>'id',
+							'as'=>'callout'
+						)
+					);
+					$pipeline[]=array(
+						'$unwind'=>array(
+							'path'=>'$callout',
+							'preserveNullAndEmptyArrays'=>true
+						)
+					);
+					$pipeline[]=array(
+						'$match'=>array('callout.callout'=>array('$exists'=>false))
+					);
+				}
+				$fbgraph=array('facebook_link','facebook_post_off','facebook_friend_off','facebook_post','facebook_friend');
+				$fkeys=array_keys($filter);
+				$tmatch=array_intersect($fkeys, $fbgraph);
+				if(sizeof($tmatch)){
+					$pipeline[]=array(
+						'$project'=>array('id'=>1,'name'=>1,'pic'=>1,'email'=>1,'email_token'=>1,'timezone'=>1,'dist'=>1,'fb_id'=>array(
+							'$concat'=>array('$id','_facebook')
+						))
+					);
+					$pipeline[]=array(
+						'$lookup'=>array(
+							'from'=>'creds',
+							'localField'=>'fb_id',
+							'foreignField'=>'id',
+							'as'=>'fb_creds'
+						)
+					);
+					$pipeline[]=array(
+						'$unwind'=>array(
+							'path'=>'$fb_creds',
+							'preserveNullAndEmptyArrays'=>true
+						)
+					);
+					if(isset($filter['facebook_link'])){
+						$pipeline[]=array(
+							'$match'=>array(
+								'$or'=>array(
+									array('fb_creds'=>array('$exists'=>false)),
+									array('fb_creds.scopes'=>array('$nin'=>array('user_posts'))),
+									array('fb_creds.scopes'=>array('$nin'=>array('user_friends')))
+								)
+							)
+						);
+					}else{
+						if(isset($filter['facebook_post_off'])){
+							$nin[]='user_posts';
+						}
+						if(isset($filter['facebook_friend_off'])){
+							$nin[]='user_friends';
+						}
+						if(isset($filter['facebook_post'])){
+							$all[]='user_posts';
+						}
+						if(isset($filter['facebook_friend'])){
+							$all[]='user_friends';
+						}
+						if(isset($nin)) $match['fb_creds.scopes']['$nin']=$nin;
+						if(isset($all)) $match['fb_creds.scopes']['$all']=$all;
+						$pipeline[]=array(
+							'$match'=>$match
+						);
+					}
+				}
+				$pipeline[]=array(
+					'$project'=>array('id'=>1,'name'=>1,'pic'=>1,'email'=>1,'email_token'=>1,'timezone'=>1,'dist'=>1)
+				);
+				#die(json_encode($pipeline));
+				$l=db2::atoList(db2::aggregate(DB,'user',$pipeline));
+				#die(json_encode($l));
+			}else if($uid){
+				$l=db2::toOrderedList(db2::find(DB,'user',array('id'=>$uid),array('projection'=>array('id'=>1,'name'=>1,'pic'=>1,'email'=>1,'email_token'=>1,'timezone'=>1))),false,false,'id');
+			}else{
+				$l=db2::toOrderedList(db2::find(DB,'user',array('status.stopped'=>array('$exists'=>false),'email_invalid'=>array('$exists'=>false)),array('projection'=>array('id'=>1,'name'=>1,'pic'=>1,'email'=>1,'email_token'=>1,'timezone'=>1))),false,false,'id');
+			}
+			if(!$uid){
+				//remove anyone who has unsubbed...
+				if($l) $rm=db2::toOrderedList(db2::find(DB,'user_settings',array('id'=>array('$in'=>$l['order']),'email.all'=>0),array('projection'=>array('id'=>1))),false,false,'id');
+				if($rm){
+					foreach ($rm['order'] as $k => $v) {
+						if(isset($l['list'][$v])) unset($l['list'][$v]);
+					}
+				}
+			}
+			//graph in plan data if needed!
+			if(isset($email['content'])&&strpos($email['content'], '[user.plan.')!==false){
+				$l=db2::graph(DB,$l,array(
+					'id'=>array(
+						'coll'=>'plan',
+						'to'=>'plan_data',
+						'match'=>'id',
+						'filter'=>array('plan')
+					)
+				));
+				$l=db2::graph(DB,$l,array(
+					'plan_data.plan'=>array(
+						'coll'=>'products',
+						'to'=>'plan',
+						'match'=>'id',
+						'filter'=>array('display_value','plan_title')
+					)
+				));
+			}
+			#die(json_encode($list));
+			//if($uid) return $l['list'][$uid];
+			foreach ($l['list'] as $k => $v) {
+				$l['list'][$k]['links']=array(
+					'app_download'=>'https://app.'.phi::$conf['domain'].'/download'
+				);
+				if(!isset($l['list'][$k]['timezone'])){
+					$l['list'][$k]['timezone']='America/Denver';
+				}
+			}
+			return $l['list'];
+		}
+		public static function getList($tlist){
+			switch ($tlist) {
+				case 'blunder':
+					$f=file_get_contents(ROOT.'/_manage/email.txt');
+					if(!$f){
+						API::toHeader(array('error'=>'invalid_permissions'));
+					}
+					$l=explode(PHP_EOL, $f);
+					$list=db2::toList(db2::find(DB,'user',array('email'=>array('$in'=>$l))));
+				break;
+				case 'focusgroup':
+					$list=db2::toList(db2::find(DB,$tlist,array()));
+				break;
+				case 'user':
+					$list=db2::toList(db2::find(DB,$tlist,array()));
+				break;
+				case 'tribalize':
+					$regex = new MongoDB\BSON\Regex('^tribalize_','i');
+					$q=array('id'=>$regex);
+					$tlist=db2::toList(db2::find(DB,'page_members',$q));
+					foreach ($tlist as $k => $v) {
+						$idp=explode('_', $v['id']);
+						$list[$idp[1]]=db2::findOne(DB,'user',array('id'=>$idp[1]));
+					}
+				break;
+				case 'users_lifetime':
+					$plans=array('nectar_founder','nectar_builder','nectar_enterprise');
+					$l=array_keys(db2::toList(db2::find(DB,'plan',array('plan'=>array('$in'=>$plans))),'id'));
+					$tlist=array_keys(db2::toList(db2::find(DB,'onboarded',array('id'=>array('$in'=>$l))),false,'id'));
+					$list=db2::toList(db2::find(DB,'user',array('id'=>array('$in'=>$tlist))));
+				break;
+				case 'users_paid':
+					$plans=array('nectar_friend','nectar_supporter','nectar_patron','nectar_angel','nectar_connector','nectar_pollinator','nectar_activator','nectar_trial','nectar_yearly');
+					$l=array_keys(db2::toList(db2::find(DB,'plan',array('plan'=>array('$in'=>$plans))),false,'id'));
+					$tlist=array_keys(db2::toList(db2::find(DB,'onboarded',array('id'=>array('$in'=>$l))),false,'id'));
+					$list=db2::toList(db2::find(DB,'user',array('id'=>array('$in'=>$tlist))),array('id','name','email','pic'));
+				break;
+				case 'freebird':
+					$c=file_get_contents(ROOT.'/_manage/freebirds.json');
+					if(!$c) die('invalid permssions on freebirds.json');
+					$list=json_decode($c,1);
+				break;
+				case 'created_lifetime':
+					$plans=array('nectar_founder','nectar_builder','nectar_enterprise');
+					$l=array_keys(db2::toList(db2::find(DB,'plan',array('plan'=>array('$in'=>$plans))),'id'));
+					#die(json_encode($l));
+					$tlist=array_keys(db2::toList(db2::find(DB,'onboarded',array('id'=>array('$in'=>$l))),false,'id'));
+					#die(json_encode($tlist));
+					$not=array_values(array_diff($l,$tlist));
+					if(sizeof($not)){
+						$list=db2::toList(db2::find(DB,'user',array('id'=>array('$in'=>$not))));
+					}else{
+						$list=false;
+					}
+				break;
+				case 'noplan':
+					$l=array_keys(db2::toList(db2::find(DB,'plan',array(),false,'id')));
+					$list=db2::toList(db2::find(DB,'user',array('id'=>array('$nin'=>$l))),array('id','name','email','pic'));
+				break;
+				case 'created_paid':
+					$plans=array('nectar_friend','nectar_supporter','nectar_patron','nectar_angel','nectar_connector','nectar_pollinator','nectar_activator','nectar_trial','nectar_yearly');
+					$l=array_keys(db2::toList(db2::find(DB,'plan',array('plan'=>array('$in'=>$plans))),false,'id'));
+					//die(json_encode($l));
+					$tlist=array_keys(db2::toList(db2::find(DB,'onboarded',array('id'=>array('$in'=>$l))),false,'id'));
+					$not=array_values(array_diff($l, $tlist));
+					$list=db2::toList(db2::find(DB,'user',array('id'=>array('$in'=>$not))),array('id','name','email','pic'));
+				break;
+			}
+			$lookup=array_keys($list);
+			//remove any that are not currently active!
+			$canceled=db2::toList(db2::find(DB,'plan_cancel',array('id'=>array('$in'=>$lookup))));
+			if($canceled){
+				foreach ($canceled as $k => $v) {
+					if(isset($v['uid'])&&isset($list[$v['uid']])) unset($list[$v['uid']]);
+				}
+			}
+			//take into account cancelled
+			//take into account unsubscribed
+			$settings=db2::toList(db2::find(DB,'user_settings',array('id'=>array('$in'=>$lookup))));
+			if($settings){
+				foreach ($settings as $k => $v) {
+					if(isset($v['email']['all'])&&$v['email']['all']===0){
+						#phi::log('cancelled, dont send');
+						if(isset($list[$v['id']])) unset($list[$v['id']]);
+					}
+				}
+			}
+			if(!isset($list)) $list=false;
+			//die(json_encode($list));
+			return $list;
+		}
+		public static function testList($r){
+			$list=self::getList($r['qs']['list']);
+			return array('success'=>true,'data'=>array('count'=>sizeof($list)));
+		}
+		public static function getModuleData(){
+			$mdata=ONE_CORE::processModuleData(array(),array(
+				"modulePath"=>"/sites/templates",
+			    "module"=>array(
+			        "systemstats"=>array(
+			            "path"=>"/sites/one_core/one_core.api",
+			            "class"=>"one_core",
+			            "method"=>"getSystemStats",
+			            "render"=>true
+			        )
+			    )
+			),phi::$debugEmail);
+			return $mdata;
+		}
+		public static function previewAdminNotification($r){
+			if(!isset($r['qs']['content'])||!$r['qs']['content']) return array('error'=>'no_content');
+			if(!isset($r['qs']['subject'])||!$r['qs']['subject']) return array('error'=>'no_subject');
+			if(!isset($r['qs']['user'])||!$r['qs']['user']) return array('error'=>'no_user');
+			$content=$r['qs']['content'];
+			$subject=$r['qs']['subject'];
+			$campaign=$r['qs']['id'].'_preview';
+			$userlist=self::getList2($r['qs'],$r['qs']['user']);
+			$user=$userlist[$r['qs']['user']];
+			if(isset($r['qs']['preview'])){
+				phi::$debugEmail=true;
+			}
+			$mdata=self::getModuleData();
+			$data=array(
+				'api'=>'https://'.phi::$conf['domain'],
+				'user'=>$user,
+				'htmlcontent'=>$content
+			);
+			$data=array_merge($data,$mdata);
+			phi::mail(DB,$campaign,array(
+				'sitepath'=>phi::$conf['root'].'/sites/one_core',
+				'template'=>'massemail.txt',
+				'container'=>'_container_preview.txt',
+				'vars'=>$data
+			),array(
+				'to'=>array($user['email']),
+				'subject'=>$subject,
+				'from'=>self::$noreply
+			));
+			$list=self::getList2($r['qs']);
+			$c=sizeof($list);
+			return array('success'=>true,'message'=>'Successfully sent preview email to ['.$user['email'].'], will send to ['.$c.'] people');
+		}
+		public static function previewNotification($r){
+			if(!isset($r['qs']['user'])||!$r['qs']['user']) return array('error'=>'no_user');
+			$campaign=$r['qs']['id'].'_preview';
+			$userlist=self::getList2($r['qs'],$r['qs']['user']);
+			$user=$userlist[$r['qs']['user']];
+			$qs=[];
+			if(isset($r['qs']['debug'])){
+				$qs['debug']=1;
+			}
+			if(isset($r['qs']['preview'])){
+				phi::$debugEmail=true;
+			}
+			phi::$previewEmail=true;
+			if(isset($r['qs']['system_id'])){
+				return ONE_CORE::processHook([
+					'qs'=>$qs
+				],array('id'=>$r['qs']['system_id'],'user'=>$user));
+			}else{
+				return array('error'=>'system_id not set');
+			}
+		}
+		public static function retryJob($r){
+			db2::update(DB,'jobs',array('_id'=>db2::toId($r['qs']['job'])),array('$unset'=>array('msg'=>1,'status'=>1)));
+			return array('success'=>true);
+		}
+		public static function getData($r){
+			include_once(ROOT.'/api/class/formbuilder.php');
+			$qo=array('sort'=>array('_id'=>-1),'limit'=>10);
+			$schema=ONE_CORE::getSchema($r['qs']['filter']);
+			if($r['qs']['filter']=='invoice'){
+				include_once(ROOT.'/classes/admin.php');
+				ADMIN_API::calculateInvoices();
+			}
+			//if(!$schema) return array('error'=>'invalid_schema');
+			try{
+				if($r['qs']['filter']=='invoice'&&false){
+					$sort=array(
+						'sort'=>array('updated'=>-1)
+					);
+					$key='updated';
+					if(isset($r['qs']['after'])&&$r['qs']['after']) $q=array('updated'=>array('$gt'=>$r['qs']['after']));
+					else if(isset($r['qs']['last'])&&$r['qs']['last']) $q=array('updated'=>array('$lt'=>$r['qs']['last']));
+					else $q=array();
+				}else{
+					$sort=array(
+						'sort'=>array('_id'=>-1)
+					);
+					$key='_id';
+					if(isset($r['qs']['after'])&&$r['qs']['after']) $q=array('_id'=>array('$gt'=>db2::toId($r['qs']['after'])));
+					else if(isset($r['qs']['last'])&&$r['qs']['last']) $q=array('_id'=>array('$lt'=>db2::toId($r['qs']['last'])));
+					else $q=array();
+				}
+				if(isset($r['qs']['query'])&&$r['qs']['query']){
+					try{
+						$tq=json_decode($r['qs']['query'],1);
+						if(!$tq) return array('error'=>'JSON Parse Error');
+					}catch(Exception $e){
+						return array('error'=>'JSON Parse Error');
+					}
+					$q=array_merge($tq,$q);
+				}
+				if($r['qs']['type']=='full'&&$schema){
+					#die(json_encode($q));
+					return formbuilder::feed(array(
+						'auth'=>$r['auth'],
+						'qs'=>array(
+							'schema'=>$schema['id']
+						)
+					),$q,$sort,$key,[
+						'showAllData'=>1
+					]);
+				}else{
+					$out=db2::toOrderedList(db2::find(DB,$r['qs']['filter'],$q,$qo),false,true,'_id');
+				}
+			}catch(Exception $e){
+				return array('error'=>'Invalid Query');
+			}
+			return array('success'=>true,'data'=>$out);
+		}
+		public static function getData2($r){
+			//allow filtering of emails
+			if(isset($r['qs']['after'])&&$r['qs']['after']) $q=array('_id'=>array('$gt'=>db2::toId($r['qs']['after'])));
+			else if(isset($r['qs']['last'])&&$r['qs']['last']) $q=array('_id'=>array('$lt'=>db2::toId($r['qs']['last'])));
+			else $q=array();
+			$projection=false;
+			if(isset($r['qs']['filter'])){
+				switch ($r['qs']['filter']) {
+					case 'business_info'://no additional filter
+						$table='business_info';
+						$graphopts=array(
+							'uid'=>array(
+								'coll'=>'user',
+								'to'=>'user',
+								'match'=>'id',
+								'filter'=>array('name','pic','id')
+							)
+						);
+					break;
+					case 'pages'://no additional filter
+						$table='page';
+					break;
+					case 'skills'://no additional filter
+						$table='skills';
+					break;
+					case 'user_list'://no additional filter
+						$table='user';
+						$graphopts=array(
+							'id'=>array(
+								'coll'=>'referal',
+								'to'=>'referal',
+								'match'=>'user_id'
+							)
+						);
+						$graphopts2=array(
+							'referal.refered_by'=>array(
+								'coll'=>'user',
+								'to'=>'referal.user',
+								'match'=>'id',
+								'filter'=>array('name','pic','id'),
+							),
+							'referal.oracle_parent'=>array(
+								'coll'=>'user',
+								'to'=>'referal.oracle_info',
+								'match'=>'id',
+								'filter'=>array('name','pic','id')
+							)
+						);
+						$graphopts3=array(
+							'referal.refered_by'=>array(
+								'coll'=>'page',
+								'to'=>'referal.user',
+								'match'=>'id',
+								'filter'=>array('name','pic','id'),
+							)
+						);
+						$projection=array('name'=>1,'pic'=>1,'id'=>1);
+					break;
+					case 'user_cancelled'://no additional filter
+						$table='plan';
+						$q['stopped']=array('$exists'=>true);
+						$sort=array('stopped'=>-1);
+						$graphopts=array(
+							'id'=>array(
+								'coll'=>'user',
+								'to'=>'user',
+								'match'=>'id',
+								'filter'=>array('name','pic','id','email','_id')
+							)
+						);
+						$afterFunction=function($data){
+							if($data){
+								foreach ($data['list'] as $k => $v) {
+									$get[]=$v['id'];
+								}
+								$l=db2::toOrderedList(db2::find(DB,'user_note',array('uid'=>array('$in'=>$get)),array('sort'=>array('_id'=>-1))));
+								//graph!
+								$l=db2::graph(DB,$l,array(
+									'by.id'=>array(
+										'coll'=>'user',
+										'to'=>'by.data',
+										'match'=>'id',
+										'filter'=>array('name','pic','id')
+									)
+								));
+								if($l){
+									foreach ($l['order'] as $k => $v) {
+										$item=$l['list'][$v];
+										$add[$item['uid']]['list'][$item['id']]=$item;
+										$add[$item['uid']]['order'][]=$item['id'];
+									}
+									if(isset($add)){
+										foreach ($add as $k => $v) {
+											if(isset($data['list'][$k])){
+												$data['list'][$k]['notes']=$v;
+											}
+										}
+									}
+								}
+								//die(json_encode($get));
+							}
+							return $data;
+						};
+						// $graphopts2=array(
+						// 	'referal.refered_by'=>array(
+						// 		'coll'=>'user',
+						// 		'to'=>'referal.user',
+						// 		'match'=>'id',
+						// 		'filter'=>array('name','pic','id'),
+						// 	),
+						// 	'referal.oracle_parent'=>array(
+						// 		'coll'=>'user',
+						// 		'to'=>'referal.oracle_info',
+						// 		'match'=>'id',
+						// 		'filter'=>array('name','pic','id')
+						// 	)
+						// );
+						// $projection=array('name'=>1,'pic'=>1,'id'=>1);
+					break;
+					default:
+						die('invalid filter');
+					break;
+				}
+			}
+			//add in other tags here too!
+			if(!isset($sort)) $sort=(!isset($r['qs']['after']))?array('_id'=>-1):array('_id'=>1);
+			$limit=(isset($r['qs']['max']))?((int) $r['qs']['max']):100;
+			$qo=array('sort'=>$sort,'limit'=>$limit);
+			if($projection) $qo['projection']=$projection;
+			//die(json_encode($q));
+			if(!$table){
+				return array('error'=>'invalid_table');
+			}
+			$out=db2::toOrderedList(db2::find(DB,$table,$q,$qo),false,true,'_id');
+			if(isset($graphopts)) $out=db2::graph(DB,$out,$graphopts);
+			if(isset($graphopts2)){
+				$out=db2::graph(DB,$out,$graphopts2);
+			}
+			if(isset($graphopts3)){
+				$out=db2::graph(DB,$out,$graphopts3);
+			}
+			if(isset($afterFunction)){
+				$out=$afterFunction($out);
+			}
+			// if($out){
+			// 	$users=array();
+			// 	foreach ($out['list'] as $k => $v) {
+			// 		if(isset($v[$ukey])){
+			// 			if(!in_array($v[$ukey], $users)){
+			// 				$users[]=$v[$ukey];
+			// 			}
+			// 		}
+			// 	}
+			// 	$udata=db2::toList(db2::find(DB,'user',array('id'=>array('$in'=>$users)),array('projection'=>array('name'=>1,'pic'=>1,'id'=>1))));
+			// 	foreach ($out['list'] as $k => $v) {
+			// 		if(isset($v[$ukey])&&isset($udata[$v[$ukey]])){
+			// 			$out['list'][$k]['user_info']=$udata[$v[$ukey]];
+			// 		}
+			// 	}
+			// }
+			return array('success'=>true,'data'=>$out);
+		}
+		public static function getJobs($r){
+			//allow filtering of emails
+			if(isset($r['qs']['filter'])){
+				switch ($r['qs']['filter']) {
+					case 'fb_import'://no additional filter
+						$table='jobs';
+						$ukey='uid';
+						$q=array('job'=>'fbimport');
+					break;
+					case 'ensuretokens'://no additional filter
+						$table='jobs';
+						$ukey='uid';
+						$q=array('job'=>'ensuretokens');
+					break;
+					case 'housekeeping'://no additional filter
+						$table='jobs';
+						$q=array('job'=>'housekeeping');
+						$ukey=false;
+					break;
+					case 'broadcast'://no additional filter
+						$table='broadcast';
+						$ukey='from';
+					break;
+					case 'scheduled'://no additional filter
+						$table='scheduled_jobs';
+						$q=array('opts.id'=>array('$ne'=>'admin_status_check'));
+						$ukey=false;
+					break;
+					default:
+						die('invalid filter');
+					break;
+				}
+			}
+			if(isset($r['qs']['after'])&&$r['qs']['after']) $q['_id']=array('$gt'=>db2::toId($r['qs']['after']));
+			else if(isset($r['qs']['last'])&&$r['qs']['last']) $q['_id']=array('$lt'=>db2::toId($r['qs']['last']));
+			//add in other tags here too!
+			if(!isset($sort)) $sort=(isset($r['qs']['after']))?array('_id'=>1):array('_id'=>-1);
+			if(!isset($q)) $q=array();
+			$out=db2::toOrderedList(db2::find(DB,$table,$q,array('sort'=>$sort,'limit'=>100)),true,'_id','_id');
+			if($out&&$ukey){
+				$users=array();
+				foreach ($out['list'] as $k => $v) {
+					if(isset($v[$ukey])){
+						if(!in_array($v[$ukey], $users)){
+							$users[]=$v[$ukey];
+						}
+					}
+				}
+				$udata=db2::toList(db2::find(DB,'user',array('id'=>array('$in'=>$users)),array('projection'=>array('name'=>1,'pic'=>1,'id'=>1))));
+				foreach ($out['list'] as $k => $v) {
+					if(isset($v[$ukey])&&isset($udata[$v[$ukey]])){
+						$out['list'][$k]['user_info']=$udata[$v[$ukey]];
+					}
+				}
+			}
+			return array('success'=>true,'data'=>$out);
+		}
+		public static function getNotificationHistory($r){
+			$q=array('id'=>$r['qs']['id']);
+			$out=db2::toOrderedList(db2::find(DB,'email_history',$q,array('sort'=>array('_id'=>-1))),false,false,'_id');
+			$out['stats']=db2::findOne(DB,'email_campaign',array('id'=>$r['qs']['campaign']));
+			$out['success']=true;
+			return $out;
+		}
+		public static function getNotifications($r){
+			//allow filtering of emails
+			if(isset($r['qs']['after'])&&$r['qs']['after']) $q=array('_id'=>array('$gt'=>db2::toId($r['qs']['after'])));
+			else if(isset($r['qs']['last'])&&$r['qs']['last']) $q=array('_id'=>array('$lt'=>db2::toId($r['qs']['last'])));
+			else $q=array();
+			if(isset($r['qs']['filter'])){
+				switch ($r['qs']['filter']) {
+					case 'push'://no additional filter
+						$q['type']='push';
+					break;
+					case 'emails':
+						$q['type']='email';
+					break;
+				}
+			}
+			if($r['qs']['filter']=='campaigns'){
+				$sort=(isset($r['qs']['after']))?array('_id'=>1):array('_id'=>-1);
+				$out=db2::toOrderedList(db2::find(DB,'email_campaign',$q,array('sort'=>$sort,'limit'=>100)),false,true,'_id');
+				$out=db2::graph(DB,$out,array(
+					'id'=>array(
+						'coll'=>'admin_notification',
+						'to'=>'info',
+						'match'=>'id'
+					)
+				));
+				return array('success'=>true,'data'=>$out);
+			}else{
+				//add in other tags here too!
+				$sort=(isset($r['qs']['after']))?array('_id'=>1):array('_id'=>-1);
+				if(isset($r['qs']['type'])){
+					switch ($r['qs']['type']) {
+						case 'success':
+							$q['status']=1;
+						break;
+						case 'error':
+							$q['status']=-1;
+						break;
+					}
+				}
+				if(isset($r['qs']['search'])){
+					if(isset($r['qs']['search']['email'])){
+						$q['opts.Destination.ToAddresses']=new MongoDB\BSON\Regex('^'.$r['qs']['search']['email'],'i');
+					}
+					if(isset($r['qs']['search']['user'])){
+						//$u=db2::findOne(DB,'user',array('id'=>$r['qs']['search']['user']));
+						$q['to']=$r['qs']['search']['user'];
+					}
+					if(isset($r['qs']['search']['notice_type'])){
+						//$q['type']=$r['qs']['search']['notice_type'];
+					}
+				}
+				$limit=(isset($r['qs']['max']))?((int) $r['qs']['max']):100;
+				$out=db2::toOrderedList(db2::find(DB,'notice',$q,array('sort'=>$sort,'limit'=>$limit)),false,true,'_id');
+				if($out&&$out['list']) foreach ($out['list'] as $k => $v) {
+					if(isset($v['to'])) $out['list'][$k]['userinfo']=ONE_CORE::getUser($v['to']);
+					if(phi::$conf['prod']&&$v['type']=='push'&&!isset($r['qs']['reveal'])){
+						$out['list'][$k]['opts']['message']='[Private]';
+						$out['list'][$k]['opts']['title']='[Private]';
+						$out['list'][$k]['opts']['messagedata']='[Private]';
+					}
+				}
+				return array('success'=>true,'data'=>$out);
+			}
+		}
+		public static function getCollections(){
+			$schema=json_decode(file_get_contents(ROOT.'/_manage/schema.json'),1);
+			$arr=array_keys($schema);
+			$arr[]='user_map';
+			//$arr[]='chat';
+			$arr[]='paid_charge';
+			$arr[]='paid_subscription';
+			$arr[]='place';
+			$arr[]='badgecount';
+			$arr[]='media';
+			$arr[]='stripe';
+			$arr[]='user_stat_cache';
+			$arr[]='user_waiver';
+			//$arr[]='tags_deal';
+			//$arr[]='app_text';
+			$arr[]='stripe_transfer';
+			//add in all the seedinfo
+			$files=phi::getFiles(ROOT.'/_manage/db2/one');
+			foreach ($files['files'] as $k => $v) {
+				$tp=explode('/', $v);
+				$fn=$tp[sizeof($tp)-1];
+				if(strpos($fn, '.json')!==false){
+					$p=explode('.', $fn);
+					if(!in_array($p[0], $arr)) $arr[]=$p[0];
+				}
+			}
+			return $arr;
+		}
+		public static function clearDB($r){
+			foreach (self::getCollections() as $k => $v) {
+				db2::drop(DB,$v);	
+			}
+			//re-calc
+			return array('success'=>true,'message'=>'Dropped ['.sizeof(self::getCollections()).'] tables');
+		}
+		public static function getUserVotes($r){
+		    $type='year';
+		    if($type=='alltime'){
+				$limit=1529798400;//6/24/2018
+			}
+			if($type=='year'){
+				$limit=time()-(24*60*60*365);
+			}
+			if($type=='month'){
+				$limit=time()-(24*60*60*30);			
+			}
+			$pipeline=array(
+				array(
+					'$match'=>array(
+						"_id"=>array('$gte'=>db2::getIdFromTime($limit)),
+						'uid'=>'UC9QP6XFW'
+					)
+				),
+				array(
+					'$group'=>array(
+						"_id"=>array( 
+					        "tag"=>'$tag'
+					    ),
+					    "count"=>array(
+					    	'$sum'=>1
+					    )
+					)
+				)
+			);
+			$resp=db2::aggregate(DB,'user_vote_feed',$pipeline);
+			return array('success'=>true,'data'=>$resp);
+		}
+		public static function getAPITimeline($r){
+			$info=self::getTimeFilterInfo(false,'$_id',$r['qs']);
+			$pipeline[]=array(
+				'$match'=>array(
+					"ts"=>array('$gte'=>$info['limit'],'$lte'=>$info['end'])
+				)
+			);
+			$pipeline[]=array(
+				'$group'=>array(
+					'_id'=>$$info['_id'],
+					'count'=>array('$avg'=>'$rts')
+				),
+			);
+			$pipeline[]=array(
+				'$sort'=>array('_id.year'=>1,'_id.day'=>1)
+			);
+			$res=db2::aggregate(DB,'api_stat',$pipeline);
+			// $sresp=phi::sort($res,array('key'=>'avg','type'=>'float','reverse'=>true));
+			// foreach ($sresp as $k => $v) {
+			// 	$sdata[$v['_id']['path']]=array($v['min'] ,$v['avg'], $v['avg'], $v['avg'],$v['max']);
+			// }
+			$data['graphs'][]=array(
+				'data'=>$res,
+				'name'=>'Response time'
+			);
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function getAPIInfo($r){
+			$collapse3=array('profile','page','event','permissions');
+			//$collapse4=array('permissions');
+			//$collapse3=array('user');
+			$pipeline[]=array(
+				'$project'=>array(
+					'rts'=>1,
+					'path'=>1,
+					'path_parts'=>array('$split'=>array('$path','/')),
+				)
+			);
+			$pipeline[]=array(
+				'$project'=>array(
+					'rts'=>1,
+					'path'=>1,
+					'path_parts'=>1,
+					'path_trim_4'=>array('$arrayElemAt'=>array('$path_parts',4)),
+					'path_trim_5'=>array('$arrayElemAt'=>array('$path_parts',5))
+				)
+			);
+			$pipeline[]=array(
+				'$project'=>array(
+					'rts'=>1,
+					'path'=>array(
+						 '$reduce'=>array(
+					        'input'=>array(
+					        	'$cond'=>array(
+									'if'=>array('$in'=>array(array('$arrayElemAt'=>array('$path_parts',3)),$collapse3)),
+									'then'=>array(
+										'$filter'=>array(
+											'input'=>'$path_parts',
+											'as'=>'path_part',
+											'cond'=>array(
+												'$ne'=>array('$path_trim_4','$$path_part')
+											)
+										)
+									),
+									'else'=>'$path_parts'
+								)
+					        ),
+					        'initialValue'=>'',
+					        'in'=>array(
+					            '$concat'=>array(
+					                '$$value',
+					                array('$cond'=>array(array('$eq'=>array('$$value', '')), '', '/')), 
+					                '$$this')
+					        )
+					    )
+					)
+				)
+			);
+			$pipeline[]=array(
+				'$group'=>array(
+					'_id'=>array(
+						'path'=>'$path',
+						'path_parts'=>'$path_parts'
+					),
+					'avg'=>array('$avg'=>'$rts'),
+					'min'=>array('$min'=>'$rts'),
+					'max'=>array('$max'=>'$rts'),
+					'count'=>array('$sum'=>1)
+				)
+			);
+			$pipeline[]=array(
+				'$limit'=>5000
+			);
+			$res=db2::aggregate(DB,'api_stat',$pipeline);
+			$sresp=phi::sort($res,array('key'=>'avg','type'=>'float','reverse'=>true));
+			foreach ($sresp as $k => $v) {
+				$sdata[$v['_id']['path']]=array($v['min'] ,$v['avg'], $v['avg'], $v['avg'],$v['max']);
+			}
+			return array('success'=>true,'data'=>$sdata);
+		}
+		public static function getUserActivity($r){
+			$info=self::getTimeFilterInfo($r['qs']['type'],'$_id',$r['qs']);
+			$pipeline=array(
+				array(
+					'$match'=>array(
+						"_id"=>array('$gte'=>db2::timeToId($info['limit']))
+						//'_id'=>array('$exists'=>true)
+					)
+				),
+				array(
+					'$group'=>array(
+						'_id'=>array(
+							'id'=>'$id'
+						),
+					    "time"=>array(
+					    	'$sum'=>'$time'
+					    )
+					)
+				),
+				array(
+					'$sort'=>array('_id.year'=>1,'_id.day'=>1)
+				)
+			);
+			$resp=db2::aggregate(DB,'user_stat',$pipeline);
+			foreach ($resp as $k => $v) {
+				$min=$v['time']/60;//in min
+				$hr=$v['time']/(60*60);
+				switch(true){
+					case $hr>=50:
+						$key='50+ hr';
+					break;
+					case $hr>=40&&$hr<50:
+						$key='40 to 50 hr';
+					break;
+					case $hr>=30&&$hr<40:
+						$key='30 to 40 hr';
+					break;
+					case $hr>=20&&$hr<30:
+						$key='20 to 30 hr';
+					break;
+					case $hr>=10&&$hr<20:
+						$key='10 to 20 hr';
+					break;
+					case $hr>=5&&$hr<10:
+						$key='5 to 10 hr';
+					break;
+					case $hr>=4&&$hr<5:
+						$key='4 to 5 hr';
+					break;
+					case $hr>=3&&$hr<4:
+						$key='3 to 4 hr';
+					break;
+					case $hr>=2&&$hr<3:
+						$key='2 to 3 hr';
+					break;
+					case $hr>=1&&$hr<2:
+						$key='1 to 2 hr';
+					break;
+					case $hr<1&&$min>=50:
+						$key='50 to 60 min';
+					break;
+					case $hr<1&&$min<50&&$min>=40:
+						$key='40 to 50 min';
+					break;
+					case $hr<1&&$min<40&&$min>=30:
+						$key='30 to 40 min';
+					break;
+					case $hr<1&&$min<30&&$min>=20:
+						$key='20 to 30 min';
+					break;
+					case $hr<1&&$min<20&&$min>=10:
+						$key='10 to 20 min';
+					break;
+					case $hr<1&&$min<10&&$min>=5:
+						$key='5 to 10 min';
+					break;
+					case $hr<1&&$min<5&&$min>=4:
+						$key='4 to 5 min';
+					break;
+					case $hr<1&&$min<4&&$min>=3:
+						$key='3 to 4 min';
+					break;
+					case $hr<1&&$min<3&&$min>=2:
+						$key='2 to 3 min';
+					break;
+					case $hr<1&&$min<2&&$min>=1:
+						$key='1 to 2 min';
+					break;
+					case $hr<1&&$min<1:
+						$key='less than 1 min';
+					break;
+				}
+				if(!isset($data[$key])) $data[$key]=0;
+				$data[$key]++;
+			}
+			$order=array(
+				'less than 1 min','1 to 2 min','3 to 4 min','4 to 5 min','5 to 10 min','10 to 20 min','20 to 30 min','30 to 40 min','40 to 50 min','50 to 60 min','1 to 2 hr','2 to 3 hr','4 to 5 hr','5 to 10 hr','10 to 20 hr','20 to 30 hr','30 to 40 hr','40 to 50 hr','50+ hr'
+			);
+			$hasdata=true;
+			foreach ($order as $k => $key) {
+				if(isset($data[$key])){
+					$series[]=array($key,$data[$key]);
+					$hasdata=true;
+				}else{
+					if($hasdata) $series[]=array($key,0);
+					$hasdata=false;//trim could be more elegant
+				}
+			}
+			$data=array(
+				'opts'=>array(
+					'chart'=>array(
+						'type'=>'column'
+					),
+					'xAxis'=>array(
+				        'type'=> 'category',
+				        'labels'=> array(
+				            'rotation'=> -45,
+				            'style'=> array(
+				                'fontSize'=> '13px',
+				                'fontFamily'=> 'Verdana, sans-serif'
+				            )
+				        )
+				    )
+				),
+				'graphs'=>array(array('data'=>$series,'name'=>'Time'))
+			);
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function getStatsTimeline($r,$obj){
+			$info=self::getTimeFilterInfo(false,'$_id',$r['qs']);
+			foreach($obj as $k => $v){
+				$l[$v['key']]=1;
+			}
+			$l['_id']=1;
+			$resp=db2::toOrderedList(db2::find(DB,'daily_stat',["_id"=>array('$gte'=>db2::timeToId($info['limit']),'$lte'=>db2::timeToId($info['end']))],['projection'=>$l,'sort'=>['_id'=>-1]]));
+			if($resp){
+				$data['opts']['yAxis']['title']['text']='Number of Memberships';
+				foreach($l as $tk =>$tv){
+					if($tk=='_id') continue;
+					$out=false;
+					foreach($resp['list'] as $k=>$v){
+						$out[]=array(
+							'_id'=>(int) db2::idToTime($v['_id']),
+							'count'=>(isset($v[$tk]))?$v[$tk]:0
+						);
+					}
+					$data['graphs'][]=array(
+						'data'=>$out,
+						'name'=>phi::getByKey($obj,'key',$tk)['name']
+					);
+				}
+			}
+			if(!isset($data)) $data=false;
+			return ['success'=>true,'data'=>$data];
+		}
+		public static function getTimeline($r){
+			if(!isset($r['qs']['view'])){
+				return array('error'=>'invalid_view');
+			}
+			switch ($r['qs']['view']) {
+				case 'user_activity':
+					$out=self::getUserActivity($r);
+				break;
+				case 'api':
+					$out=self::getAPIInfo($r);
+				break;
+				case 'api_timeline':
+					$out=self::getAPITimeline($r);
+				break;
+				case 'active':
+					$out=self::getUserTimeline($r);
+				break;
+				case 'membership':
+					//$out=self::getPostTimeline($r);
+					$out=self::getStatsTimeline($r,[
+						['name'=>'Player Memberships','key'=>'membership_player'],
+						['name'=>'Producer Memberships','key'=>'membership_producer'],
+						['name'=>'Provider Memberships','key'=>'membership_provider'],
+						['name'=>'ONE|Pass Memberships','key'=>'membership_onepass']
+					]);
+				break;
+				case 'finances':
+					$out=self::getStatsTimeline($r,[
+						['name'=>'Total','key'=>'finances_30day_total'],
+						['name'=>'Tickets','key'=>'finances_30day_tickets'],
+						['name'=>'Subscriptions','key'=>'finances_30day_subscription'],
+						['name'=>'Fundraisers','key'=>'finances_30day_fundraiser'],
+						['name'=>'Ticket Fees','key'=>'finances_30day_fee_ticket'],
+						['name'=>'Fundraiser Fees','key'=>'finances_30day_fee_fundraiser']
+					]);
+				break;
+				case 'user_timeline':
+					//$out=self::getPostTimeline($r);
+					$out=self::getStatsTimeline($r,[
+						['name'=>'Users','key'=>'user_count']
+					]);
+				break;
+				case 'posts':
+					//$out=self::getPostTimeline($r);
+					$out=self::getCollectionTimeline($r,array('table'=>'post','name'=>'Posts'));
+				break;
+				case 'ticket_receipt':
+					$out=self::getCollectionTimeline($r,array('table'=>'ticket_receipt','name'=>'Ticket Sales'));
+				break;
+				case 'messages':
+					$out=self::getCollectionTimeline($r,array('table'=>'chat','name'=>'Messages'));
+				break;
+				case 'friends':
+					$out=self::getCollectionTimeline($r,array('table'=>'friend','name'=>'Friends'));
+				break;
+				case 'users':
+					$out=self::getCollectionTimeline($r,array('table'=>'user','name'=>'Users'));
+				break;
+				case 'notifications':
+					$out=self::getCollectionTimeline($r,array('table'=>'notice','name'=>'Notifications'));
+				break;
+				case 'exchanges':
+					$out=self::getCollectionTimeline($r,array('table'=>'exchange','name'=>'Exchanges'));
+				break;
+				case 'award_breakdown':
+					$out=self::getAwards($r);
+				break;
+				case 'fb_share':
+					$out=self::getCollectionTimeline($r,array('table'=>'fb_share','name'=>'FB Shares'));
+				break;
+				case 'page_activity':
+					$out=self::getAppStats($r);
+				break;
+				case 'referal':
+					$out=self::getReferals($r);
+				break;
+				default:
+					$out=self::getCollectionTimeline($r,array('table'=>$r['qs']['view'],'name'=>$r['qs']['view']));
+				break;
+			}
+			return $out;
+		}
+		public static function getAwards($r){
+			$pipeline=array(
+				array(
+					'$group'=>array(
+						"_id"=>[
+							'game'=>'$game'
+						],
+					    "count"=>array(
+					    	'$sum'=>1
+					    )
+					)
+				),
+				array(
+					'$sort'=>['count'=>-1]
+				)
+			);
+			#die(json_encode($pipeline));
+			//die(json_encode(db2::aggregate(DB,'awards',$pipeline)));
+			$resp=db2::aToList(db2::aggregate(DB,'awards',$pipeline),'_id.game',false,false);
+			$resp=db2::graph(DB,$resp,[
+				'_id.game'=>[
+					'match'=>'id',
+					'coll'=>'games',
+					'to'=>'game'
+				]
+			]);
+			$resp['chartType']='list';
+			$resp['template']='game_list';
+			return ['success'=>true,'data'=>$resp];
+		}
+		public static function getReferals($r){
+			$pipeline=array(
+				array(
+					'$group'=>array(
+						"_id"=>[
+							'refered_by'=>'$refered_by'
+						],
+						"people"=>[
+							'$push'=>[
+								'name'=>'$name',
+								'pic'=>'$pic',
+								'id'=>'$id'
+							]
+						],
+					    "count"=>array(
+					    	'$sum'=>1
+					    )
+					)
+				),
+				array(
+					'$sort'=>['count'=>-1]
+				)
+			);
+			#die(json_encode($pipeline));
+			//die(json_encode(db2::aggregate(DB,'awards',$pipeline)));
+			$resp=db2::aToList(db2::aggregate(DB,'user',$pipeline),'_id.refered_by',false,false);
+			$resp=db2::graph(DB,$resp,[
+				'_id.refered_by'=>[
+					'match'=>'id',
+					'coll'=>'user',
+					'to'=>'referer',
+					'filter'=>['id','name','pic']
+				]
+			]);
+			$resp=db2::graph(DB,$resp,[
+				'_id.refered_by'=>[
+					'match'=>'id',
+					'coll'=>'page',
+					'to'=>'referer',
+					'filter'=>['id','name','pic']
+				]
+			]);
+			$resp['chartType']='list';
+			$resp['template']='referal_list';
+			return ['success'=>true,'data'=>$resp];
+		}
+		public static function getCollectionTimeline($r,$opts){
+			$info=self::getTimeFilterInfo($r['qs']['type'],'$_id',$r['qs']);
+			$pipeline=array(
+				array(
+					'$match'=>array(
+						"_id"=>array('$gte'=>db2::timeToId($info['limit']),'$lte'=>db2::timeToId($info['end']))
+					)
+				),
+				array(
+					'$group'=>array(
+						"_id"=>$info['id'],
+					    "count"=>array(
+					    	'$sum'=>1
+					    )
+					)
+				),
+				array(
+					'$sort'=>array('_id.year'=>1,'_id.day'=>1)
+				)
+			);
+			#die(json_encode($pipeline));
+			$resp=db2::aggregate(DB,$opts['table'],$pipeline);
+			$data['opts']['yAxis']['title']['text']='Number of '.$opts['name'];
+			//add in 0's!
+			if($resp){
+				//$start=self::getTimeFromId($resp[0]['_id']);
+				$start=self::getTimeFromId(self::getIdFromTime($info['limit'],$info['id']));
+				#die('limit'.$info['limit'].'start: '.$start.json_encode(self::getIdFromTime($info['limit'],$info['id'])));
+				#die($start);
+				//die('start'.$start. ' '.json_encode($resp[0]['_id']));
+				$end=$info['end'];
+				$interval=$info['expected'];
+				$ct=$start;
+				$ci=0;
+				while($ct<$end){
+					if(isset($resp[$ci])) $currentTs=self::getTimeFromId($resp[$ci]['_id']);
+					else $currentTs=false;
+					//die($currentTs. ' a '.$ct);
+					if($currentTs==$ct){
+						$out[]=$resp[$ci];
+						$ci++;
+					}else{
+						$out[]=array(
+							'_id'=>self::getIdFromTime($ct,$info['id']),
+							'count'=>0
+						);
+					}
+					$ct+=$interval;
+				}
+			}else{
+				$out=false;
+			}
+			$data['graphs'][]=array(
+				'data'=>$out,
+				'name'=>'Number of '.$opts['name']
+			);
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function hasPermission(){
+			return true;
+		}
+		public static function getIdFromTime($ts,$id){
+			foreach ($id as $k => $v) {
+				switch($k){
+					case 'day':
+						$out[$k]=(int) date('z',$ts)+1;
+					break;
+					case 'dayOfMonth':
+						$out[$k]=(int) date('j',$ts);
+					break;
+					case 'month':
+						$out[$k]=(int) date('m',$ts);
+					break;
+					case 'year':
+						$out[$k]=(int) date('Y',$ts);
+					break;
+					case 'hour':
+						$out[$k]=(int) date('G',$ts);
+					break;
+					case 'minute':
+						$out[$k]=(int) date('i',$ts);
+					break;
+				}
+			}
+			$out['composit']=true;
+			return $out;
+		}
+		public static function getTimeFromId($_id){
+			$datetime = new DateTime(); 
+			$datetime->setDate($_id['year'], $_id['month'], $_id['dayOfMonth']); 
+			if(isset($_id['hour'])){
+				$m=(isset($_id['minute']))?$_id['minute']:0;
+				$datetime->setTime($_id['hour'],$m);
+			}else{
+				$datetime->setTime(0,0);
+			}
+			return $datetime->format('U');
+		}
+		public static function getPostTimeline($r){
+			$type=$r['qs']['type'];
+			if($type=='year'){
+				$limit=time()-(24*60*60*365);
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>'$tsu'),
+			        "month"=>array('$month'=>'$tsu'),
+			        "year"=>array('$year'=>'$tsu'),
+			    );
+			}
+			if($type=='month'){
+				$limit=time()-(24*60*60*30);
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>'$tsu'),
+			        "month"=>array('$month'=>'$tsu'),
+			        "year"=>array('$year'=>'$tsu'),
+			    );
+			}
+			if($type=='week'){
+				$limit=time()-(7*24*60*60);
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>'$tsu'),
+			        "month"=>array('$month'=>'$tsu'),
+			        "year"=>array('$year'=>'$tsu'),
+			    );
+			}
+			if($type=='day'){
+				$limit=time()-(24*60*60);
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>'$tsu'),
+			        "month"=>array('$month'=>'$tsu'),
+			        "year"=>array('$year'=>'$tsu'),
+			        "hour"=>array('$hour'=>'$tsu'),
+			    );
+			}
+			if($type=='hour'){
+				$limit=time()-(24*60*60);
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>'$tsu'),
+			        "month"=>array('$month'=>'$tsu'),
+			        "year"=>array('$year'=>'$tsu'),
+			        "hour"=>array('$hour'=>'$tsu'),
+			       "minute"=>array('$minute'=>'$tsu'),
+			    );
+			}
+			$pipeline=array(
+				array(
+					'$match'=>array(
+						"tsu"=>array('$gte'=>db2::tsToTime($limit))
+					)
+				),
+				array(
+					'$group'=>array(
+						"_id"=>$id,
+					    "count"=>array(
+					    	'$sum'=>1
+					    )
+					)
+				),
+				array(
+					'$sort'=>array('_id'=>1)
+				)
+			);
+			$resp=db2::aggregate(DB,'post',$pipeline);
+			$data['opts']['yAxis']['title']['text']='Number of Posts';
+			$data['graphs'][]=array(
+				'data'=>$resp,
+				'name'=>'Number of Posts'
+			);
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function getTimeFilterInfo2($range){
+			$diff=$range['end']-$range['start'];
+			$expected=60*60*24;//one every 1 day
+			$data_key=array('$toDate'=>'$_id');
+			$id=array( 
+		        "day"=>array('$dayOfYear'=>$data_key),
+		        "month"=>array('$month'=>$data_key),
+		        "year"=>array('$year'=>$data_key),
+		        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			);
+			return array(
+				'start'=>$range['start'],
+				'end'=>$range['end'],
+				'range'=>$diff,
+				'expected'=>$expected,
+				'id'=>$id
+			);
+		}
+		public static function getTimeFilterInfo($type,$data_key,$qs){
+			$average=false;
+			$max=false;
+			if($data_key=='$_id') $data_key=array('$toDate'=>'$_id');
+			if(isset($qs['range'])){
+				$diff=$qs['range']['end']-$qs['range']['start'];
+				$year=60*60*24*365;
+				$month=60*60*24*30;
+				$month3=60*60*24*30*3;
+				$week=60*60*24*7;
+				$day=60*60*24;
+				$hour=60*60;
+				if($diff<=$day){
+					$type='hour';
+				}else if($diff<=$week){
+					$type='day';
+				}else if($diff<=$month){
+					$type='week';
+				}else if($diff<=$month3){
+					$type='month';
+				}else if($diff<=$year){
+					$type='3month';
+				}else{
+					$type='year';
+				}
+			}
+			if($type=='year'){
+				$limit=time()-(24*60*60*365);
+				$key='a';
+				$expected=60*60*24;//one every 1 day
+				$end=time();
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>$data_key),
+			        "month"=>array('$month'=>$data_key),
+			        "year"=>array('$year'=>$data_key),
+			        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			    );
+			}
+			if($type=='3month'){
+				$limit=time()-(24*60*60*30*3);
+				$key='a';
+				$expected=60*60*24;//one every 1 day
+				$end=time();
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>$data_key),
+			        "month"=>array('$month'=>$data_key),
+			        "year"=>array('$year'=>$data_key),
+			        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			    );
+			}
+			if($type=='month'){
+				$limit=time()-(24*60*60*30);
+				$key='a';
+				$expected=60*60*24;//one every 1 day
+				$end=time();
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>$data_key),
+			        "month"=>array('$month'=>$data_key),
+			        "year"=>array('$year'=>$data_key),
+			        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			    );
+			}
+			if($type=='week'){
+				$limit=time()-(7*24*60*60);
+				$key='a';
+				$expected=60*60*24;//one every 1 day
+				$end=time();
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>$data_key),
+			        "month"=>array('$month'=>$data_key),
+			        "week"=>array('$week'=>$data_key),
+			        "year"=>array('$year'=>$data_key),
+			        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			    );
+			}
+			if($type=='day'){
+				$limit=time()-(24*60*60);
+				$key='a';
+				$expected=60*60;//one every 1 hr
+				$end=time();
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>$data_key),
+			        "month"=>array('$month'=>$data_key),
+			        "year"=>array('$year'=>$data_key),
+			        "hour"=>array('$hour'=>$data_key),
+			        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			    );
+			}
+			if($type=='hour'){
+				$limit=time()-(24*60*60);
+				$key='a';
+				$expected=60;//one every 60 seconds
+				$end=time();
+				$id=array( 
+			        "day"=>array('$dayOfYear'=>$data_key),
+			        "month"=>array('$month'=>$data_key),
+			        "year"=>array('$year'=>$data_key),
+			        "hour"=>array('$hour'=>$data_key),
+			       	"minute"=>array('$minute'=>$data_key),
+			        "dayOfMonth"=>array('$dayOfMonth'=>$data_key)
+			    );
+			}
+			if(isset($qs['range'])){
+				$start=$qs['range']['start'];
+				$end=$qs['range']['end'];
+			}
+			return array(
+				'expected'=>$expected,
+				'limit'=>(isset($start))?$start:$limit,
+				'end'=>$end,
+				'key'=>$key,
+				'id'=>$id
+			);
+		}
+		public static function getUserTimeline($r){
+			$info=self::getTimeFilterInfo($r['qs']['type'],'$created_on',$r['qs']);
+			$pipeline=array(
+				array(
+					'$match'=>array(
+						"created_on"=>array('$gte'=>db2::tsToTime($info['limit']))
+					)
+				),
+				array(
+					'$group'=>array(
+						"_id"=>$info['id'],
+					    "count"=>array(
+					    	'$sum'=>1
+					    ),
+					    //"avg"=>array('$avg'=>'$a'),
+					    "max"=>array('$max'=>'$a')
+					    //"min"=>array('$min'=>'$a')
+					)
+				),
+				array(
+					'$sort'=>array('_id.year'=>1,'_id.day'=>1,'_id.hour'=>1,'_id.minute'=>1)
+				)
+			);
+			// die(json_encode($pipeline));
+			$resp=db2::aggregate(DB,'heartbeat',$pipeline);
+			$pipeline2=array(
+				array(
+					'$match'=>array(
+						"created_on"=>array('$gte'=>db2::tsToTime($info['limit']))
+					)
+				),
+				array(
+					'$group'=>array(
+						"_id"=>$info['id'],
+					    "count"=>array(
+					    	'$sum'=>1
+					    ),
+					    //"avg"=>array('$avg'=>'$a'),
+					    "max"=>array('$max'=>'$a_24')
+					    //"min"=>array('$min'=>'$a')
+					)
+				),
+				array(
+					'$sort'=>array('_id.year'=>1,'_id.day'=>1,'_id.hour'=>1,'_id.minute'=>1)
+				)
+			);
+			$resp2=db2::aggregate(DB,'heartbeat',$pipeline2);
+			$pipeline3=array(
+				array(
+					'$match'=>array(
+						"created_on"=>array('$gte'=>db2::tsToTime($info['limit']))
+					)
+				),
+				array(
+					'$group'=>array(
+						"_id"=>$info['id'],
+					    "count"=>array(
+					    	'$sum'=>1
+					    ),
+					    "max"=>array('$max'=>'$a_week')
+					)
+				),
+				array(
+					'$sort'=>array('_id.year'=>1,'_id.day'=>1,'_id.hour'=>1,'_id.minute'=>1)
+				)
+			);
+			$resp3=db2::aggregate(DB,'heartbeat',$pipeline3);
+			$pipeline4=array(
+				array(
+					'$match'=>array(
+						"created_on"=>array('$gte'=>db2::tsToTime($info['limit']))
+					)
+				),
+				array(
+					'$group'=>array(
+						"_id"=>$info['id'],
+					    "count"=>array(
+					    	'$sum'=>1
+					    ),
+					    "max"=>array('$max'=>'$a_month')
+					)
+				),
+				array(
+					'$sort'=>array('_id.year'=>1,'_id.day'=>1,'_id.hour'=>1,'_id.minute'=>1)
+				)
+			);
+			$resp4=db2::aggregate(DB,'heartbeat',$pipeline4);
+			$data['opts']['yAxis']['title']['text']='Active Users';
+			$data['graphs'][]=array(
+				'data'=>$resp,
+				'name'=>'Active Users'
+			);
+			$data['graphs'][]=array(
+				'data'=>$resp2,
+				'name'=>'Active Users (24 Hr)'
+			);
+			$data['graphs'][]=array(
+				'data'=>$resp3,
+				'name'=>'Active Users (Week)'
+			);
+			$data['graphs'][]=array(
+				'data'=>$resp4,
+				'name'=>'Active Users (Month)'
+			);
+			return array('success'=>true,'data'=>$data);
+		}
+		public static function getStats($r){
+			$presales=db2::findOne(DB,'shop_stats',array('id'=>'sale'));
+			$stats['boxes']['order'][]='lasta';
+			$twominago=time()-(60*2);
+			$stats['boxes']['list']['lasta']=array(
+				'name'=>'Online',
+				'value'=>db2::count(DB,'user',array('la'=>array('$gte'=>$twominago)))
+			);
+			$stats['boxes']['order'][]='friends';
+			$stats['boxes']['list']['friends']=array(
+				'name'=>'Friend Links',
+				'value'=>(db2::count(DB,'friend',array())/2)
+			);
+			if($presales){
+				$stats['boxes']['order'][]='total';
+				$stats['boxes']['list']['total']=array(
+					'name'=>'Total',
+					'value'=>'$'.$presales['total']
+				);
+				$stats['boxes']['order'][]='revenue';
+				$stats['boxes']['list']['revenue']=array(
+					'name'=>'Revenue',
+					'value'=>'$'.$presales['net']
+				);
+				$stats['boxes']['order'][]='fees';
+				$stats['boxes']['list']['fees']=array(
+					'name'=>'Fees',
+					'value'=>'$'.$presales['fees']
+				);
+			}
+			$cancelled=db2::toOrderedList(db2::find(DB,'plan_cancel',array()),false,false,'uid');
+			$totalCancelled=sizeof($cancelled['order']);
+			$cancelled_count=db2::count(DB,'user',array('id'=>array('$in'=>$cancelled['order'])));
+			$stats['boxes']['order'][]='canceled';
+			$stats['boxes']['list']['canceled']=array(
+				'name'=>'Canceled',
+				'value'=>$cancelled_count
+			);
+			$stats['boxes']['order'][]='deleted';
+			$stats['boxes']['list']['deleted']=array(
+				'name'=>'Deleted',
+				'value'=>$totalCancelled-$cancelled_count
+			);
+			$stats['boxes']['order'][]='users';
+			$stats['boxes']['list']['users']=array(
+				'name'=>'Users',
+				'value'=>db2::count(DB,'user')
+			);
+			if($stats['boxes']['list']['canceled']['value']) $stats['boxes']['list']['users']['value']-=$stats['boxes']['list']['canceled']['value'];
+			$stats['boxes']['order'][]='referals';
+			$stats['boxes']['list']['referals']=array(
+				'name'=>'Referals',
+				'value'=>db2::count(DB,'referal')
+			);
+			$stats['boxes']['order'][]='focusgroup';
+			$stats['boxes']['list']['focusgroup']=array(
+				'name'=>'Focus Group Emails',
+				'value'=>db2::count(DB,'focusgroup')
+			);
+			$stats['boxes']['order'][]='devices';
+			$stats['boxes']['list']['devices']=array(
+				'name'=>'Devices',
+				'value'=>db2::count(DB,'device')
+			);
+			//memberships!
+			$userstats=self::userStats($r);
+			$ustats=array(
+				'order'=>array('monthly','yearly','lifetime'),
+				'typeorder'=>array('total','paid_active','active','stopped','overdue','trial'),
+				'list'=>array(
+					'monthly'=>array(
+						'name'=>'Monthly',
+						'total'=>0,
+						'paid_active'=>0,
+						'active'=>0,
+						'overdue'=>0,
+						'trial'=>0,
+						'stopped'=>0
+					),
+					'yearly'=>array(
+						'name'=>'Yearly',
+						'total'=>0,
+						'paid_active'=>0,
+						'active'=>0,
+						'overdue'=>0,
+						'trial'=>0,
+						'stopped'=>0
+					),
+					'lifetime'=>array(
+						'name'=>'Lifetime',
+						'total'=>0,
+						'paid_active'=>0,
+						'active'=>0,
+						'overdue'=>0,
+						'trial'=>0,
+						'stopped'=>0
+					),
+					'unknown'=>array(
+						'name'=>'Unknown',
+						'total'=>0,
+						'paid_active'=>0,
+						'active'=>0,
+						'overdue'=>0,
+						'trial'=>0,
+						'stopped'=>0
+					)
+				)
+			);
+			foreach ($userstats as $k => $v) {
+				$cycle=(isset($v['_id']['cycle']))?$v['_id']['cycle']:false;
+				if(!$cycle) $cycle='unknown';
+				if(isset($v['_id']['stopped'])&&$v['_id']['stopped']){
+					$ustats['list'][$cycle]['stopped']+=$v['count'];
+				}else{
+					if(isset($v['_id']['trial'])&&$v['_id']['trial']) $ustats['list'][$cycle]['trial']+=$v['count'];
+					if(isset($v['_id']['active'])&&$v['_id']['active']) $ustats['list'][$cycle]['active']+=$v['count'];
+					if(isset($v['_id']['active'])&&$v['_id']['active']&&!isset($v['_id']['trial'])) $ustats['list'][$cycle]['paid_active']+=$v['count'];
+					if(isset($v['_id']['overdue'])&&$v['_id']['overdue']) $ustats['list'][$cycle]['overdue']+=$v['count'];
+					$ustats['list'][$cycle]['total']+=$v['count'];
+				}
+			}
+			$stats['membership_stats']=$ustats;
+			$userstats=db2::graph(DB,self::userStats2($r),array(
+				'id'=>array(
+					'coll'=>'products',
+					'to'=>'plan',
+					'match'=>'id'
+				)
+			));
+			$stats['membership_stats2']=$userstats;
+			//die(json_encode($userstats));
+			#die(json_encode($ustats));
+			// include_once(phi::$conf['root'].'/classes/shop.php');
+			// $items=shop::getOrderedProducts(DB,array('order'=>1),'all');
+			// foreach ($items['order'] as $k => $v) {
+			// 	$stats['memberships']['order'][]=$v;
+			// 	$stats['memberships']['list'][$v]=array(
+			// 		'name'=>(isset($items['list'][$v]['description']))?$items['list'][$v]['description']:$items['list'][$v]['title'],
+			// 		'value'=>db2::count(DB,'plan',array('plan'=>$v))
+			// 	);
+			// }
+			$l=db2::toList(db2::find(DB,'referer_landing',array()));
+			if($l){
+				foreach ($l as $k => $v) {
+					if(!isset($stats['referals']['list'][$v['rid']])){
+						$stats['referals']['list'][$v['rid']]=array(
+							'landing'=>0,
+							'referals'=>0,
+							'user'=>ONE_CORE::getUser($v['rid'],array('name','pic','id'))
+						);
+						if($stats['referals']['list'][$v['rid']]['user']){
+							if(!isset($sort[$v['rid']])) $sort[$v['rid']]=0;
+							$sort[$v['rid']]++;
+						}else{
+							//try page
+							$stats['referals']['list'][$v['rid']]['user']=ONE_CORE::getPage($v['rid'],array('name','pic','id'));;
+							if($stats['referals']['list'][$v['rid']]['user']){
+								if(!isset($sort[$v['rid']])) $sort[$v['rid']]=0;
+								$sort[$v['rid']]++;
+							}else{
+								unset($stats['referals']['list'][$v['rid']]);
+							}
+						}
+					}
+					if(isset($stats['referals']['list'][$v['rid']])){
+						$stats['referals']['list'][$v['rid']]['landing']++;
+						$sort[$v['rid']]++;
+					}
+				}
+				arsort($sort);
+				$stats['referals']['order']=array_keys($sort);
+			}else{
+				$stats['referals']=false;
+			}
+			$l=db2::toList(db2::find(DB,'referal',array()));
+			if($l){
+				foreach ($l as $k => $v) {
+					if(!isset($stats['referals']['list'][$v['refered_by']])){
+						$stats['referals']['list'][$v['refered_by']]=array(
+							'landing'=>0,
+							'referals'=>0,
+							'user'=>ONE_CORE::getUser($v['refered_by'],array('name','pic','id'))
+						);
+						if($stats['referals']['list'][$v['refered_by']]['user']){
+							$sort[$v['refered_by']]=0;
+						}else{
+							unset($stats['referals']['list'][$v['refered_by']]);
+						}
+					}
+					if(isset($stats['referals']['list'][$v['refered_by']])){
+						if(!isset($sort[$v['refered_by']])) $sort[$v['refered_by']]=0;
+						$sort[$v['refered_by']]++;
+						$stats['referals']['list'][$v['refered_by']]['referals']++;
+					}
+				}
+			}else{
+				$stats['referals']=false;
+			}
+			// $set=array(
+			// 	'counts'=>array(
+			// 		'supporting'=>$c,
+			// 		'total'=>$stats['boxes']['list']['users']['value']
+			// 	)
+			// );
+			// db2::update(DB,'cache',array('id'=>'stats'),array('$set'=>$set),array('upsert'=>true));
+			//die(json_encode($items));
+			return array('success'=>true,'stats'=>$stats);
+		}
+		public static function loadEmails($r){
+			$d=file_get_contents(phi::$conf['root'].'/_manage/tempdata/email_list.csv');
+			$c=phi::loadCsvData($d,',',function($headers,$data){
+				foreach ($headers as $k => $v) {
+					$r['qs']['data'][$v]=$data[$k];
+				}
+				return ONE_CORE::focusgroup($r,1);//force to bulk mode
+			});
+			return array('success'=>true,'message'=>'Success, process ['.$c.'] items!');
+		}
+		public static function toggleBookmark($r){
+			if(!isset($r['qs']['logid'])||!$r['qs']['logid']) return array('error'=>'invalid_log');
+			$lid=db2::toId($r['qs']['logid']);
+			$l=db2::findOne(DB,'log',array('_id'=>$lid));
+			if(!$l) return array('error'=>'invalid_log');
+			if(isset($l['bookmark'])){
+				db2::update(DB,'log',array('_id'=>$lid),array('$unset'=>array('bookmark'=>1)));
+				$out['removed']=true;
+			}else{
+				db2::update(DB,'log',array('_id'=>$lid),array('$set'=>array('bookmark'=>1)));
+			}
+			$out['success']=true;
+			return $out;
+		}	
+		public static function authUser($r,$appid){
+			//allow option request
+			if(isset($_SERVER['REQUEST_METHOD'])&&$_SERVER['REQUEST_METHOD']=='OPTIONS') return $r;//allow option requests to go thru
+			if(isset($r['qs']['token'])&&isset($r['qs']['appid'])){
+				if($r['qs']['token']==phi::$conf['admin_token']){
+					if(isset($r['qs']['force_uid'])){
+						$r['auth']['uid']=$r['qs']['force_uid'];
+						$r['auth']['scope']='*';
+					}else{
+						$r['auth']['uid']='ADMIN_TOKEN';
+						$r['auth']['scope']='*';
+					}
+				}else{
+					$r=API::authUser($r,$r['qs']['appid']);
+				}
+				return $r;//could be anon
+			}else{
+				$r['auth']=false;
+				return $r;
+			}
+		}
+		public static function getSupport($r){
+			if(isset($r['qs']['last'])&&$r['qs']['last']) $q=array('_id'=>array('$gt'=>db2::toId($r['qs']['last'])));
+			else $q=array();
+			// if(isset($r['qs']['filter'])){
+			// 	switch ($r['qs']['filter']) {
+			// 		case 'all'://no additional filter
+			// 		break;
+			// 		case 'bookmark':
+			// 			$q['bookmark']=1;
+			// 		break;
+			// 		case 'php':
+			// 			$q['type']=array('$in'=>array('php_error','php_warning','php_notice'));
+			// 		break;
+			// 		case 'other':
+			// 			$q['type']=array('$nin'=>array('php_error','php_warning','php_notice','dwolla','cron','jserror','node','coinbase'));
+			// 		break;
+			// 		default:
+			// 			$q['type']=$r['qs']['filter'];
+			// 		break;
+			// 	}
+			// 	//die(json_encode($q));
+			// }
+			$sort=(isset($r['qs']['last']))?array('_id'=>-1):array('_id'=>1);
+			$out=db2::toOrderedList(db2::find(DB,'support',$q,array('sort'=>$sort,'limit'=>40)));
+			// if(isset($out['list'])) foreach ($out['list'] as $k => $v) {
+			// 	if(isset($v['uid'])){
+			// 		$out['list'][$k]['user_info']=ONE_CORE::getUser($v['uid']);
+			// 	}
+			// }
+			$out['success']=true;
+			//$logs=$db->log->find($q)->sort($sort)->limit(100);
+			// if($logs->hasNext()){
+			// 	while($logs->hasNext()){
+			// 		$log=$logs->getNext();
+			// 		$log['_id']=''.$log['_id'];
+			// 		if(($ts==$log['ts']&&$log['mts']>$mts)||$ts!=$log['ts']){
+			// 			$last=(float) $log['ts'].'.'.$log['mts'];
+			// 			if($out['last']==0||$out['last']<$last) $out['last']=$last;
+			// 			//$log['diff']=microtime(true)-$log['ts'];
+			// 			//unset($log['_id'],$log['ts']);
+			// 			if(isset($log['uid'])){
+			// 				$log['user_info']=GROUPUP::getUserInfo(false,$log['uid']);
+			// 			}
+			// 			$out['log'][]=$log;
+			// 		}
+			// 	}
+			// 	if($out['last']==0&&$lt) $out['last']=$lt;
+			// }else{
+			// 	$out=array('error'=>'nothing_there');
+			// }
+			//$out['totalsize']=phi::getCollectionSize('prod.log');
+			return $out;
+		}
+		public static function getLogs($r){
+			if(isset($r['qs']['after'])&&$r['qs']['after']) $q=array('_id'=>array('$gt'=>db2::toId($r['qs']['after'])));
+			else if(isset($r['qs']['last'])&&$r['qs']['last']){
+				$q=array('_id'=>array('$lt'=>db2::toId($r['qs']['last'])));
+			}else$q=array();
+			if(isset($r['qs']['filter'])){
+				switch ($r['qs']['filter']) {
+					case 'all':
+						$q['type']=array('$nin'=>array('link'));
+					break;
+					case 'links':
+						$q['type']=array('$in'=>array('link'));
+					break;
+					case 'bookmark':
+						$q['bookmark']=1;
+					break;
+					case 'php':
+						$q['type']=array('$in'=>array('php_error','php_warning','php_notice'));
+					break;
+					case 'other':
+						$q['type']=array('$nin'=>array('php_error','php_warning','php_notice','dwolla','cron','jserror','node','coinbase'));
+					break;
+					default:
+						$q['type']=$r['qs']['filter'];
+					break;
+				}
+				//die(json_encode($q));
+			}
+			$sort=(isset($r['qs']['after']))?array('_id'=>1):array('_id'=>-1);
+			$limit=(isset($r['qs']['max']))?((int) $r['qs']['max']):40;
+			if(isset($r['qs']['search']['user'])){
+				$q['uid']=$r['qs']['search']['user'];
+			}
+			if(isset($r['qs']['search']['content'])){
+				$regex = new MongoDB\BSON\Regex($r['qs']['search']['content'],'i');
+				$q['msg']=$regex;
+			}
+			$out=db2::toOrderedList(db2::find(DB,'log',$q,array('sort'=>$sort,'limit'=>$limit)),false,true);
+			if(isset($out['list'])) foreach ($out['list'] as $k => $v) {
+				if(isset($v['uid'])){
+					$out['list'][$k]['user_info']=ONE_CORE::getUser($v['uid']);
+				}
+			}
+			//$logs=$db->log->find($q)->sort($sort)->limit(100);
+			// if($logs->hasNext()){
+			// 	while($logs->hasNext()){
+			// 		$log=$logs->getNext();
+			// 		$log['_id']=''.$log['_id'];
+			// 		if(($ts==$log['ts']&&$log['mts']>$mts)||$ts!=$log['ts']){
+			// 			$last=(float) $log['ts'].'.'.$log['mts'];
+			// 			if($out['last']==0||$out['last']<$last) $out['last']=$last;
+			// 			//$log['diff']=microtime(true)-$log['ts'];
+			// 			//unset($log['_id'],$log['ts']);
+			// 			if(isset($log['uid'])){
+			// 				$log['user_info']=GROUPUP::getUserInfo(false,$log['uid']);
+			// 			}
+			// 			$out['log'][]=$log;
+			// 		}
+			// 	}
+			// 	if($out['last']==0&&$lt) $out['last']=$lt;
+			// }else{
+			// 	$out=array('error'=>'nothing_there');
+			// }
+			//$out['totalsize']=phi::getCollectionSize('prod.log');
+			return array('success'=>true,'data'=>$out);
+		}
+	}
+?>

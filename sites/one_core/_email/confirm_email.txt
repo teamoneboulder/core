@@ -1,0 +1,17 @@
+<div style="font-size:24px;border-bottom:1px solid #ccc">
+	<table>
+		<tr>
+			<td>
+				<span style="font-size:24px">Hi!</span>
+			</td>
+		</tr>
+	</table>
+</div>
+<div style="padding-bottom:15px;padding-left:10px;font-size:16px;padding-top:10px">
+	<p>
+		Here is the code to validate your email!
+	</p>
+	<p style="font-size:20px;padding:15px;background:#eee;[s-corner-all]">[code]</p>
+	<p>Big love!</p>
+	<p>The Nectar Team</p>
+</div>

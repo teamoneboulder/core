@@ -1,0 +1,247 @@
+@@@input_page@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;overflow: hidden" class="apppageview">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;" class="content">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<%if(this.title){%>
+			<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px">
+				<table style="width:100%;color:#888">
+					<tr>
+						<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+							<i class="icon-cancel" style="font-size:14px;"></i>
+						</td>
+						<td style="text-align: center;font-size:18px;color:#888;padding:3px;"><%=title%></td>
+						<td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;font-size:16px;" class="x_set highlightcolor">
+							Done
+						</td>
+					</tr>
+				</table>
+			</div>
+			<%}%>
+			<div class="inputarea">
+			</div>
+		</div>
+	</div>
+</div>
+@@@input_number_web@@@
+<div data-<%=template%>="<%=_tid%>" style="color:#888;text-align: center;">
+	<input style="width:200px;text-align: center;resize:none;margin:auto;padding:20px;font-size:36px;display: inline-block;background: transparent;" placeholder="$0">
+</div>
+@@@input_page_web@@@
+<div data-<%=template%>="<%=_tid%>" style="width:400px;z-index: 10000;background: transparent;overflow: hidden" class="apppageview">
+	<%if(this.title){%>
+	<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px">
+		<table style="width:100%;color:#888">
+			<tr>
+				<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+					<i class="icon-cancel" style="font-size:14px;"></i>
+				</td>
+				<td style="text-align: center;font-size:18px;color:#888;padding:3px;"><%=title%></td>
+				<td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;font-size:16px;" class="x_set highlightcolor">
+					Done
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<div class="inputarea">
+	</div>
+</div>
+@@@input_page_alert@@@
+<div data-<%=template%>="<%=_tid%>" class="apppageview">
+	<%if(this.title){%>
+	<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px">
+		<table style="width:100%;color:#888">
+			<tr>
+				<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+					<i class="icon-cancel" style="font-size:14px;"></i>
+				</td>
+				<td style="text-align: center;font-size:18px;color:#888;padding:3px;"><%=title%></td>
+				<td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;font-size:16px;" class="x_set highlightcolor">
+					Done
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+	<div class="inputarea">
+	</div>
+</div>
+@@@input_select@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div class="scroller"></div>
+</div>
+@@@input_number@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div class="scroller"></div>
+</div>
+@@@input_clear@@@
+<div data-<%=template%>="<%=_tid%>" style="margin-top:10px;margin-bottom:10px" class="onboardcolor clearinput">
+	<div style="text-align: center;font-size:18px;padding-top:10px;padding-bottom:10px" class="x_clearinput">Clear</div>
+</div>
+@@@input_permissions@@@
+<div data-<%=template%>="<%=_tid%>" style="margin-top:5px" class="onboardcolor">
+	<div style="text-align: center;font-size:18px;padding-top:10px;padding-bottom:10px">Select Privacy</div>
+	<div style="text-align: center;font-size:16px;padding:12px 0px">
+		<div class="x_perm" data-perm="public" style="margin:0px 3px;padding:4px;display: inline-block;"><i class="icon-globe"></i> Public</div>
+		<!-- <div class="x_perm" data-perm="friends" style="margin:0px 3px;padding:4px;display: inline-block;"><i class="icon-friend-check"></i> Friends</div> -->
+		<div class="x_perm" data-perm="private" style="margin:0px 3px;padding:4px;display: inline-block;"><i class="icon-lock"></i> Private</div>
+	</div>
+</div>
+@@@input_area@@@
+<div data-<%=template%>="<%=_tid%>" <%if(this.inline){%>style="display:inline-block;"<%}%>>
+	<%if((value||value===0)&&keepPlaceholder){%>
+	<div style="font-size:12px;color:#888;padding-bottom:2px"><%=placeholder%></div>
+	<%}%>
+	<div>
+		<%if(value||value===0){%>
+		<%=value%>
+		<%}else{%>
+		<div style="color:#888"><%=placeholder%></div>
+		<%}%>
+	</div>
+</div>
+@@@input_email@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="text-align: center;padding:10px 0px" class="prettyinput2">
+		<input type="text" style="width:90vw;padding:8px;font-size:18px;border:1px solid #ccc;" class="truebox s-corner-all" placeholder="Email Address" value="<%=email%>">
+	</div>
+	<div>
+		<%=$.fn.render({template:'input_permissions',returntemplate:true})%>
+	</div>
+	<div>
+		<%=$.fn.render({template:'input_clear',returntemplate:true})%>
+	</div>
+</div>
+@@@input_phone@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="text-align: center;padding:10px 0px" class="phoneinput">
+		<input type="tel" style="width:90vw;padding-top:5px;padding-bottom:5px;font-size:20px;border:1px solid #ccc;" class="truebox s-corner-all" placeholder="Phone Number">
+	</div>
+	<div>
+		<%=$.fn.render({template:'input_permissions',returntemplate:true})%>
+	</div>
+	<div>
+		<%=$.fn.render({template:'input_clear',returntemplate:true})%>
+	</div>
+</div>
+@@@input_gender@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div class="select" style="text-align: center;padding-top:5px">
+		<div style="text-align: center;font-size:16px;padding:20px 0px;" class="onboardcolor genderarea">
+			<div class="x_gender" data-type="male" style="margin:0px 8px;padding:4px;display: inline-block;">Male</div>
+			<div class="x_gender" data-type="female" style="margin:0px 8px;padding:4px;display: inline-block;">Female</div>
+			<div class="x_gender" data-type="nonbinary" style="margin:0px 8px;padding:4px;display: inline-block;">Non-Binary</div>
+		</div>
+	</div>
+	<div class="input_more" style="margin:15px 5px;border:1px solid #ccc">
+		<textarea style="width:100%;min-height:60px;resize:none;padding:10px;font-size:16px;color:#888" maxlength="150" class="autosize truebox maxlengthbox moreinfo" placeholder="Nectar is a safe space for gender expression. Here, you can share more about your gender identity."><%=description%></textarea>
+	</div>
+	<%if(perms){%>
+	<div>
+		<%=$.fn.render({template:'input_permissions',returntemplate:true})%>
+	</div>
+	<%}%>
+	<div>
+		<%=$.fn.render({template:'input_clear',returntemplate:true})%>
+	</div>
+</div>
+@@@input_birthday@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if(this.nav){%>
+	<div style="height:40px;">
+		<%=_ui.swipenav.render({id:'birthdaynav',nav:nav,itemClass:'nectarnav'})%>
+	</div>
+	<%}%>
+	<div style="text-align:center;z-index:1;background:white">
+		<div data-page="birthday" class="pages">
+			<div class="birthday"></div>
+			<div class="zodiac"></div>
+		</div>
+		<div data-page="sunonly" class="pages scrollY" style="max-height:40vh;">
+			<div>
+			<%for (var i = 0; i < signs.order.length; i++) {
+				var sign=signs.list[signs.order[i]]%>
+				<div class="signitem <%if(selected_sign==sign.id){%>highlightcolor<%}%>" data-id="<%=sign.id%>" style="padding:5px;border-bottom:1px solid #ccc;">
+					<table style="width:100%;text-align: center;">
+						<tr>
+							<td style="width:50px;text-align: center;">
+								<i class="icon-sun-<%=sign.id%>" style="font-size:40px;"></i>
+							</td>
+							<td style="text-align:left">
+								<div style="font-size:16px;">
+									<b><%=sign.name%></b>
+								</div>
+								<div style="padding-top:5px;font-size:13px;padding-left:5px">
+									<%=modules.zodiac.getDateRange(sign.id)%>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			<%}%>
+			</div>
+		</div>
+		<div style="display:none">
+			<%=$.fn.render({template:'input_permissions',returntemplate:true})%>
+		</div>
+		<div>
+		<%=$.fn.render({template:'input_clear',returntemplate:true})%>
+	</div>
+	</div>
+</div>
+@@@input_birthday_zodiac@@@
+<div style="margin:10px;padding:5px;font-size:16px;text-align: center;">
+	<div style="font-size:16px;color:#888"><i class="icon-sun-<%=sign.id%>" style="font-size:18px;"></i> <b><%=sign.name%></b></div>
+</div>
+@@@input_address@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if(!data.id){%>
+	<div style="border-bottom:1px solid #ccc;position: relative;">
+		<i class="icon-search appcontent" style="position:absolute;top:8px;left:5px;font-size:18px"></i>
+		<input class="s-corner-all truebox addressinput normalinput appinput_clean" placeholder="Enter Address" style="padding:5px 5px 5px 40px;">
+	</div>
+	<div style="height:30vh" class="scrollY">
+		<div class="resultslist"></div>
+	</div>
+	<%}else{%>
+	<div data-<%=template%>="<%=_tid%>" style="padding:10px;color:#888;text-align: left;border:1px solid white;margin:5px" class="s-corner-all x_removecity">
+	    <div style="font-size:16px;"><%=modules.tools.location.getName(data.info,'simple')%></div>
+	</div>
+	<%if(apt){%>
+	<div style="text-align: center;padding-bottom: 10px">
+		<div class="prettyinput2" style="margin-left:15px;width:290px">
+			<input type="text" style="width:95vw;padding:5px;border-bottom:1px solid #ccc;font-size:18px;" class="s-corner-all normalinput truebox x_apt" placeholder="Address Line 2" value="<%=data.apt%>">
+		</div>
+	</div>
+	<%}%>
+	<%if(perms){%>
+	<div>
+		<%=$.fn.render({template:'input_permissions',returntemplate:true})%>
+	</div>
+	<div>
+		<%=$.fn.render({template:'input_clear',returntemplate:true})%>
+	</div>
+	<%}%>
+	<%}%>
+</div>
+@@@input_address_list@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="padding:10px;color:black;text-align: left;border-bottom:1px solid #ccc;" class="searchrow" data-index="text">
+	    <div style="font-size:18px;"><%=text%></div>
+	</div>
+	<%if(data&&data.length){%>
+	<%for (var i = 0; i < data.length; i++) {
+		var item=data[i];%>
+		<div style="padding:10px;color:black;text-align: left;border-bottom:1px solid #ccc;" class="searchrow" data-index="<%=i%>">
+			<div style="font-size:18px;"><i class="icon-location"></i> <%=modules.tools.location.getName(item,'simple')%></div>
+		</div>
+	<%}%>
+	<%}%>
+</div>
+@@@input_address_search@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:10px;color:black;text-align: left;border-bottom:1px solid #ccc;" class="searchrow">
+    <div style="font-size:18px;"><i class="icon-location"></i> <%=modules.tools.location.getName(data,'simple')%></div>
+</div>

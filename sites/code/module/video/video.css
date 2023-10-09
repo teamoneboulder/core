@@ -1,0 +1,22 @@
+/*CUSTOM*/
+.plyr__control__responsive:not(.plyr--playing) .plyr__controls{
+  visibility: hidden;
+}
+.plyr-button-bl .plyr__control--overlaid{
+  top:calc(100% - 30px) !important;
+}
+.plyr_fullheight .plyr--video,.plyr_fullheight .plyr__video-wrapper{
+  height: 100%;
+}
+.plyr--video,.plyr__video-wrapper,.plyr__poster{
+  background: transparent !important;
+}
+body.isUploading #wrapper{
+	bottom:30px !important;
+}
+.plyr--full-ui,.plyr__video-wrapper{
+  height: 100% !important;
+}
+.plyr__poster{
+  height: 100% !important;
+}

@@ -1,0 +1,226 @@
+[{
+	"id":"profile_pic",
+	"name":"Upload a profile Pic.",
+	"points":11,
+	"order":1,
+	"category":"profile",
+	"onboard":1,
+	"message":"🚀 For uploading a profile picture!"
+},{
+	"id":"profile_skills",
+	"name":"Add skills to your profile.",
+	"points":11,
+	"order":4,
+	"onboard":1,
+	"display":5,
+	"category":"profile",
+	"message":"🚀 For adding skills to your profile!"
+},{
+	"id":"profile_city",
+	"name":"Add a home city to your profile",
+	"points":11,
+	"order":6,
+	"onboard":1,
+	"display":5,
+	"category":"profile",
+	"message":"🚀 For adding a home city to your profile!"
+},{
+	"id":"profile_birthday",
+	"name":"Add a birthday to your profile",
+	"points":11,
+	"order":6,
+	"onboard":1,
+	"display":5,
+	"category":"profile",
+	"message":"🚀 For adding a birthday to your profile!"
+},{
+	"id":"learn_points",
+	"name":"Learn about Points",
+	"points":11,
+	"order":1.3,
+	"onboard":1,
+	"category":"learn",
+	"message":"🚀 For learning about the points system!"
+},{
+	"id":"learn_welcome",
+	"name":"Read our opening welcome to the game.",
+	"points":11,
+	"order":1.1,
+	"onboard":1,
+	"category":"learn",
+	"message":"🚀 For reading our opening to the game!"
+},{
+	"id":"learn_gifting",
+	"name":"Learn about the Gift Economy",
+	"points":11,
+	"order":1.5,
+	"dev":1,
+	"onboard":1,
+	"category":"learn",
+	"message":"🚀 For learning about the Gift Economy"
+},{
+	"id":"learn_aims",
+	"name":"Learn about the Aims of the Game",
+	"points":11,
+	"onboard":1,
+	"order":1.2,
+	"category":"learn",
+	"message":"🚀 For learning about the Gift Economy"
+},{
+	"id":"watch_culture_video",
+	"name":"Watch our becoming a player video",
+	"points":11,
+	"onboard":1,
+	"order":1.4,
+	"category":"learn",
+	"message":"🚀 For watching our becoming a player video!"
+},{
+	"id":"watch_community_video",
+	"name":"Watch a video on the importance of community",
+	"points":11,
+	"onboard":1,
+	"order":1.5,
+	"category":"learn",
+	"message":"🚀 For watching the video on the importance of community"
+},{
+	"id":"watch_commons_video",
+	"name":"Watch the orienting to the commons video",
+	"points":11,
+	"onboard":1,
+	"order":1.5,
+	"category":"learn",
+	"message":"🚀 Watching our orienting to the commons video!"
+},{
+	"id":"profile_questions",
+	"name":"Answer all the profile Questions",
+	"points":55,
+	"order":5,
+	"display":5.5,
+	"onboard":1,
+	"category":"profile",
+	"message":"🚀 For answering all the profile questions!"
+},{
+	"id":"profile_genekey",
+	"name":"Add your Gene Keys profile",
+	"points":11,
+	"order":8,
+	"display":7,
+	"onboard":1,
+	"message":"🚀 For adding Gene Keys to your Profile!",
+	"category":"profile"
+},{
+	"id":"profile_humandesign",
+	"name":"Add your Human Design Profile!",
+	"points":11,
+	"order":9,
+	"display":6,
+	"onboard":1,
+	"message":"🚀 For adding Human Design to your Profile!",
+	"category":"profile"
+},{
+	"id":"attend_an_event",
+	"name":"Attend an event or workshop",
+	"message":"🚀 For attending <b>[extra.page.data.name]</b>!",
+	"points":11,
+	"display":5,
+	"unique_id":"[game]_[page.id]_[uid]"
+},{
+	"id":"visit_location",
+	"name":"Visiting a participating ONE|Boulder location",
+	"message":"🚀 For visiting a ONE|Boulder location, <span style='font-weight:bold' link='/page/[extra.page.data.id]'>[extra.page.data.name]</span>!",
+	"points":11,
+	"display":5,
+	"limit":"perday_location"
+},{
+	"id":"attend_an_actionday",
+	"name":"Attend an Action Day",
+	"message":"🚀 For attending an action day!",
+	"points":11,
+	"display":4
+},{
+	"id":"send_a_gift",
+	"name":"Send a gift",
+	"message":"🚀 For giving a Gift!",
+	"points":5,
+	"onboard":1,
+	"order":7,
+	"category":"play"
+},{
+	"id":"referal",
+	"name":"Refer others to the game",
+	"message":"🚀 For Refering <span link='/profile/[extra.page.id]' style='font-weight:bold'>[extra.page.data.name]</span> to the game!",
+	"display":1.5,
+	"points":44,
+	"unique_id":"[game]_[uid]_[page.id]"
+},{
+	"id":"offer",
+	"name":"Make an offer",
+	"message":"🚀 For adding an offer!",
+	"points":22,
+	"onboard":1,
+	"order":7.1,
+	"display":4,
+	"limit":"perday"
+},{
+	"id":"request",
+	"name":"Make a Request",
+	"message":"🚀 For adding a request!",
+	"points":11,
+	"onboard":1,
+	"display":3,
+	"order":7.2,
+	"limit":"perday"
+},{
+	"id":"request_fulfilled",
+	"name":"Fulfill a Request",
+	"message":"🚀 For fulfilling a request",
+	"points":33,
+	"display":3.1,
+	"unique_id":"[game]_[request_id]_[uid]"
+},{
+	"id":"request_fulfilled_response",
+	"name":"Respond to a fulfilled request",
+	"message":"🚀 For responding to a fulfilled request",
+	"points":5,
+	"display":3.1,
+	"unique_id":"[game]_[request_id]_[uid]"
+},{
+	"id":"teach_class",
+	"name":"Hosting an Event",
+	"message":"🚀 For hosting <b>[extra.page.data.name]</b>!",
+	"points":55,
+	"limit":"perday"
+},{
+	"id":"teach_class_half",
+	"name":"Hosting an Event",
+	"message":"🚀 For gathering the tribe at <b>[extra.page.data.name]</b>!",
+	"points":55,
+	"limit":"perday"
+},{
+	"id":"teach_class_full",
+	"name":"Hosting a Workshop",
+	"message":"🚀 For fully activating <b>[extra.page.data.name]</b>!",
+	"points":55,
+	"display":1,
+	"limit":"perday"
+},{
+	"id":"rsvp_first",
+	"name":"RSVP to first event",
+	"message":"🚀 For RSVP'ing to your first event!",
+	"display":3,
+	"points":11
+},{
+	"id":"oneratio",
+	"name":"Reach a 1.0 ONE|Ratio for the first time (with over 1000 points total).",
+	"message":"🚀 for reaching a 1.0 ONE|Ratio for the first time.",
+	"display":2,
+	"points":111
+},{
+	"id":"membership_payment",
+	"name":"Membership Payment",
+	"points_custom":{
+		"multiply":1,
+		"field":"amount"
+	},
+	"limit":"perday"
+}]

@@ -1,0 +1,33 @@
+{
+    "messages":{
+        "list":{
+            "msg1":{
+                "content":"Hey Eros, saw that you really enjoy snowboarding.  I would really love to hit the slopes with you sometime.",
+                "user":{
+                    "name":"Tom Bassett",
+                    "pic":"https://groot.s3.amazonaws.com/sites/nectar/_temp/tom_avatar.jpg",
+                    "me":true
+                }
+            },
+            "msg3":{
+                "content":"How about next weekend?",
+                "user":{
+                    "name":"Tom Bassett",
+                    "pic":"https://groot.s3.amazonaws.com/sites/nectar/_temp/tom_avatar.jpg",
+                    "me":true
+                }
+            },
+            "msg5":{
+                "content":"Could you send me some money for gas?",
+                "by":"tom",
+                "user":{
+                    "name":"Tom Bassett",
+                    "pic":"https://groot.s3.amazonaws.com/sites/nectar/_temp/tom_avatar.jpg",
+                    "me":true
+                }
+            }
+        },
+        "order":["msg1","msg3","msg5"]
+    },
+    "id":"CH1234"
+}

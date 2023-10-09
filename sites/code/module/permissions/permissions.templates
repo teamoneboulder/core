@@ -1,0 +1,383 @@
+@@@permissions_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit l-corner-top-web" style="background: white;overflow: hidden">
+	<%=$.fn.render({template:'app_header',data:{
+        data:{
+        	page:true,
+            name:'<div data-height="36" data-max="20" data-incriment="2" class="topname">'+data.name+'</div>',
+            back:'<i class="icon-cancel"></i>',
+            class:'',
+            submit:((data.id=='fb_link')?'Save':((data.current||data.request)?'Done':'Send')),
+            submitClass:'x_send',
+            backClass:'x_close'
+        }
+    },returntemplate:true})%>
+	<div style="position: absolute;top:65px;left:0;right:0;bottom:0;border-top:1px solid #ccc;background: white;" class="contentscroller apppage webapppage">
+		<%if(data.current){%>
+		<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+		<%}else{%>
+		<%=$.fn.render({template:'permissions_content',data:{data:data},returntemplate:true})%>
+		<%}%>
+	</div>
+</div>
+@@@permissions_page_page@@@
+<div data-<%=template%>="<%=_tid%>" style="overflow: hidden;text-align:left;" class="sfit">
+	<div class="sfit scrollY" style="bottom:50px;background: white;">
+		<div style="position:relative;min-height:200px;background: white;">
+			<%if(data.current){%>
+			<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+			<%}else{%>
+			<%=$.fn.render({template:'permissions_content',data:{data:data},returntemplate:true})%>
+			<%}%>
+		</div>
+	</div>
+	<div style="position: absolute;bottom:0;left:0;right:0;height:50px;" class="highlightbutton2 x_send">
+		<table style="width:100%;height:100%;text-align: center;font-size:18px">
+			<tr>
+				<td class="content"><i class="icon-floppy"></i> Save Settings</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@permissions_page_alert@@@
+<div data-<%=template%>="<%=_tid%>" style="overflow: hidden;text-align:left;">
+	<div style="position:relative;min-height:200px;background: white;" class="apppage webapppage s-corner-all">
+		<%if(data.current){%>
+		<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+		<%}else{%>
+		<div style="height:40px;" class="highlightbutton2 s-corner-top stickywaypoint">
+			<table style="width:100%;height:100%" class="s-corner-top">
+				<tr>
+					<td style="width:50px;text-align: left;padding-left:5px;" class="x_close">
+						<i class="icon-cancel" style="font-size:18px"></i>
+					</td>
+					<td style="text-align: center;font-weight: bold">
+						Facebook Friend Settings
+					</td>
+					<td style="width:50px;text-align: right;padding-right:5px;font-weight: bold;" class="x_send">Save</td>
+				</tr>
+			</table>
+		</div>
+		<%=$.fn.render({template:'permissions_content',data:{data:data},returntemplate:true})%>
+		<%}%>
+	</div>
+</div>
+@@@permissions_content@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if(data.id=='fb_link'){%>
+	<div style="padding:20px;font-size:16px">
+		As your Facebook friends join Nectar, we'll automatically recreate your friendship on Nectar, so you can migrate your network! This is the only way we use this permission. We don't gather any other info or contact any of your friends.
+	</div>
+	<%}%>
+	<%if(!data.request&&!data.current&&data.id!='fb_link'){%>
+	<div style="padding:10px;">
+		<div>
+			<div style="padding-top:10px;">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:40px;">
+							<i class="icon-comment permissions_icon"></i>
+						</td>
+						<td class="permissions_text">
+							Intro Message
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="padding:5px;" class="permtextarea">
+				<textarea style="width:100%;min-height:50px;padding:10px;font-size:14px;resize: none;border:1px solid #ccc;" class="truebox permdata intromessage" data-type="text" data-field="message" placeholder="This is the beginning of a beautiful connection.  Start it right with a conscious message!" maxlength="200"></textarea>
+			</div>
+		</div>
+	</div>
+	<%}%>
+	<div style="padding:10px;" class="togglerow showcontent">
+		<div>
+			<div style="padding-top:10px;">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:40px;">
+							<i class="icon-contacts permissions_icon"></i>
+						</td>
+						<td class="permissions_text">
+							Share My Contact Info
+						</td>
+						<td style="width:60px;text-align: right;">
+							<div style="display: inline-block;position: relative;vertical-align: middle;font-size:15px;margin-right:1px;padding-right:5px;" class="contactstatus">all</div>
+							<!-- <div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle" class="toggler checked">
+								<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+								<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+							</div> -->
+						</td>
+						<td style="width:35px;text-align: center;"><div class="perm_status"><i class="icon-left-open" style="font-size:25px"></i></div></td>
+					</tr>
+				</table>
+			</div>
+			<div class="morecontent">
+				<div style="padding-top:8px;" class="toggler <%if(data.current&&data.current.perms&&data.current.perms.indexOf('phone')>=0){%>checked<%}else if(!data.current){%>checked<%}%> permdata" data-type="check" data-parent="contact" data-field="phone">
+					<table style="width:100%;">
+						<tr>
+							<td style="width:40px;"></td>
+							<td style="width:40px;">
+								<i class="icon-phone permissions_icon"></i>
+							</td>
+							<td class="permissions_text">
+								Phone Number
+							</td>
+							<td style="width:60px;text-align: right;">
+								<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+									<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+									<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+								</div>
+							</td>
+							<td style="width:35px;text-align: center;">
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="padding-top:8px;" class="toggler <%if(data.current&&data.current.perms&&data.current.perms.indexOf('address')>=0){%>checked<%}else if(!data.current){%>checked<%}%> permdata" data-type="check" data-parent="contact" data-field="address">
+					<table style="width:100%;">
+						<tr>
+							<td style="width:40px;"></td>
+							<td style="width:40px;">
+								<i class="icon-location-1 permissions_icon"></i>
+							</td>
+							<td class="permissions_text">
+								Address
+							</td>
+							<td style="width:60px;text-align: right;">
+								<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+									<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+									<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+								</div>
+							</td>
+							<td style="width:35px;text-align: center;">
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="padding-top:8px;" class="toggler <%if(data.current&&data.current.perms&&data.current.perms.indexOf('email')>=0){%>checked<%}else if(!data.current){%>checked<%}%> permdata" data-type="check" data-parent="contact" data-field="email">
+					<table style="width:100%;">
+						<tr>
+							<td style="width:40px;"></td>
+							<td style="width:40px;">
+								<i class="icon-mail permissions_icon"></i>
+							</td>
+							<td class="permissions_text">
+								Email
+							</td>
+							<td style="width:60px;text-align: right;">
+								<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+									<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+									<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+								</div>
+							</td>
+							<td style="width:35px;text-align: center;">
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="padding-top:8px;" class="toggler <%if(data.current&&data.current.perms&&data.current.perms.indexOf('birthday')>=0){%>checked<%}else if(!data.current){%>checked<%}%> permdata" data-type="check" data-parent="contact" data-field="birthday">
+					<table style="width:100%;">
+						<tr>
+							<td style="width:40px;"></td>
+							<td style="width:40px;">
+								<i class="icon-birthday permissions_icon"></i>
+							</td>
+							<td class="permissions_text">
+								Birthday
+							</td>
+							<td style="width:60px;text-align: right;">
+								<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+									<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+									<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+								</div>
+							</td>
+							<td style="width:35px;text-align: center;"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="padding:10px;" class="togglerow showcontent">
+		<div>
+			<div style="padding-top:10px;">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:40px;">
+							<i class="icon-friends-nectar permissions_icon"></i>
+						</td>
+						<td class="permissions_text">
+							Add To Custom List
+						</td>
+						<td style="width:35px;text-align: center;"><div class="perm_status"><i class="icon-left-open" style="font-size:25px"></i></div></td>
+					</tr>
+				</table>
+			</div>
+			<div class="morecontent">
+				<div class="friendslist">
+					<div style="padding:15px;font-size:18px;"><i class="icon-refresh animate-spin"></i> Loading...</div>
+				</div>
+				<div class="extralists">
+					
+				</div>
+				<div style="padding:10px 32px">
+					<div class="x_createlist" style="padding:5px;text-align: left;color:#888;font-weight: bold"><i class="icon-plus"></i> New List</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%if(!data.current&&false){%>
+	<div style="padding:10px;" class="togglerow">
+		<div>
+			<div style="padding-top:10px;">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:40px;">
+							<i class="icon-pages permissions_icon"></i>
+						</td>
+						<td class="permissions_text">
+							Invite to my pages
+						</td>
+						<td style="width:60px;text-align: right;">
+							<!-- <div style="display: inline-block;position: relative;vertical-align: middle;font-size:15px;margin-right:1px;">all</div>
+							<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle" class="toggler checked">
+								<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+								<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+							</div> -->
+						</td>
+						<td style="width:35px;text-align: center;"><div class="perm_status"><i class="icon-left-open" style="font-size:25px"></i></div></td>
+					</tr>
+				</table>
+			</div>
+			<div class="morecontent">
+				<div style="padding:10px;font-size:20px;">
+					<i class="icon-info"></i> Coming Soon!
+				</div>
+			</div>
+		</div>
+	</div>
+	<%}%>
+	<div style="padding:10px;display:none" class="">
+		<div>
+			<div style="padding-top:10px;">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:40px;">
+							<i class="icon-bell permissions_icon"></i>
+						</td>
+						<td class="permissions_text">
+							Receive Notifications of Their Activity
+						</td>
+						<td style="width:60px;text-align: right;">
+							<div class="permdata toggler <%if(data.current&&data.current.notify){%>checked<%}%>" data-type="check" data-field="notify">
+								<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+									<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+									<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div style="padding:10px;">
+		<div>
+			<div style="padding-top:10px;" class="toggler <%if(data.current&&data.current.birthday){%>checked<%}else if(!data.current){%>checked<%}%> permdata" data-type="check" data-field="addbirthday">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:40px;">
+							<i class="icon-calendar permissions_icon"></i>
+						</td>
+						<td class="permissions_text">
+							Add Their Birthday To My Calendar
+						</td>
+						<td style="width:30px;text-align: right;">
+							<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+								<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+								<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div style="padding:10px;display:none">
+		<div >
+			<div style="padding-top:10px;">
+				<table style="width:100%;">
+					<tr>
+						<td style="width:40px;">
+							<i class="icon-notes permissions_icon"></i>
+						</td>
+						<td class="permissions_text">
+							Add Private Notes To This Contact
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div>
+				<div style="padding:5px;">
+					<textarea style="width:100%;min-height:40px;padding:5px;font-size:14px;resize: none;border:1px solid #ccc;" class="truebox permdata notedata" data-type="text" data-field="notes" placeholder="Private notes to add to contact"><%if(data.current&&data.current.notes){%><%=data.current.notes%><%}%></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
+	<%if(data.current){%>
+	<div class="nectarbtn_danger s-corner-all x_unfriend"><i class="icon-minus-circled"></i> Unfriend</div>
+	<%}%>
+	<div style="height:100vh;" class="notonweb"></div>
+	<div class="notonmobile" style="height:80px"></div>
+</div>
+@@@permissions_friendlist@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if(data){%>
+	<%for (var i = 0; i < data.friendlist.order.length; i++) {
+		var item=data.friendlist.list[data.friendlist.order[i]];%>
+		<%=$.fn.render({template:'permissions_friendlist_item',data:{data:item},returntemplate:true})%>
+	<%}%>
+	<%}else{%>
+	reload...
+	<%}%>
+</div>
+@@@permissions_addlist@@@
+<div data-<%=template%>="<%=_tid%>" class="toggler permdata checked" data-type="check" data-parent="list" data-field="<%=id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:40px;"></td>
+			<td class="permissions_text">
+				<input type="text" style="font-size:15px;padding:5px 0px;color:#555" class="normalinput" placeholder="Enter list name..." data-showdone="1" data-inpage="1">
+			</td>
+			<td style="width:60px;text-align: right;">
+				<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+					<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+					<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+				</div>
+			</td>
+			<td style="width:35px;text-align: center;" class="x_trash">
+				<i class="icon-trash-empty" style="font-size:22px"></i>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@permissions_friendlist_item@@@
+<div class="toggler permdata <%if(data.added){%>checked<%}%>" data-type="check" data-parent="list" data-field="<%=data.id%>">
+	<table style="width:100%;">
+		<tr>
+			<td style="width:40px;"></td>
+			<td class="permissions_text">
+				<%=data.name%>
+			</td>
+			<td style="width:60px;text-align: right;">
+				<div style="width:30px;height:30px;display: inline-block;position: relative;vertical-align: middle">
+					<i class="icon-rounded-square-empty" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:1;color:#555"></i>
+					<i class="checkon icon-rounded-square-fill highlighttext" style="font-size:25px;position: absolute;top:2px;left:2px;z-index:2"></i>
+				</div>
+			</td>
+			<td style="width:35px;text-align: center;">
+				
+			</td>
+		</tr>
+	</table>
+</div>

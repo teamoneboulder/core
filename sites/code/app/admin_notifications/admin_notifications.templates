@@ -1,0 +1,292 @@
+@@@admin_notifications@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page" style="color:black">
+    <div style="position:absolute;left:50%;margin-left:-500px;width:200px;z-index:4">
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Notifications</b> 
+                <i class="icon-refresh refresh" style="margin:0;padding:2px;font-size:16px;position:absolute;top:8px;right:8px"></i>
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="all">All</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="emails">Emails</div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="push">Push</div>
+            </div>
+            <div class="totalsize" style="padding:5px;text-align:right;display:none;font-size:11px;color:#888"></div>
+        </div>
+        <div style="margin:5px;padding:5px;background:white;border:1px solid #aaa;" class="m-corner-all truebox">
+            <div style="font-size:18px;padding:10px 5px;text-align:center;margin:0px 5px  0px 5px;border-bottom:1px solid #ccc;"><b>Campaigns</b> 
+            </div>
+            <div>
+                <div style="padding:5px;text-align:right" class="navselect" data-filter="campaigns">Email</div>
+            </div>
+        </div>
+    </div>
+    <div style="position: absolute;top:0;left:0;right:0;height:30px;z-index: 3">
+        <div style="padding-left:210px;width:800px;margin:auto;">
+            <table style="height:100%">
+                <tr>
+                    <td style="width:80px;">
+                        <select class="status">
+                            <option value="all">All</option>
+                            <option value="success">Success</option>
+                            <option value="error">Error</option>
+                        </select>
+                    </td>
+                    <td style="width:150px">
+                        <input type="text" style="border:1px solid #aaa;padding:3px;width:150px;" class="s-corner-all x_email" placeholder="Search Email">
+                    </td>
+                    <td style="padding-left:5px;position: relative;">
+                        <div class="usersearcharea"></div>
+                        <div class="usersearch l-corner-all shadow_br" style="position: absolute;top:100%;left:0;width:200px;max-height:300px;background:white;display: none;border:1px solid #ccc;">
+                            <div class="usersearchcontent" style="padding:10px 0px"></div>
+                        </div>
+                    </td>
+                    <td style="padding-left:5px;">
+                        <input type="text" style="border:1px solid #aaa;padding:3px;width:150px;" class="s-corner-all x_type" placeholder="Notice Type">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="sfit scroller" style="z-index:2;top:30px">
+        <div style="padding-left:210px;width:800px;margin:auto;" class="listbox">
+            <div class="itemlist" style="width:800px;max-width:100%;padding-top:5px;padding-bottom:5px"></div>
+        </div>
+    </div>
+</div>
+@@@admin_notifications_item@@@
+<%if(data.opts&&data.opts.Message||data.raw){%>
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <%if(data.raw){%>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center">
+                <%if(data.raw){%>
+                <i class="icon-attach" style="font-size:24px;"></i>
+                <%}else{%>
+                <i class="icon-mail" style="font-size:24px;"></i>
+                <%}%>
+            </td>
+            <td>
+                <div style="font-size:14px;"><b><%=modules.global_admin_notifications.getRawEmailSubject(data.opts.RawMessage.Data)%></b></div>
+                <div style="font-size:12px;"><b>Email With Attachments</b></div>
+                <div style="font-size:10px;padding-top:5px" class="selectable">Sent <%=data._id.formatTime()%> to <%=modules.global_admin_notifications.getRawEmailTo(data.opts.RawMessage.Data)%></div>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(data.status&&data.status==1){%>
+                <span class="btn btn-primary preview_email" data-id="<%=data._id%>">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview_email" data-id="<%=data._id%>">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+    <%}else{%>
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center">
+                <i class="icon-mail" style="font-size:24px;"></i>
+            </td>
+            <td>
+                <div style="font-size:14px;"><b><%=data.opts.Message.Subject.Data%></b></div>
+                <div style="padding-top:5px;font-size:11px"><%=data.opts.Message.Body.Text.Data.limitlength(150)%></div>
+                <div style="font-size:10px;padding-top:5px" class="selectable">Sent <%=data._id.formatTime()%> to <%if(data.userinfo){%><%=data.userinfo.name%><%}else{%><%=data.opts.Destination.ToAddresses.join(', ')%><%}%></div>
+            </td>
+            <td style="width:50px;text-align:center;vertical-align:top">
+                <%if(data.status&&data.status==1){%>
+                <span class="btn btn-primary preview_email" data-id="<%=data._id%>">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview_email" data-id="<%=data._id%>">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+    <%}%>
+</div>
+<%}else if(data.opts&&data.opts.message){%>
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:50px;text-align:center">
+                <i class="icon-bell" style="font-size:24px;"></i>
+            </td>
+            <td>
+                <div style="font-size:14px;" class="dont-break-out"><b><%=data.opts.message%></b></div>
+                <div style="font-size:10px;padding-top:5px">Sent <%=data._id.formatTime()%> to <%if(data.userinfo){%><%=data.userinfo.name%><%}else if(data.opts.device){%><%=data.opts.device.did%><%}else if(data.opts.title){%><%=data.opts.title%> Topic<%}%></div>
+            </td>
+            <td style="width:50px;text-align:center">
+                <%if(data.status){%>
+                <span class="btn btn-primary preview_push" data-id="<%=data._id%>">View</span>
+                <%}else{%>
+                <span class="btn btn-warning preview_push" data-id="<%=data._id%>">View</span>
+                <%}%>
+            </td>
+        </tr>
+    </table>
+</div>
+<%}%>
+@@@admin_notifications_campaignitem@@@
+<div data-<%=template%>="<%=_tid%>" style="background:white;border:1px solid #aaa;margin-bottom:5px;padding:5px;word-wrap: break-word;" class="truebox m-corner-all">
+    <div style="font-size:20px;padding-left:20px"><%if(data.info&&data.info.email_subject){%><b><%=data.info.email_subject%></b> <%if(data.info.system_id){%>(<%=data.info.system_id%>)<%}%><%}else{%><b><%=data.id%></b><%}%></div>
+    <div style="width:90%;margin:auto;margin-top:10px;">
+        <div>
+            <div style="height:10px;background:#ccc;padding:1px;overflow:hidden" class="m-corner-all truebox">
+                <div style="height:8px;background:#f09;width:<%=(data.read/data.sent*100).toFixed(0)%>%" class="m-corner-all"></div>
+            </div>
+        </div>
+        <div style="padding:5px;font-size:12px">
+            <%=data.sent%> emails sent, <%=data.clicked%> clicks, <%=(data.read/data.sent*100).toFixed(0)%>% read.
+        </div>
+    </div>
+</div>
+@@@admin_notifications_email_history@@@
+<div>
+    <%if(stats){%>
+    <div style="padding:5px;margin:5px;background:#eee;padding:5px" class="s-corner-all">
+        <div style="width:90%;margin:auto;margin-top:10px;">
+            <div>
+                <div style="height:10px;background:#ccc;padding:1px;overflow:hidden" class="m-corner-all truebox">
+                    <div style="height:8px;background:#f09;width:<%=(stats.read/stats.sent*100).toFixed(0)%>%" class="m-corner-all"></div>
+                </div>
+            </div>
+            <div style="padding:5px;font-size:12px">
+                <%=stats.sent%> emails sent, <%=stats.clicked%> clicks, <%=(stats.read/stats.sent*100).toFixed(0)%>% read.
+            </div>
+        </div>
+    </div>
+    <%}%>
+    <%if(this.order){%>
+    <%for (var i = 0; i < order.length; i++) {
+        var item=list[order[i]];
+        %>
+        <div style="padding-bottom:5px">
+            <%if(item.link){%>
+            <table>
+                <tr>
+                    <td><i class="icon-link" style="font-size:16px"></i></td>
+                    <td style="padding-left:10px;">
+                        <div>Link Clicked! <span style="font-size:9px;padding-top:2px;padding-left:10px;">(<a href="<%=item.link%>"><%=item.link%></a>)</span></div>
+                        <div style="font-size:9px;padding-top:2px;padding-left:10px;"><%=item._id.formatTime()%></div>
+                    </td>
+                </tr>
+            </table>
+            <%}else{%>
+            <table>
+                <tr>
+                    <td><i class="icon-mail" style="font-size:16px"></i></td>
+                    <td style="padding-left:10px;">
+                        <div>Email Read!</div>
+                        <div style="font-size:9px;padding-top:2px;padding-left:10px;"><%=item._id.formatTime()%></div>
+                    </td>
+                </tr>
+            </table>
+            <%}%>
+        </div>
+    <%}%>
+    <%}else{%>
+    no history yet
+    <%}%>
+</div>
+@@@admin_notifications_previewpush@@@
+<div style="text-align:left;padding:10px;overflow:hidden">
+    <div style="padding:10px 0px;font-size:24px;"><b>Push Preview</b></div>
+    <table style="margin-left:10px;margin-bottom:10px;" class="selectable">
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>To</b>:</td>
+            <td>
+                <%if(this.userinfo){%>
+                <div>
+                    <table>
+                        <tr>
+                            <td><div style="width:25px;height:25px;padding:5px;background-image:url(<%=modules.tools.getImg(userinfo.pic,'profile')%>)" class="coverimg s-corner-all"></div></td>
+                            <td style="font-size:14px;padding-left:8px">
+                                <div><b><%=userinfo.name%></b></div>
+                                <div style="font-size:11px;color:#888;padding-left:10px;"><%=opts.device.did%></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <%}else if(opts.device){%>
+                <div><%=opts.device.did%></div>
+                <%}else if(opts.title){%>
+                <div><%=opts.title%> Topic</div>
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Message</b>:</td>
+            <td><%=opts.message%></td>
+        </tr>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Sent</b>:</td>
+            <td><%=modules.moment.format(_id,'ago')%></td>
+        </tr>
+        <%if(this.opts){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;vertical-align:top"><b>Opts</b>:</td>
+            <td><code><%=JSON.stringify(opts).wrapJson()%></code></td>
+        </tr>
+        <%}%>
+        <%if(this.resp){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;vertical-align:top"><b>Response</b>:</td>
+            <td><code><%=JSON.stringify(resp).wrapJson()%></code></td>
+        </tr>
+        <%}%>
+    </table>
+</div>
+@@@admin_notifications_previewemail@@@
+<div style="text-align:left;padding:15px;">
+    <div style="padding:10px 0px;font-size:24px;"><b>Email Preview</b></div>
+    <table style="margin-left:10px;margin-bottom:10px;" class="selectable">
+        <%if(!this.raw){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>To</b>:</td>
+            <td>
+                <%if(this.userinfo){%>
+                <div>
+                    <table>
+                        <tr>
+                            <td><div style="width:25px;height:25px;padding:5px;background-image:url(<%=modules.tools.getImg(userinfo.pic,'profile')%>)" class="coverimg s-corner-all"></div></td>
+                            <td style="font-size:14px;">
+                                <div><b><%=userinfo.name%></b></div>
+                                <div style="font-size:11px;color:#888;padding-left:10px;"><%=opts.Destination.ToAddresses.join(', ')%></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <%}else{%>
+                <div><%=opts.Destination.ToAddresses.join(', ')%></div>
+                <%}%>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Subject</b>:</td>
+            <td><%=opts.Message.Subject.Data%></td>
+        </tr>
+        <%}%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Sent</b>:</td>
+            <td><%=ts.formatTime()%></td>
+        </tr>
+        <%if(this.resp){%>
+        <tr>
+            <td style="width:50px;text-align:right;padding-right:5px;"><b>Response</b>:</td>
+            <td><code><%=JSON.stringify(resp)%></code></td>
+        </tr>
+        <%}%>
+        <tr class="historyrow">
+            <td style="width:50px;text-align:right;padding-right:5px;vertical-align: top;">
+                <div><b>History</b>:
+            </td>
+            <td>
+                <div class="history truncatehistory transition" style="padding:5px;overflow:hidden"><i class="icon-refresh animate-spin"></i> Loading...</div>
+                <div class="x_showmore normallink" style="padding:5px;">Show More History</div>
+                <div class="x_showless normallink" style="display:none;padding:5px">Show Less History</div>
+            </td>
+        </tr>
+    </table>
+    <div style="text-align:center">
+        <iframe style="width:750px;margin:auto;height:450px;border:1px solid #ccc;" id="email" class="m-corner-all">
+        </iframe>
+    </div>
+</div>

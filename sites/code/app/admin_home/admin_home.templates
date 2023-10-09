@@ -1,0 +1,408 @@
+@@@admin_home@@@
+<div class="sfit" data-<%=template%>="<%=_tid%>" style="z-index:5">
+    <div id="pageview" class="transition sfit">
+        <div class="header truebox coverimg" style="position:absolute;top:0;left:0;right:0;height:60px;font-size:20px;z-index:2;background:#1d3a88">
+        	<table style="width:100%;height:100%">
+        		<tr>
+            		<td style="color:white;font-size:24px;padding-left:10px">
+            			<b>ONE</b> | Admin
+            		</td>
+            		<td></td>
+            	</tr>
+        	</table>
+        	<div style="position: absolute;top:0;right:0;bottom:0;">
+        		<table style="height:100%;color:white;">
+        			<tr>
+        				<td class="statusinfo"></td>
+        				<td style="padding-right: 10px;">
+        					<div style="width:300px;position: relative;">
+        						<input type="text" style="width:300px;padding:10px 30px;background:rgba(255,255,255,.5);color:white" class="s-corner-all x_usersearch" placeholder="Search Users">
+        						<i class="icon-search" style="position: absolute;top:4px;left:0;padding:5px;"></i>
+        						<i class="icon-cancel x_cancel" style="position: absolute;top:4px;right:0;padding:5px;display: none;"></i>
+        					</div>
+        				</td>
+        				<td>
+        					<div style="width:60px;height:60px;border-left:1px solid white;background-image: url(<%=modules.tools.getImg(app.user.profile.pic,'square')%>)" class="coverimg x_profile"></div>
+        				</td>
+        			</tr>
+        		</table>
+        	</div>
+        </div>
+        <div id="content" style="position:absolute;top:60px;left:0;right:0;bottom:0;z-index:1">
+            <div style="position: absolute;top:0;left:0;bottom:0;background:#ccc;width:200px" id="menu">
+            	<div style="position: absolute;top:0;left:0;right:0;bottom:0px" class="scrollY">
+            		<div style="padding-top:20px;">
+            	<%for (var i = 0; i < menu.length; i++) {
+            		var item=menu[i];%>
+            		<div style="padding:10px;" class="x_nav" data-nav="<%=item.id%>"><i class="<%=item.icon%>"></i> <%=item.name%></div>
+            	<%}%>
+                <%if(app.canView('admin')){%>
+            	<div style="padding-top:40px;padding-left:10px;font-size:16px;font-weight: bold">
+            		Vendors
+            	</div>
+            	<%for (var i = 0; i < vendors.length; i++) {
+            		var item=vendors[i];%>
+            		<div style="padding:10px;" data-link="<%=item.link%>" class="x_link">
+            			<table style="width:100%">
+            				<tr>
+            					<td style="width:40px;">
+            						<div style="width:40px;height:30px;background-image:url(<%=item.pic%>)" class="coverimg"></div>
+            					</td>
+            					<td style="padding-left:10px;"><%=item.name%></td>
+            				</tr>
+            			</table>
+            		</div>
+            	<%}%>
+                <%}%>
+            		</div>
+            	</div>
+            </div>
+            <div style="position: absolute;top:0;left:200px;bottom:0;right:0;background:#ddd;" id="contentpage"></div>
+        </div>
+    </div>
+</div>
+@@@admin_home_statusmenu@@@
+<div data-<%=template%>="<%=_tid%>" style="width:320px">
+    <div>
+	<%
+    for (var i = 0; i < info.items.order.length; i++) {
+		var item=info.items.list[info.items.order[i]];
+        %>
+		<div style="padding:10px;border-bottom:1px solid #ccc">
+			<div>
+				<%=item.title%>
+			</div>
+			<%if(item.subitems){%>
+			<%for (var ti = 0; ti < item.subitems.length; ti++) {
+				var subitem=item.subitems[ti];%>
+				<div style="padding:2px 10px;font-size:11px"><%=subitem.content%></div>
+			<%}%>
+			<%}%>
+		</div>
+	<%}%>
+    </div>
+    <%if(data.data.services){%>
+    <%for(var local_ip in data.data.services){
+        var info=data.data.services[local_ip];%>
+        <div>
+            <div style="padding:5px;display:none;"><%=info.data.name%> - <%=local_ip%></div>
+            <div style="padding:10px;">
+                <%if(info.missing&&info.missing.length){%>
+                <div>Offline!</div>
+                <%for (var i = 0; i < info.missing.length; i++) {
+                    var item=info.missing[i];%>
+                <div style="color:#f02;padding:2px;"><i class="icon-check-empty"></i> <%=item%></div>
+                <%}%>
+                <%}%>
+                <%if(info.active&&info.active.length){%>
+                <div>Active</div>
+                <%for (var i = 0; i < info.active.length; i++) {
+                    var item=info.active[i];%>
+                <div style="padding:2px;"><i class="icon-check"></i> <%=item%></div>
+                <%}%>
+                <%}%>
+            </div>
+        </div>
+    <%}%>
+    <%}%>
+</div>
+@@@admin_home_statusinfo@@@
+<div data-<%=template%>="<%=_tid%>" style="position: relative;padding:10px;margin-right:10px">
+	<%if(!count&&!urgent){%>
+	<i class="icon-thumbs-up" style="font-size:22px;color:white"></i>
+	<%}else{%>
+	<i class="icon-warning-sign" style="font-size:22px;color:white"></i>
+    <%if(count){%>
+	<div style="position: absolute;top:0;right:0;width:20px;height:20px;background:white" class="circle">
+		<table style="width:100%;height:100%;text-align: center;font-size:11px">
+			<tr>
+				<td>
+					<%=count%>
+				</td>
+			</tr>
+		</table>
+	</div>
+    <%}%>
+    <%if(urgent){%>
+    <div style="position: absolute;top:0;left:0;width:20px;height:20px;background:#f02;" class="circle">
+        <table style="width:100%;height:100%;text-align: center;font-size:11px;color:white">
+            <tr>
+                <td>
+                    <%=urgent%>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <%}%>
+	<%}%>
+</div>
+@@@admin_home_userview@@@
+<div data-<%=template%>="<%=_tid%>" class="selectable" style="text-align:left;padding:20px">
+    <div style="color:black;position:relative;padding-bottom:10px;" >
+        <table style="width:350px;">
+            <tr>
+                <td style="width:90px;">
+                    <%if(this.pic){%>
+                    <img src="<%=modules.tools.getImg(pic,'square')%>" style="width:80px;height:80px;border:1px solid #ccc;margin-top:2px;margin-left:2px" class="s-corner-all boxhoverkid"/>
+                    <%}%>
+                </td>
+                <td style="vertical-align:top;text-align:left"> 
+                    <div style="font-size:18px;padding:3px;color:black;background:white;font-weight:bold" class="m-corner-all boxhoverkid">
+                        <%=name%>
+                    </div>
+                    <div style="font-size:11px;padding-left:8px;padding-top:2px;color:#888;">User Since: <%=modules.moment.format(_id)%></div>
+                    <%if(window.app.canView('admin')){%>
+                    <div style="text-align:center;padding-bottom: 10px;padding-top:10px;">
+                        <div class="btn x_loginas" style="display: inline-block;"><i class="icon-lock"></i> Login</div>
+                    </div>
+                    <%}%>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="font-size:16px;padding-top:10px;"><b>Email</b></div>
+    <div style="margin:2px;padding:5px;background:#eee;border:1px solid #ccc;" class="m-corner-all"><%=email%></div>
+    <div style="font-size:16px;padding-top:10px;"><b>UID</b></div>
+    <div style="margin:2px;padding:5px;background:#eee;border:1px solid #ccc;" class="m-corner-all"><%=id%></div>
+    <div id="moreuserinfo">
+        <div style="padding:20px;text-align: center;font-size:18px"><i class="icon-refresh animate-spin"></i> Loading...
+        </div>
+    </div>
+    <%if(window.app.canView('admin')){%>
+    <div style="text-align:center;">
+        <div class="btn btn-danger x_delete"><i class="icon-trash-empty"></i> Delete User</div>
+    </div>
+    <%}%>
+</div>
+@@@admin_home_search@@@
+<div data-<%=template%>="<%=_tid%>" class="rowitem tagitem" data-id="<%=data.id%>">
+	<table style="width:100%">
+		<tr>
+			<td style="width:50px;padding:2px">
+				<div style="width:50px;height:50px;background-image: url(<%=modules.tools.getImg(data.pic,'square')%>)" class="coverimg"></div>
+			</td>
+			<td style="padding-left:10px;">
+				<div style="font-size:16px"><%=data.name%></div>
+				<div style="font-size:14px;padding:2px"><%=data.email%></div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@admin_home_account@@@
+<div data-<%=template%>="<%=_tid%>" style="border:1px solid #ccc;margin-bottom:2px;padding:2px;position:relative" class="s-corner-all truebox userdevice" data-id="<%=id%>">
+    <table>
+        <tr>
+            <td style="width:50px;text-align:center">
+               	
+            </td>
+            <td>
+            	<div><%=id%></div>
+            	<div>
+            	<%if(this.scopes){%>
+            	<%=JSON.stringify(scopes)%>
+            	<%}%>
+            	</div>
+            </td>
+        </tr>
+    </table>
+</div>
+@@@admin_home_device@@@
+<div data-<%=template%>="<%=_tid%>" style="border:1px solid #ccc;margin-bottom:2px;padding:2px;position:relative" class="s-corner-all truebox userdevice" data-id="<%=id%>">
+    <table>
+        <tr>
+            <td style="width:50px;text-align:center">
+                <i class="icon-mobile" style="font-size:40px;"></i>
+            </td>
+            <td>
+                <div style="font-size:16px;padding-bottom:2px;padding-top:2px">
+                    <%if(this.a&&parseInt(a,10)){%>
+                    Android Device
+                    <%}else{%>
+                    iOS Device <%if(this.sandbox&&sandbox){%>(Sandbox)<%}else{%>(Production)<%}%>
+                    <%}%>
+                </div>
+                <div style="font-size:11px;color:#aaa;padding-bottom:2px">Last Active: <%=la.formatTime()%></div>
+                <div style="font-size:11px;color:#aaa">ID: <%=id.limitlength(20)%></div>
+                <%if(this.version){%><div style="font-size:11px;color:#aaa">VOIP</div><%}%>
+                <%if(this.device){%><div style="font-size:11px;color:#aaa"><div>
+                    <%=JSON.stringify(device).wrapJson()%>
+                </div></div><%}%>
+            </td>
+        </tr>
+    </table>
+    <i class="icon-trash-empty menuicon x_deletedevice" data-id="<%=id%>" style="color:black;display:block;padding:5px;position:absolute;top:0;right:0;font-size:20px"></i>
+</div>
+@@@admin_home_oracle_invite@@@
+<div data-<%=template%>="<%=_tid%>">
+    <div style="text-align:center">Please provide a short URL for their invite code.</div>
+    <div style="padding-top:20px;padding-bottom:30px;">
+        <span>https://nectar.earth/o/</span>
+        <span>
+            <input type="text" placeholder="Short URL" id="shorturl" style="width:100px;border-bottom:1px solid #ccc;">
+        </span>
+    </div>
+</div>
+@@@admin_home_moreuserinfo@@@
+<div data-<%=template%>="<%=_tid%>">
+    <%if(this.error){%>
+    <span class="x_retry btn btn-primary"><i class="icon-refresh"></i> Retry</span>
+    <%}else{%>
+    <%if(user.la){%><div style="font-size:11px;color:#888;padding-top:10px;">Last Active: <%=user.la.formatTime(1)%></div><%}%>
+    <div style="font-size:16px;padding-top:10px;"><b>Membership</b></div>
+    <div style="padding:10px;">
+        <div>
+	        <%if(user.plan.valid_until){%>
+	        <div style="padding-top:5px">
+	        Member Until <%=modules.moment.format(user.plan.valid_until,'simpledate',false,1)%> <span style="font-size:11px">(<%=modules.moment.format(user.plan.valid_until,'ago',false,1)%>)</span>
+	        </div>
+	        <%}else{%>
+            Not active yet
+            <%}%>
+        </div>
+    </div>
+    <%if(user.plan.membership){%>
+    <div>
+        <%=JSON.stringify(user.plan.membership).wrapJson()%>
+    </div>
+    <%}%>
+    <%if(user.status){%>
+    <div>
+        <%=JSON.stringify(user.status).wrapJson()%>
+    </div>
+    <%}%>
+    <div style="font-size:16px;padding-top:10px;"><b>Accounts</b></div>
+    <div style="padding:5px;">
+        <div id="devices">
+            <div style="padding:5px;font-size:14px">
+                <%if(user.accounts){%>
+                <%for (var i=0;i<user.accounts.order.length;i++) {
+                    var account=user.accounts.list[user.accounts.order[i]];
+                    %>
+                    <%=$.fn.render({template:'admin_home_account',data:account,returntemplate:true})%>
+                    <%}%>
+                <%}else{%>
+                <div style="padding:5px;text-align: center">No Linked Accounts</div>
+                <%}%>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+    <%if(window.app.canView('admin')){%>
+    <div style="font-size:16px;padding-top:10px;"><b>Devices</b></div>
+    <div style="padding:5px;">
+        <div id="devices">
+            <div style="padding:5px;font-size:14px">
+                <%if(user.devices){%>
+                <%for (var i=0;i<user.devices.order.length;i++) {
+                    var device=user.devices.list[user.devices.order[i]];
+                    %>
+                    <%=$.fn.render({template:'admin_home_device',data:device,returntemplate:true})%>
+                    <%}%>
+                <%}else{%>
+                <div style="padding:5px;text-align: center">No Devices</div>
+                <%}%>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+    <div style="font-size:16px;padding-top:10px;"><b>Tokens</b> <i class="icon-plus menuicon x_addapp" style="color:black;font-size:13px;display:none"></i></div>
+    <div style="padding:5px;">
+        <div id="apps">
+            <div style="padding:5px;font-size:14px">
+                <%if(user.apps){%>
+                <%for (var i=0;i<user.apps.order.length;i++) {
+                    var app=user.apps.list[user.apps.order[i]];
+                    %>
+                    <%=$.fn.render({template:'admin_home_user_app',data:app,returntemplate:true})%>
+                    <%}%>
+                <%}%>
+            </div>
+        </div>
+        <div class="clearfloat"></div>
+    </div>
+    <%}%>
+    <%}%>
+</div>
+@@@admin_home_testpush@@@
+<div style="padding:20px;text-align:left;">
+    <div style="font-size:22px;padding-bottom:10px;color:#555">Send Push Message</div>
+    <div style="padding:5px;font-size:16px;"><b>Message</b></div>
+    <textarea style="width:100%;min-height:80px;padding:5px;border:1px solid #ccc;resize:none" placeholder="Enter Message..." id="pushmessage" class="s-corner-all"></textarea>
+    <div style="padding:5px;font-size:16px;margin-top:10px;"><b>Intent</b></div>
+    <div>
+        <input type="text" style="width:300px;padding:5px;border:1px solid #ccc;" class="s-corner-all" id="intent" placeholder="Intent">
+    </div>
+    <div>
+        <input type="checkbox" class="x_call"> Call
+    </div>
+</div>
+@@@admin_home_user_app@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:5px;font-size:14px;position:relative;border:1px solid #ccc;margin:5px 0px;" class="s-corner-all">
+    <div>
+         <table>
+            <tr>
+                <td style="width:40px;"><i class="icon-key" style="font-size:24px"></i></td>
+                <td style="padding-left:5px">
+                    <div style="font-size:15px;text-align:left"><b><%=app.name%></b></div>
+                    <div style="font-size:11px;padding-left:5px">
+                        <div><b>Created</b> <%=_id.formatTime()%></div>
+                        <div style="pading-top:3px;"><b>Appid</b> <span class="selectable"><%=appid%></span></div>
+                        <div style="pading-top:3px;"><b>Token</b> <span class="selectable"><%=id%></span></div>
+                        <%if(this.ua_info){%>
+                        <div style="font-size:12px;color:#aaa;padding-top:5px">
+                            <div>
+                                <table>
+                                    <tr>
+                                        <td style="vertical-align:top">
+                                            <div style="font-size:11px;padding-bottom:10px;">
+                                                <table style="font-size:11px">
+                                                    <tr>
+                                                        <td style="text-align:left;padding-right:5px;"><b>Platform</b></td>
+                                                        <td><%=ua_info.platform%></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:left;padding-right:5px;"><b>Browser</b></td>
+                                                        <td><%=ua_info.browser%></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="text-align:left;padding-right:5px;"><b>Version</b></td>
+                                                        <td><%=ua_info.version%></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <%}%>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <i class="icon-trash-empty x_revoke_app" data-id="<%=id%>" style="position:absolute;top:0px;right:0px;padding:4px;"></i>
+</div>
+@@@admin_home_testnotice@@@
+<div data-<%=template%>="<%=_tid%>" style="padding:20px;text-align:left">
+    <div style="font-size:20px;padding-bottom:10px;">Notice Testing</div>
+    <div>
+        <%for (var i = 0; i < notices.length; i++) {
+            var notice=notices[i];%>
+            <div style="margin:2px;padding:2px;border:1px solid #ccc;width:220px;float:left;" class="s-corner-all truebox x_selector" data-id="<%=notice.id%>">
+                <table>
+                    <tr>
+                        <td style="width:25px">
+                            <i class="icon-bell" style="font-size:20px;"></i>
+                        </td>
+                        <td>
+                            <div><%=notice.name%></div>
+                            <div style="padding-top:3px;font-size:11px;color:#888"><%=notice.subtitle%></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        <%};%>
+        <div class="clearfloat"></div>
+    </div>
+</div>

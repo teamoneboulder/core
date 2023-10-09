@@ -1,0 +1,29 @@
+.input_more .maxlength{
+	text-align: right;
+	padding:2px;
+	color:#888;
+}
+.x_perm,.x_nav{
+	opacity: .6;
+}
+.x_perm.selected,.x_gender.selected,.x_nav.selected{
+	opacity: 1;
+	font-weight: bold;
+}
+.inputarea .mbsc-fr-c{
+	border-bottom:0 !important;
+}
+.inputarea .nectarnav:not(.selected){
+	color:#888;
+	opacity: 1 !important;
+	font-weight: normal !important;
+}
+.condense .clearinput{
+	display: none;
+}
+.condense .input_more{
+	margin:5px !important;
+}
+.condense .genderarea{
+	padding:10px 0px;
+}

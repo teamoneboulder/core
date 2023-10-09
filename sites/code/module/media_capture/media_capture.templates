@@ -1,0 +1,142 @@
+@@@media_capture_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit appview" style="background:white;">
+	<%=$.fn.render({template:'app_header',data:{
+			data:{
+				page:true,
+				name:'Audio Capture',
+				nameClass:'title',
+				back:'<i class="icon-cancel"></i>',
+				backClass:'x_cancel',
+				submit:" "
+			}
+		},returntemplate:true})%>
+	<div class="apppage sfit">
+		<div class="apppageview">
+			<div class="sfit" style="bottom:51px;border-top:1px solid #ccc">
+				<%=$.fn.render({template:'audio_window',returntemplate:1})%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@audio_player@@@
+<div class="audiobox" style="position: relative;">
+	<div style="<%if(this.editing){%>height:120px;<%}else{%>height:60px;<%}%>">
+		<%if(this.editing){%>
+		<div class="audio_waveform l-corner-all" style="position: absolute;top:2px;left:5px;right:5px;bottom:50px;z-index:1;background: #eee;z-index: 3"></div>
+		<div style="position: absolute;top:12px;left:10px;right:10px;height:6px;background: #555;z-index: 5" class="l-corner-all">
+			<div class="audio_progress button2 l-corner-all" style="height:100%;width:0%;padding:0;"></div>
+		</div>
+		<%}else{%>
+		<div class="audio_waveform l-corner-all" style="position: absolute;top:0;left:5px;right:5px;bottom:0px;z-index:1;background: #eee;z-index: 3"></div>
+		<div style="position: absolute;top:12px;left:10px;right:10px;height:6px;background: #555;z-index: 5" class="l-corner-all">
+			<div class="audio_progress button2 l-corner-all" style="height:100%;width:0%;padding:0;"></div>
+		</div>
+		<%}%>
+		<div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:4">
+			<div class="audio_title">
+			    <span class="audio_track"></span>
+			 </div>
+		  <div class="audio_btn audio_volumeBtn" style="display: none"></div>
+		  <!-- <div class="audio_btn playpausebtn audio_playBtn">
+		  	<i class="audio_playicon icon-play"></i>
+		  </div> -->
+		  <!-- <div class="audio_btn playpausebtn audio_pauseBtn"></div> -->
+		  <!-- Progress -->
+		  <%if(this.editing){%>
+			<div style="position:absolute;left:5px;bottom:55px;">
+				<i class="playpausebtn audio_playBtn icon-play" style="padding:5px;"></i>
+				<i class="playpausebtn audio_pauseBtn icon-pause" style="display: none;padding:5px;"></i>
+			</div>
+			<%}else{%>
+			<div style="position:absolute;left:5px;bottom:5px;">
+				<i class="playpausebtn audio_playBtn icon-play" style="padding:5px;"></i>
+				<i class="playpausebtn audio_pauseBtn icon-pause" style="display: none;padding:5px;"></i>
+			</div>
+			<%}%>
+		  <%if(this.editing){%>
+		  <div class="audio_save button2" style="position:absolute;bottom:5px;right:5px;font-size:18px">
+		  	Send
+		  </div>
+		  <div class="audio_time" style="position:absolute;bottom:55px;left:50px;color:rgba(55,55,55,.6);font-size:18px">
+		  	<span class="audio_timer">0:00</span> <span>/</span> <span class="audio_duration">0:00</span>
+		  </div>
+		  <%}else{%>
+		  <div class="audio_time" style="position:absolute;bottom:5px;left:50px;color:rgba(55,55,55,.6);font-size:18px">
+		  	<span class="audio_timer">0:00</span> <span>/</span> <span class="audio_duration"><%if(this.media&&media.duration){%><%=media.duration.toTime()%><%}else{%>0:00<%}%></span>
+		  </div>
+		  <%}%>
+		  <!-- Volume -->
+		  <div class="audio_volume fadeout" style="display: none;">
+		  	<div style="width:90%;margin:auto;position:relative;height:100%" class="audio_progresscontainer">
+			    <div class="audio_barFull audio_bar"></div>
+			    <div class="audio_barEmpty audio_bar"></div>
+			    <div class="audio_sliderBtn"></div>
+			</div>
+		  </div>
+		</div>
+		<div class="audio_loading_box sfit" style="z-index: 3;background: white;display: none;"></div>
+	</div>
+</div>
+@@@audio_loadfail@@@
+<div data-<%=template%>="<%=_tid%>">
+	<table style="width:100%;height:100%;text-align: center;color:#555">
+		<tr>
+			<td>
+				<div style="padding-top:10px;" class="bold"><i class="icon-warning-sign"></i> Failed to load audio</div>
+				<div>
+					<div class="nbtn s-corner-all x_retry" style="border:1px solid #ccc;color:#555"><i class="icon-refresh"></i> Try Again</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@feed_audiopreview@@@
+<div data-<%=template%>="<%=_tid%>" style="position: relative;">
+	<div class="audioitem" data-contentid="<%=media.id%>">
+		<%=$.fn.render({template:'audio_player',data:{media:media},returntemplate:1})%>
+	</div>
+</div>
+@@@audio_window@@@
+<div data-<%=template%>="<%=_tid%>" style="background: white;">
+	<%if(this.editing){%>
+	<div class="button1" style="padding:5px;">
+		Create Audio Recording
+		<i class="icon-cancel x_close regicon" style="float: right;font-size:14px;color:white;padding:2px"></i>
+	</div>
+	<%}%>
+	<div class="x_start_recording">
+		<div class="x_start" style="padding:20px;text-align: center;">
+			<div class="button bluebtn" style="text-align: center;">Start Recording</div>
+		</div>
+	</div>
+	<div class="x_recording">
+		<div style="height:150px;" class="audio_siriwave"></div>
+		<div>
+			<div style="display: inline-block;width:60px;padding:5px;font-size:14px;"><span class="audio_record_time"></span></div>
+			<span class="x_stop button pinkbtn" style="padding:5px;font-size:14px;position: absolute;bottom:2px;right:2px;">Done</span>
+		</div>
+	</div>
+	<div class="x_done_recording" style="position: relative;background:white">
+		<%=$.fn.render({template:'audio_player',data:{editing:(this.editing)?1:0},returntemplate:1})%>
+	</div>
+	<div class="x_upload" style="display: none;"></div>
+	<%if(this.editing){%>
+	<div style="border-bottom:1px solid #ccc"></div>
+	<%}%>
+</div>
+@@@media_capture_alert@@@
+<div data-<%=template%>="<%=_tid%>" style="">
+	<div style="height:40px;background:#ededed" class="s-corner-top">
+		<table style="width:100%;height:100%">
+			<tr>
+				<td style="padding-left:10px;font-size:16px;text-align: left" class="bold title">Audio Capture</td>
+				<td style="width:40px;text-align: center;">
+					<i class="icon-cancel x_cancel" style="font-size:14px;padding:5px;"></i>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<%=$.fn.render({template:'audio_window',returntemplate:1})%>
+	</div>
+</div>

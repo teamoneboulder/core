@@ -1,0 +1,5 @@
+#!/bin/bash
+cp ${ROOT}/_manage/conf/php/cgi.ini /etc/php/7.4/cgi/php.ini
+cp ${ROOT}/_manage/conf/php/cli.ini /etc/php/7.4/cli/php.ini
+lighttpdconf
+echo 'Success!'

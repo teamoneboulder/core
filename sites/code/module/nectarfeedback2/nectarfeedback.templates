@@ -1,0 +1,45 @@
+@@@modules_nectarfeedback_selector@@@
+<div data-<%=template%>="<%=_tid%>" id="nectarfeedback" style="width:240px;height:240px;position:absolute;top:50%;left:50%;margin-left:-120px;margin-top:-120px;z-index:1000;display: none;" class="circle _bar">
+	<div style="position: absolute;top:50%;left:50%;" class="_inner">
+	<%
+		var count=order.length;
+		var start=0;
+        switch(count){
+            case 1:
+                start=0;
+            break;
+            case 2:
+                start=0;
+            break;
+            case 3:
+                start=0;
+            break;
+            case 4:
+                start=app.toRad(45);
+            break;
+            case 5:
+                start=0;
+            break;
+            case 6:
+                start=app.toRad(30);
+            break;
+            case 7:
+                start=0;
+            break;
+        }
+		//divide
+		var start=0;
+		var deg=360/count;
+		var radper=app.toRad(deg);
+		for (var i = 0; i < order.length; i++) {
+			var item=list[order[i]];
+			var left=radius*Math.cos(start+i*radper)-size/2;
+            var top=radius*Math.sin(start+i*radper)-size/2;
+		%>
+		<div style="position: absolute;top:<%=top%>px;left:<%=left%>px;width:<%=size%>px;height:<%=size%>px;" class="circle emoji_container" data-emoji-value="<%=order[i]%>" data-emoji-name="<%=item.name%>">
+		<img src="<%=item.svg%>" class="circle nectarfeedbackimg">
+		</div>
+		<%}%>
+        <div style="position: absolute;top:50%;left:50%;width:<%=size%>px;height:<%=size%>px;margin-left:-<%=(size/2)%>px;margin-top:-<%=(size/2)%>px;" class="emoji_container" data-emoji-value="center"></div>
+	</div>
+</div>

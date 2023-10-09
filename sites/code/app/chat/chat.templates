@@ -1,0 +1,583 @@
+@@@module_chat_page@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;left:<%=left%>%;width:100%;height:100%">
+	<div style="position:absolute;top:25px;left:0;right:0;height:45px;z-index:2" class="appheader">
+		<table style="width:100%;height:100%;" class="themeheadercolor">
+			<tr>
+				<td style="width:30px;text-align:center">
+					<%=$.fn.render({template:'backbtn',returntemplate:true})%>
+				</td>
+				<td style="text-align:center;" class="middlearea">
+					<%if(this.people){%>
+					<%if(people.length==1){%>
+					<div style="position:relative;font-size:18px">
+						<b><%=people_list[people[0]].name%></b>
+					</div>
+					<%}else{%>
+					<div class="">
+						<div style="font-size:18px;padding-bottom:2px;font-weight: bold"><%=name%></div>
+					</div>
+					<%}%>
+					<%}else if(this.type&&this.type=='connectin'){%>
+					<div style="position:relative;padding-bottom:8px;font-size:20px;">
+						<i class="icon-connect-in"></i> Connect-in
+					</div>
+					<div style="position:relative;font-size:14px">
+						from <b><%=from.name%></b>
+					</div>
+					<%}else{%>
+					<div style="position:relative;margin-top:-5px;padding-bottom:3px">
+						<div style="width:35px;height:35px;margin:auto;background-image:url(<%=modules.tools.getImg(pic,'small')%>)" class="coverimg circle"></div>
+					</div>
+					<div style="position:relative;font-size:18px">
+						<b><%=name%></b>
+					</div>
+					<%}%>
+				</td>
+				<%if(this.type&&this.type=='connectin'){%>
+				<td style="width:45px;text-align:center">
+				<i class="icon-dot-3 normalicon x_menu" style="font-size:18px;"></i>
+				</td>				
+				<%}else{%>
+				<td style="width:45px;" class="x_people normalicon">
+					<div style="display: inline-block;position: relative;">
+						<div style="position: absolute;top:-3px;right:-3px;width:15px;height:15px;background:white;color:black" class="circle">
+							<table style="width:100%;height:100%;text-align: center;color:black;font-size:11px">
+								<tr>
+									<td>
+										<%=people.length+1%>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<i class="icon-groups normalicon" style="font-size:28px;"></i>
+					</div>
+				</td>
+				<td style="width:45px;display: none;" class="x_more normalicon">
+					<div style="display:inline-block;vertical-align:middle;font-size:20px;"><i style="font-size:30px;" class="icon-dot-3"></i></div>
+				</td>
+				<%}%>
+				<!-- <td style="width:30px;text-align:center">
+					<div style="padding:4px;" class="x_phone"><i class="icon-phone" style="font-size:24px;color:rgba(2552,255,255,.6)"></i></div>
+				</td>
+				<td style="width:30px;text-align:center">
+					<div style="padding:4px;"><i class="icon-down-open x_closer" style="font-size:24px;color:rgba(2552,255,255,.6)"></i></div>
+				</td> -->
+			</tr>
+		</table>
+	</div>
+	<%if(this.title){%>
+	<div style="position:absolute;top:90px;left:0;right:0;height:80px;color:white;overflow:hidden">
+		<div style="padding:5px;margin:5px;background: rgba(255,255,255,.2);" class="s-corner-all">
+			<div style="font-size:18px"><b><%=title%></b></div>
+			<%if(this.content){%><div style="padding:5px;font-size:14px"><%=content%></div><%}%>
+		</div>
+	</div>
+	<div style="position:absolute;top:170px;left:0;right:0;bottom:0;" class="content chatcontentbox topborder">
+	<%}else{%>
+	<div style="position:absolute;top:70px;left:0;right:0;bottom:0;" class="content chatcontentbox apppage topborder">
+	<%}%>
+		<div class="sfit chatpage">
+			<div class="sfit errormessage" style="display: none"></div>
+			<div class="chatcontent sfit" style="display: none;">
+				<div style="position:absolute;top:0;left:0;right:0;bottom:60px;color:white;z-index: 1;" class="scrollcontent">
+					<div class="chatarea">
+					</div>
+					<div style="height:20px"></div>
+				</div>
+				<div style="position:absolute;bottom:0;left:0;right:0;z-index:2" class="keyboardinput"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@module_chat_page_web@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;left:0%;width:100%;height:100%">
+	<div style="position:absolute;top:0px;left:0;right:0;height:45px;z-index:2;background: white;border-bottom:1px solid #ccc" class="appheader m-corner-top">
+		<table style="width:100%;height:100%;color:#555">
+			<tr>
+				<td style="width:30px;text-align:center">
+					<i class="icon-cancel backbtn" style="font-size: 16px"></i>
+				</td>
+				<td style="text-align:center;" class="middlearea">
+					<%if(this.people){%>
+					<%if(people.length==1){%>
+					<div style="position:relative;font-size:18px">
+						<b><%=people_list[people[0]].name%></b>
+					</div>
+					<%}else{%>
+					<div class="">
+						<div style="font-size:18px;padding-bottom:2px;font-weight: bold"><%=name%></div>
+					</div>
+					<%}%>
+					<%}else{%>
+					<div style="position:relative;margin-top:-5px;padding-bottom:3px">
+						<div style="width:35px;height:35px;margin:auto;background-image:url(<%=modules.tools.getImg(pic,'small')%>)" class="coverimg circle"></div>
+					</div>
+					<div style="position:relative;font-size:18px">
+						<b><%=name%></b>
+					</div>
+					<%}%>
+				</td>
+				<td style="width:30px;" class="x_people normalicon">
+					<div style="display: inline-block;position: relative;">
+						<div style="position: absolute;top:-3px;left:-3px;width:15px;height:15px;background:#eee;color:black" class="circle">
+							<table style="width:100%;height:100%;text-align: center;color:black;font-size:11px">
+								<tr>
+									<td>
+										<%=people.length+1%>
+									</td>
+								</tr>
+							</table>
+						</div>
+						<i class="icon-groups normalicon" style="font-size:28px;"></i>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%if(this.title){%>
+	<div style="position:absolute;top:90px;left:0;right:0;height:80px;color:white;overflow:hidden">
+		<div style="padding:5px;margin:5px;background: rgba(255,255,255,.2);" class="s-corner-all">
+			<div style="font-size:18px"><b><%=title%></b></div>
+			<%if(this.content){%><div style="padding:5px;font-size:14px"><%=content%></div><%}%>
+		</div>
+	</div>
+	<div style="position:absolute;top:170px;left:0;right:0;bottom:0;" class="content chatcontentbox">
+	<%}else{%>
+	<div style="position:absolute;top:45px;left:0;right:0;bottom:0;" class="content chatcontentbox">
+	<%}%>
+		<div class="sfit chatpage" style="overflow: hidden;">
+			<div class="sfit errormessage" style="display: none"></div>
+			<div class="chatcontent sfit">
+				<div style="position:absolute;top:0;left:0;right:0;bottom:60px;color:white;z-index: 1;" class="scrollcontent">
+					<div class="chatarea">
+					</div>
+					<div style="height:20px"></div>
+				</div>
+				<div style="position:absolute;bottom:0;left:0;right:0;z-index:2" class="keyboardinput"></div>
+				<div style="position: absolute;top:-1px;left:0;right:0;z-index:4" class="friendrequest feeditems"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@module_chat_add@@@
+<div data-<%=template%>="<%=_tid%>" style="background: white;" class="sfit">
+	<div style="position: absolute;top:0;left:0;right:0;height:70px;" class="themebg appcontent">
+		<div style="position: absolute;bottom:0;left:0;right:0;">
+			<table style="width:100%;height:50px;">
+				<tr>
+					<td style="width:80px;padding-left:10px;font-size:16px;" class="x_cancel">Cancel</td>
+					<td style="text-align: center;font-size:20px;font-weight: bold">New Chat</td>
+					<td style="width:80px;padding-right:10px;text-align: right;font-size:16px;" class="notavailable x_create">Create</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="position: absolute;top:80px;left:0;right:0;height:40px;text-align: center;z-index:2">
+		<input type="text" style="width:100vw;padding:10px 5px 10px 60px;font-size:16px;" class="truebox normal x_search" placeholder="Search for people...">
+		<div style="position: absolute;top:0;left:0;bottom:0;width:60px;">
+			<table style="width:100%;height:100%;text-align: center;">
+				<tr>
+					<td style="font-size:20px;">To:</td>
+				</tr>
+			</table>
+		</div>
+		<div style="position: absolute;top:0;right:0;width:60px;bottom:0;z-index:1"></div>
+		<i class="icon-cancel revicon x_close" style="position: absolute;top:2px;right:2px;padding:5px;font-size:24px;color:#888;display:none;z-index: 2"></i>
+	</div>
+	<div style="position: absolute;top:70px;left:0;right:0;bottom:0;border-top:1px solid #ccc;z-index:3;display: none" class="add_chatname"></div>
+	<div style="position: absolute;top:128px;left:0;right:0;bottom:0;border-top:1px solid #ccc;z-index: 2;display: none;" class="add_search_results"></div>
+	<div style="position: absolute;top:128px;left:0;right:0;bottom:0;border-top:1px solid #ccc;z-index:1" class="add_search_current"></div>
+</div>
+@@@module_chat_addpeople@@@
+<div data-<%=template%>="<%=_tid%>" style="background: white;" class="sfit">
+	<div style="position: absolute;top:0;left:0;right:0;height:70px;" class="themebg appcontent">
+		<div style="position: absolute;bottom:0;left:0;right:0;">
+			<table style="width:100%;height:50px;">
+				<tr>
+					<td style="width:80px;padding-left:10px;font-size:16px;" class="x_cancel">Cancel</td>
+					<td style="text-align: center;font-size:20px;font-weight: bold">Add People</td>
+					<td style="width:80px;padding-right:10px;text-align: right;font-size:16px;" class="notavailable x_create">Add</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="position: absolute;top:80px;left:0;right:0;height:40px;text-align: center;z-index:2">
+		<input type="text" style="width:100vw;padding:10px 5px 10px 60px;font-size:16px;" class="truebox normal x_search" placeholder="Search for people...">
+		<div style="position: absolute;top:0;left:0;bottom:0;width:60px;">
+			<table style="width:100%;height:100%;text-align: center;">
+				<tr>
+					<td style="font-size:20px;">To:</td>
+				</tr>
+			</table>
+		</div>
+		<div style="position: absolute;top:0;right:0;width:60px;bottom:0;z-index:1"></div>
+		<i class="icon-cancel revicon x_close" style="position: absolute;top:2px;right:2px;padding:5px;font-size:24px;color:#888;display:none;z-index: 2"></i>
+	</div>
+	<div style="position: absolute;top:128px;left:0;right:0;bottom:0;border-top:1px solid #ccc;z-index: 2;display: none;" class="add_search_results"></div>
+	<div style="position: absolute;top:128px;left:0;right:0;bottom:0;border-top:1px solid #ccc;z-index:1" class="add_search_current"></div>
+</div>
+@@@module_chat_chatname@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="background: white;">
+	<div style="font-size:18px;text-align: center;padding:20px;"><b>Please enter a chat name.</b></div>
+	<div style="text-align: center;padding-top:10px">
+		<input type="text" style="font-size:18px;padding:5px;border:1px solid #ccc;" class="x_name chatboxname truebox normal s-corner-all" placeholder="Chat Name" value="<%=name%>">
+	</div>
+</div>
+@@@module_chat_search_current@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+	<div>
+		<%if(people.order.length){%>
+		<%for (var i = 0; i < people.order.length; i++) {
+			var person=people.list[people.order[i]];
+			if(!person) continue;
+			%>
+			<div class="person" data-id="<%=person.id%>" style="border-bottom:1px solid #ccc;">
+				<table style="width:100%">
+					<tr>
+						<td style="width:50px;">
+							<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(person.pic,'small')%>" class="coverimg"></div>
+						</td>
+						<td style="color:black;text-align: left;padding-left: 10px;">
+							<div style="font-size:18px;"><%=person.name%></div>
+							<div></div>
+						</td>
+						<%if(preventRemove.indexOf(person.id)==-1){%>
+						<td style="width:70px;padding-right:8px">
+							<div style="padding:5px;border:1px solid #f02;color:#f02;text-align: center;" class="x_remove s-corner-all normalicon" data-id="<%=person.id%>">Remove</div>
+						</td>
+						<%}%>
+					</tr>
+				</table>
+			</div>
+		<%}%>
+		<%}else{%>
+		<div style="padding:20px;text-align: center;font-size:18px">Search for people above.</div>
+		<%}%>
+	</div>
+</div>
+@@@module_chat_search_results@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div>
+		<%if(this.success&&this.data&&data.order){%>
+		<%for (var i = 0; i < data.order.length; i++) {
+			var person=data.list[data.order[i]];
+			if(person.id==app.user.profile.id) continue;
+			%>
+			<div class="person <%if(people.order.indexOf(person.id)>=0){%>notavailable<%}%>" data-id="<%=person.id%>" style="border-bottom:1px solid #ccc;">
+				<table>
+					<tr>
+						<td>
+							<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(person.pic,'small')%>" class="coverimg"></div>
+						</td>
+						<td style="color:black">
+							<div style="font-size:18px;padding-left:10px"><%=person.name%></div>
+							<%if(people.order.indexOf(person.id)>=0){%>
+							<div style="font-size:12px;padding-top:3px;padding-left:15px">Already Added</div>
+							<%}%>
+						</td>
+					</tr>
+				</table>
+			</div>
+		<%}%>
+		<%}else if(this.error){%>
+		<div style="padding:20px;text-align: center;font-size:18px"><%=data.error%></div>
+		<%}else if(this.success){%>
+		<div style="padding:20px;text-align: center;font-size:18px">No Results</div>
+		<%}else{%>
+		<div style="padding:20px;text-align: center;font-size:18px">Search for people above.</div>
+		<%}%>
+	</div>
+</div>
+@@@module_chat_imagemedia@@@
+<%for (var i = 0; i < data.length; i++) {
+	var pic=data[i];%>
+	<div style="padding-bottom:5px;">
+		<div style="height:<%=modules.tools.getImgHeight(pic,{maxWidth:80,maxHeight:70,units:'%'})%>px;">
+			<img src="<%=modules.tools.getImg(pic,'small')%>" style="max-width:80vw;max-height:70vh" class="s-corner-all">
+		</div>
+	</div>
+<%}%>
+@@@module_chat_item@@@
+<div data-<%=template%>="<%=_tid%>" style="<%if(data.notify&&!data.parent){%>border-top:1px solid #ccc;border-bottom:1px solid #ccc;background:#f8f8f8;<%}%>margin:10px 0px" <%if(data._id){%>data-id="<%=data._id%>" data-parent="<%=data._id%>" data-message="<%=data._id%>"<%}%> <%if(data.tempid){%>data-tempid="<%=data.tempid%>"<%}%> class="chatrow">
+	<%if(data.notify&&!data.parent){%>
+	<div style="padding:5px;text-align:center;font-size:11px;color:#555" class="bold">Chat Thread</div>
+	<%}%>
+	<div class="regularcontent">
+	<%if(data.removed&&data.removed.order){%>
+		<div style="padding:5px;text-align: center;color:#555">
+		<%if(data.removed.order.length==1){%>
+		<%if(data.user.id==data.removed.list[data.removed.order[0]].id){%>
+		<%=data.user.name%></span> left the chat
+		<%}else{%>
+		<%=data.user.name%></span> removed <%=data.removed.list[data.removed.order[0]].name%> from the chat
+		<%}%>
+		<%}else{%>
+		<%=data.user.name%></span> removed <%=data.removed.list[data.removed.order[0]].name%> and <%=(data.removed.order.length-1)%> other from the chat.
+		<%}%>
+		</div>
+	<%}else if(data.added&&data.added.order){%>
+	<div>
+		<div style="padding:5px;text-align: center;color:#555">
+			<%if(data.added.order.length==1){%>
+			<%if(data.added.list[data.added.order[0]].id==data.user.id){%>
+			<%=data.user.name%></span> joined the chat
+			<%}else{%>
+			<span class="bold"><%=data.user.name%></span> added <span class="bold"><%=data.added.list[data.added.order[0]].name%></span>
+			<%}%>
+			<%}else{%>
+			<%
+			var items=[];
+			for (var i = 0; i < data.added.order.length; i++) {
+				var item=data.added.list[data.added.order[i]];
+				if(!data.added.order[i+1]) items.push('and <span class="bold">'+item.name+'</span>');
+				else items.push('<span class="bold">'+item.name+'</span>');
+			}%>
+			<span class="bold"><%=data.user.name%></span> added <%=items.join(', ')%>
+			<%}%>
+		</div>
+	</div>
+	<%}else if(data.denied){%>
+	<div>
+		<%if(data.by!=opts.identity.id){%>
+		<div style="padding:5px;text-align: center;color:#555"><%=data.user.name.firstName()%> denied your friend request.</div>
+		<%}else{%>
+		<div style="padding:5px;text-align: center;color:#555">You denied their friend request.</div>
+		<%}%>
+	</div>
+	<%}else if(data.request){%>
+	<div>
+		<%if(data.by!=opts.identity.id){%>
+		<div style="padding:5px;text-align: center;color:#555"><%=data.user.name.firstName()%> sent you a friend request.</div>
+		<%}else{%>
+		<div style="padding:5px;text-align: center;color:#555">You sent a friend request.</div>
+		<%}%>
+		<%if(data.content){%>
+		<div style="margin:5px;padding:5px;background:#eee;color:#555;text-align: left;font-size:14px" class="s-corner-all webselectable"><%=data.content%></div>
+		<%}%>
+	</div>
+	<%}else if(data.canceled){%>
+	<div>
+		<%if(data.by!=opts.identity.id){%>
+		<div style="padding:5px;text-align: center;color:#555"><%=data.user.name.firstName()%> canceled the friend request.</div>
+		<%}else{%>
+		<div style="padding:5px;text-align: center;color:#555">You canceled the friend request.</div>
+		<%}%>
+	</div>
+	<%}else if(data.added){%>
+	<div>
+		<%if(data.by!=opts.identity.id){%>
+		<div style="padding:5px;text-align: center;color:#555"><%=data.user.name.firstName()%> added you as a friend.</div>
+		<%}else{%>
+		<div style="padding:5px;text-align: center;color:#555">You confirmed the friend request.</div>
+		<%}%>
+	</div>
+	<%}else if(data.media&&data.media.type=='call'){%>
+		<%if(data.by!=opts.identity.id){%>
+		<div style="padding:5px;text-align: center;color:#555"><%=data.user.name.firstName()%> called you</div>
+		<%}else{%>
+		<div style="padding:5px;text-align: center;color:#555">You called them</div>
+		<%}%>
+	<%}else{%>
+	<%if(data.attachment&&data.attachment.type=='tags'){%>
+	<div style="text-align: center;padding-top:5px">
+		<div style="display: inline-block;margin:auto;max-width:90vh;padding:3px 5px;font-size:14px;color:#555"><i class="icon-connect-in"></i><span class="bold"><%=data.user.name.firstName()%></span> wants to connect around <span class="bold"><%=data.attachment.data.name%></span></div>
+	</div>
+	<%}%>
+	<table style="width:100%">
+		<tr>
+			<%if(data.by==opts.identity.id){%>
+			<td style="width:25px;vertical-align:top;text-align: right;padding-right:3px;font-size:11px;padding-top:3px">
+			</td>
+			<%}else{%>
+			<td style="width:40px;vertical-align:top;text-align: right;vertical-align: bottom">
+				<div style="width:36px;height:36px;background-image:url(<%=modules.tools.getImg(data.user.pic,'small')%>);display: inline-block;margin:auto" class="coverimg userimg s-corner-all x_viewprofile" data-id="<%=data._id%>"></div>
+			</td>
+			<%}%>
+			<td style="vertical-align:top;">
+				<div style="position: relative;" class="<%if(data.by==opts.identity.id){%>chat_me_box<%}else{%>chat_other_box<%}%>">
+					<%if(data.by!=opts.identity.id){%>
+					<div class="chattime" aria-hidden="true">
+						<div style="padding-bottom:2px;color:#888;font-weight:bold;font-size:10px;padding-left:7px;display: inline-block;" aria-hidden="true"><%=data.user.name.firstName()%></div>
+						<div style="margin-left:6px;display: inline-block;font-size:10px;margin-right:5px" aria-hidden="true"><%=modules.moment.format(data._id,'simpledate')%></div>
+						<div style="display: inline-block;font-size:10px;" aria-hidden="true"><%=modules.moment.format(data._id,'time')%></div>
+					</div>
+					<%}else{%>
+					<div style="height:15px;padding-bottom:2px">
+						<div class="chattime" style="display: inline-block;float:right;padding-right:5px">
+							<div style="padding-bottom:2px;color:#888;font-weight:bold;font-size:10px;display: inline-block;" aria-hidden="true">Me</div>
+							<div style="margin-left:6px;display: inline-block;font-size:10px;margin-right:5px" aria-hidden="true"><%=modules.moment.format(data._id,'simpledate')%></div>
+							<div style="display: inline-block;font-size:10px;" aria-hidden="true"><%=modules.moment.format(data._id,'time')%></div>
+						</div>
+					</div>
+					<%}%>
+					<%if(data.images&&data.images.length&&false){%>
+					<div style="padding-bottom: 5px">
+						<%=modules.chat_global.render({type:'images',data:data.images})%>
+					</div>
+					<%}%>
+					<%if(data.start){%>
+					<table <%if(data.by==opts.identity.id){%>style="color:white"<%}%>>
+						<tr>
+							<td style="vertical-align:top">
+								<i class="icon-calendar" style="font-size:24px"></i>
+							</td>
+							<td style="padding-left:5px">
+								<div style="font-size:14px;font-weight:bold"><%=modules.moment.format(data.start,'nicedate',false,1)%></div>
+								<div style="padding-top:5px;padding-left:5px"><%=modules.moment.format(data.start,'timerange',this.end,1)%></div>
+							</td>
+						</tr>
+					</table>
+					<%}else if(data.amount){%>
+					<table style="width:100%;">
+						<tr>
+							<td style="font-size:16px;text-align: center;">
+								<%if(data.by==opts.identity.id){%>
+									You sent <span class="bold" style="color:<%=modules.tools.getMoneyColor(data.amount,false,false,false)%>"><%=modules.tools.getMoneySign(data.amount)%>$<%=modules.tools.toMoney(data.amount)%></span>
+								<%}else{%>
+									You Received <span class="bold" style="color:<%=modules.tools.getMoneyColor(data.amount,false,false,true)%>">$<%=modules.tools.toMoney(data.amount)%></span>
+								<%}%>
+							</td>
+						</tr>
+					</table>
+					<%}%>
+					<%if(data.content){%>
+					<div class="chatcontentarea" style="position: relative;">
+						<div style="position:relative;display: inline-block;text-align: left;<%if(modules.tools.isEmojiString(data.content)){%>font-size:50px<%}%>" class="s-corner-all truebox <%if(data.by==opts.identity.id){%>chat_me<%}else{%>chat_other<%}%>">
+							<%if(data.type&&data.type=='connectin'&&data.tag&&app.user.tags.tags[tag]){%>
+							<div><b><i class="icon-connect-in"></i> <%=app.user.tags.tags[tag].name%></b></div>
+							<div style="padding:2px"><%=modules.links_global.fixContent(data.content,{addSpacing:1})%></div>
+							<%}else{%>
+							<div class="chatitem webselectable" role="text" aria-label="<%=data.user.name%> <%=modules.moment.format(data._id,'ago')%> <%=data.content%>"><%=modules.links_global.fixContent(data.content,{addSpacing:1})%></div>
+							<%}%>
+							<%if(data.by!=opts.identity.id){%>
+							<div class="chatarrow" style="left:-5px"></div>
+							<%}else{%>
+							<!-- <div class="chatarrow_me"></div> -->
+							<%}%>
+							<%if(data.bookmark){%>
+							<%if(data.by==opts.identity.id){%>
+							<div style="position: absolute;top:0px;left:0px;">
+								<i class="icon-bookmark" style="color:white;font-size:11px"></i>
+							</div>
+							<%}else{%>
+							<div style="position: absolute;top:0px;right:0px;">
+								<i class="icon-bookmark" style="color:black;font-size:11px"></i>
+							</div>
+							<%}%>
+							<%}%>
+						</div>
+					</div>
+					<%}%>
+				</div>
+			</td>
+			<%if(data.by!=opts.identity.id){%>
+			<td style="width:50px;vertical-align:top;text-align: left;padding-left:3px;font-size:11px;padding-top:16px;display: none;">
+				<div class="chattime">
+					<div><%=modules.moment.format(data._id,'simpledate')%></div>
+					<div><%=modules.moment.format(data._id,'time')%></div>
+				</div>
+			</td>
+			<%}%>
+		</tr>
+	</table>
+	<%}%>
+	<%if(data.media&&data.media.type&&data.media.data){
+		data.media.data.isMe=(data.by!=opts.identity.id)?0:1;
+	%>
+	<div style="padding-bottom: 5px;padding-top:5px;">
+		<%=modules.chat_global.render(data,false,(this.renderData)?renderData.container:false)%>
+	</div>
+	<%}%>
+	<%if(data.attachment&&data.attachment.type!='tags'){%>
+	<div style="color:#888">
+	<%=modules.chat_attachment_global.render(data.attachment,false,(this.renderData)?renderData.container:false)%>
+	</div>
+	<%}%>
+	<%if(data.post){%>
+	<div>
+		<%=modules.chat_global.render(data)%>
+	</div>
+	<%}%>
+	</div>
+	<div class="retryarea retryitem">
+		<div style="margin:18px 5px 0px 5px;padding:5px;border:1px solid #f02;font-size: 14px" class="s-corner-all x_retry">
+			<i class="icon-refresh"></i> Retry
+		</div>
+	</div>
+	<div class="retrymessage retryitem" style="padding:4px;text-align: center;color:#f02">
+		<i class="icon-warning-sign"></i> Bad Network Connection, please try again.
+	</div>
+	<div class="<%=data._id%>_replies">
+	<%if(data.children&&data.children.order&&data.children.order.length){%>
+		<%for (var i = 0; i < data.children.order.length; i++){
+			var item=data.children.list[data.children.order[i]];%>
+			<%=$.fn.render({template:'module_chat_item',data:{data:item,opts:opts},returntemplate:true})%>
+		<%}%>
+	<%}%>
+	</div>
+	<%if(data.notify&&!data.parent){%>
+	<div style="text-align: right;">
+		<div class="x_reply bold" data-chatid="<%=data._id%>" style="padding:5px;display: inline-block;font-size:11px;color:#555">Reply to Thread</div>
+	</div>
+	<%}%>
+</div>
+@@@chat_post_preview@@@
+<div style="width:90vw;color:black;margin:5px 2px;border:1px solid #ccc;" class="headercolor s-corner-all">
+	<div class="x_viewpost">
+		<table style="width:100%;text-align: left;">
+			<tr>
+				<td style="width:50px;vertical-align:top">
+					<div class="coverimg s-corner-tl" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(data.user.pic,'small')%>)"></div>
+				</td>
+				<td style="vertical-align:top;padding-top:3px">
+					<div style="font-size:14px;font-weight: bold"><%=data.user.name%></div>
+					<div style="padding-top:2px;padding-left:2px;font-size:11px"><span class="livetime" data-ts="<%=data._id%>"><%=modules.moment.format(data._id,'ago')%></span> <i class="<%=modules.inlinepermissions_global.getIcon(data.perms)%>"></i></div>
+				</td>
+				<td style="width:40px;text-align: center;vertical-align: middle;">
+					<i class="icon-right-open" style="font-size:20px"></i>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+	<%if(data.media&&data.media.type){%>
+	<div>
+		<%=modules.chat_global.render(data,1)%>
+	</div>
+	<div style="height:6px;"></div>
+	<%}else{%>
+	<div style="padding:5px;">
+		<%=app.wrapContent(modules.links_global.fixContent(modules.feed_global.parseMessage(data,false,1)),200)%>
+	</div>
+	<%}%>
+	</div>
+</div>
+@@@modules_chat_ontyping@@@
+<div data-<%=template%>="<%=_tid%>" data-typing="<%=by%>" class="feeditems" style="background:white;">
+	<table style="width:100%">
+		<tr>
+			<td style="width:46px;vertical-align:bottom">
+				<div style="width:36px;height:36px;background-image:url(<%=app.getUserImg(by,'small')%>);margin:auto" class="coverimg circle"></div>
+			</td>
+			<td>
+				<div style="padding:10px;display: inline-block;" class="s-corner-all">
+					<div class="chatwave">
+					    <span class="chatdot"></span>
+					    <span class="chatdot"></span>
+					    <span class="chatdot"></span>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+@@@module_chat_readreceipts@@@
+<div class="readreceipts" style="text-align: right;padding-right:5px;margin-top:-5px">
+	<%if(readby&&readby.length){%>
+	<%for (var i = 0; i < readby.length; i++) {%>
+	<div style="width:20px;height:20px;margin:0px 2px;background-image:url(<%=app.getUserImg(readby[i],'small')%>);display: inline-block;" class="coverimg circle"></div>
+	<%}%>
+	<%}else{%>
+	<i class="icon-check-1" style="color:white;font-size:18px;padding:3px"></i>
+	<%}%>
+</div>

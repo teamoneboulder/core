@@ -1,0 +1,10 @@
+@@@modules_astroview_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index:1000000;background:black;opacity:0;color:white">
+	<div style="position: absolute;top:0;left:0;right:0;padding:10px;font-size:20px;background:rgba(0,0,0,.4);z-index: 2;text-align: center;" class="timeselect">
+		Solar Time
+		<i class="x_closer icon-cancel" style="position:absolute;top:5px;right:0px;font-size:24px;color:white"></i>	
+	</div>
+	<div style="position: absolute;top:0px;left:0;right:0;bottom:0px;z-index: 1" id="canvascontainer">
+		<canvas id="solarsystem" style="width:100%;height:100%;"></canvas>
+	</div>
+</div>

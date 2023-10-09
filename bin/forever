@@ -1,0 +1,18 @@
+#!/bin/bash
+if [[ "$1" = "" ]] ; then
+echo "...need an action.";
+exit;
+fi
+if [[ "$1" = "start" ]] ; then
+	if [[ "$2" = "" ]] ; then
+	echo "...need a file.";
+	exit;
+	fi
+	if [[ "$2" = "${ROOT}/node/notifier.js" ]] ; then
+	${ROOT}/node/node_modules/.bin/forever $1 -l ${LOGDIR}/notifier.log -a --minUptime 1000 --spinSleepTime 1000 $2
+	exit;
+	fi
+	${ROOT}/node/node_modules/.bin/forever $1 -l ${LOGDIR}/forever.log -a $2
+exit;
+fi
+${ROOT}/node/node_modules/.bin/forever $1 $2

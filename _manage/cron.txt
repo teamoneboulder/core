@@ -1,0 +1,3 @@
+PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+ROOT=[home]/[project]
+*/1 * * * * admin forever

@@ -1,0 +1,23 @@
+@@@viewselect_button@@@
+<div data-<%=template%>="<%=_tid%>" style="height:100%">
+	<%if(types.order.length==2){%>
+	<table style="height:100%;">
+		<tr>
+			<td>
+	<%for (var i = 0; i < types.order.length; i++) {
+		var item=types.list[types.order[i]];%>
+		<i class="togglebtn <%=item.icon%> <%if(current.id==item.id){%>selected<%}%>" style="padding:3px;font-size:14px;" data-type="<%=item.id%>"></i>
+	<%}%>	
+			</td>
+		</tr>
+	</table>
+	<%}else{%>
+	<table style="height:100%">
+		<tr>
+			<td class="current">
+				<i class="<%=current.icon%>" style="font-size:14px"></i> <%=current.name%>
+			</td>
+		</tr>
+	</table>
+	<%}%>
+</div>

@@ -1,0 +1,12 @@
+export HOME=/var/www
+export PROJECT=one-core
+export ROOT=$HOME/${PROJECT}
+export LOGDIR=/var/log/${PROJECT}
+export NODE_PATH=$HOME/${PROJECT}/node/node_modules
+export XDG_RUNTIME_DIR=/run/user/1000
+export PATH=$PATH:~/.local/bin:/usr/local/lib/python3.6/dist-packages
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+alias python=python3
+alias cdr='cd $HOME/${PROJECT}'
+alias urldecode='sed "s@+@ @g;s@%@\\\\x@g" | xargs -0 printf "%b"'
+alias aliases='/usr/bin/php ${ROOT}/classes/admin_cli.php processfile ${ROOT}/_manage/conf/aliases aliases;cp $HOME/conf/aliases /root/.bash_aliases;source ~/.bashrc;echo "Aliases Updated!!!"'

@@ -1,0 +1,597 @@
+@@@home_page@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg scrollY" style="background:white;z-index: 1;">
+	<div style="width:100%;height:100%;">
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;">
+			<div style="position:absolute;top:40px;left:0;right:0;padding:5px;z-index:1" class="loginform">
+				<div style="text-align:center;padding-bottom:20px;">
+					<img src="<%=_.getImg(_page.pic,'square')%>" style="height:120px" class="l-corner-all">
+				</div>
+				<%if(_page.pic_text){%>
+				<div style="text-align: center;">
+					<img src="<%=_.getImg(_page.pic_text,'full')%>" style="height:100px;margin:auto">
+				</div>
+				<%}else{%>
+				<div style="padding:5px;text-align: center;color:#555;font-size:24px"><%=_page.name%></div>
+				<%}%>
+				<div style="width:400px;max-width: 100%;margin:auto;padding-top:50px;">
+					<div id="buttonarea">
+						<%if(page.events){%>
+						<div style="font-size:20px;padding-bottom:5px;color:#555">Upcoming Events</div>
+						<%for (var i = 0; i < page.events.order.length; i++) {
+							var event=page.events.list[page.events.order[i]];%>
+							<div style="margin-top:5px;" class="rowitem itable" link="<%=app.siteurl%>/welcome/event/<%=event.id%>" data-type="self">
+							    <div class="tcell" style="width:120px;background: white;vertical-align: top;">
+							        <div style="width:120px;height:90px;background-image:url(<%=_.getImg(event.pic,'background')%>)" class="coverimg s-corner-all"></div>
+							    </div>
+							    <div class="tcell" style="vertical-align:top">
+							        <div style="padding:0px 20px 20px 20px;background: white;">
+							            <div style="font-size:18px;padding-bottom:10px;color:#333;text-align:left"><%=event.name%></div>
+							            <%if(event.oneboulder){%>
+							            <div class="button1 m-corner-all" style="display: inline-block;margin:3px"><i class="icon-calendar"></i> ONE|Boulder Event!</div>
+							            <%}%>
+							            <div style="font-size:20px">
+							                <div class="table" style="padding:5px 0px;text-align:left">
+							                    <div class="tcell" style="width:30px;text-align: left;font-size:16px"><i class="icon-real-time"></i></div>
+							                    <div class="tcell" style="font-size:14px;padding-left:5px;text-align: left;"><%=modules.moment.format(event.start,'event_full_short',event.end,1)%></div>
+							                </div>
+							            </div>
+							        </div>
+							    </div>
+							</div>
+						<%}%>
+						<%}%>
+						<%if(_page.onepass){%>
+						<div>
+							<div class="button1 m-corner-all x_checkin" style="text-align: center;">Check-In with the App and receive 11 points!</div>
+							<div class="button2 m-corner-all x_getapp" style="text-align: center;margin-top:20px">Get The App!</div>
+							<div class="button0 m-corner-all x_onepass" style="text-align: center;margin-top:20px;border:1px solid #ccc;padding:8px">Learn About <b>ONE</b>|Pass</div>
+							<div class="button0 m-corner-all x_create" style="text-align: center;margin-top:20px;border:1px solid #ccc;padding:8px">Create An Account</div>
+						</div>
+						<%}else{%>
+						<div class="button2 m-corner-all x_getapp" style="text-align: center;margin-top:20px">Get the App!</div>
+						<%}%>
+					</div>
+					<div id="createarea" style="<%if(_page&&_page.onepass){%>display: none<%}%>">
+						<%if(_page&&_page.onepass){%>
+						<div>
+							<div class="button0 x_goback m-corner-all"><i class="icon-left-open"></i> Go Back</div>
+						</div>
+						<%}%>
+						<div style="padding-top:30px">
+							<div class="prettyinput">
+								<label>
+								  <input type="text" required id="name" style="box-sizing: border-box;"/>
+								  <div class="label-text">Name</div>
+								</label>
+							</div>
+							<div class="prettyinput">
+								<label>
+								  <input type="email" required id="email" style="box-sizing: border-box;"/>
+								  <div class="label-text">Email</div>
+								</label>
+							</div>
+						</div>
+						<div style="position: relative;max-width: 320px;margin:auto;">
+							<div class="searcharea">
+								<div class="prettyinput">
+									<label>
+									  <input type="text" style="box-sizing: border-box;width:100%;background: transparent;" required id="referedby"/>
+									  <div class="label-text">Refered By</div>
+									</label>
+								</div>
+							</div>
+							<div class="resultarea" style="display: none;padding:0px 10px 20px 10px;z-index: 2">
+								<div style="padding-left:5px;padding-top:0px;font-weight: bold;color:#555;font-size:14px">Refered By</div>
+								<div class="resultareacontent" style="color:white"></div>
+							</div>
+							<div class="searchele m-corner-all" style="position: absolute;top:60px;left:5px;right:5px;border:1px solid #ccc;display: none;max-height:250px;background: white;z-index: 2"></div>
+						</div>
+						<div style="width:280px;color:#555;margin:10px auto;display: none" class="x_toggle notifications" id="notifications">
+							<i class="icon-check-empty toggler"></i> Send me email notifications
+						</div>
+						<div style="display:none">
+							<div style="width:280px;color:#555;margin:10px auto;" class="x_toggle waiver" data-waiver="media">
+								<i class="icon-check-empty toggler"></i> I Agree to the <a href="https://docs.google.com/document/d/15TPsy0JaG9Kh_UvKi8V1Q1guXFAhrykz0de_GDTSaEo" target="_blank" class="linker">Covid Waiver</a>
+							</div>
+							<div style="width:280px;color:#555;margin:10px auto;" class="x_toggle waiver" data-waiver="media">
+								<i class="icon-check-empty toggler"></i> I Agree to the <a href="https://docs.google.com/document/d/1EQDh_uuR0-_VADxsjP4A_oevdf0eVGayIuo5eADLaN4" target="_blank" class="linker">Liability Waiver</a>
+							</div>
+							<div style="width:280px;color:#555;margin:10px auto;" class="x_toggle waiver" data-waiver="media">
+								<i class="icon-check-empty toggler"></i> I Agree to the <a href="https://docs.google.com/document/d/1lmmZrtDhIp_IYbXf2M9mZAryQQEClSNzxgcOLLWtnfs" target="_blank" class="linker">Media Waiver</a>
+							</div>
+						</div>
+						<div id="response" style="padding-top: 15px;text-align:left;display:none;font-size:16px;color:#555;font-weight: bold;width:320px;margin:auto;"></div>
+						<div style="max-width:320px;margin:auto;margin-top:40px;margin-bottom:50px;position: relative;">
+							<div class="truebox">
+								<div style="display:inline-block;width:100%;text-align:center;padding:10px;color:white;font-size:20px;font-weight: normal" id="reset" class="x_loginbtn truebox shineybutton button1">
+									<%if(window._eventinfo){%>
+									<b>Get Tickets!</b>
+									<%}else{%>
+									<b>Join ONE|<b>Boulder</b>!</b>
+									<%}%>
+								</div>
+							</div>
+						</div>
+						<div style="margin-top:50px;text-align: center;padding-bottom: 100px;">Powered by ONE|<b>Boulder</b></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@home_page_cover@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit" style="z-index: 2;background: white;">
+	<div style="position: absolute;top:0;left:0;right:0;height:50px;background:#555;color:white">
+		<div class="table">
+			<div class="tcell" style="padding-left:10px;font-size:20px">About ONE|Pass</div>
+			<div class="tcell x_cancel" style="width:50px;text-align:center">
+				<i class="icon-cancel" style="font-size:20px"></i>
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;top:50px;left:0;right:0;bottom:0;" class="scrollY">
+		<%if(_apptext.list.onepass_info){%>
+		<div class="redactorcontent" style="width:600px;max-width:90%;margin:auto">
+			<%=_apptext.list.onepass_info.content%>
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@home@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg scrollY" style="background:white">
+	<div style="width:100%;height:100%;">
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;">
+			<div style="position:absolute;top:40px;left:0;right:0;padding:5px;z-index:1" class="loginform">
+				<%if(window.location.href.indexOf('team')>=0){%>
+				<div>
+
+				</div>
+				<div style="max-width: 320px;margin:auto;margin-bottom:20px;" >
+					<div class="itable">
+						<div class="tcell" style="width:40px;">
+							<i class="icon-contacts" style="font-size:36px;"></i>
+						</div>
+						<div class="tcell" style="font-weight:bold;text-align:left;padding-left:15px">
+							<div></div>
+							<div>Nucleus</div>
+						</div>
+					</div>
+					<div style="padding-bottom:15px">
+						<div class="itable">
+							<div class="tcell" style="width:100px;"><div class="s-corner-all coverimg" style="width:100px;height:100px;border:1px solid #ccc;margin:5px;background-image:url(https://s3.amazonaws.com/one-light/upload/341ca601390222/square.jpeg);" class="coverimg"></div></div>
+							<div class="tcell" style="text-align:left;padding-left:5px">
+								<div style="font-size: 20px;padding-bottom:5px;padding-top:5px;font-weight:bold">Argon</div>
+								<div><i class="icon-hero"></i> Strategic Networking</div>
+								<div style="padding-left:5px">
+									<div style="padding-bottom: 10px;padding-bottom:5px"><a href="mailto:nikkojoyce@gmail.com">nikkojoyce@gmail.com</a></div>
+									<div style="">(978) 413-4471</div>
+									<div style="display: none;">View Bio</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="padding-bottom:15px">
+						<div class="itable">
+							<div class="tcell" style="width:100px;"><div class="s-corner-all coverimg" style="width:100px;height:100px;border:1px solid #ccc;margin:5px;background-image:url(https://s3.amazonaws.com/one-light/upload/cd9aa8ef94697d/square.jpeg);" class="coverimg"></div></div>
+							<div class="tcell" style="text-align:left;padding-left:5px">
+								<div style="font-size: 20px;padding-bottom:5px;padding-top:5px;font-weight: bold;">Juicy</div>
+								<div>App Development</div>
+								<div style="padding-left:5px">
+									<div style="padding-bottom: 10px;padding-bottom:5px"><a href="mailto:nikkojoyce@gmail.com">tbassett44@gmail.com</a></div>
+									<div style="">(815) 735-1272</div>
+									<div style="display: none;">View Bio</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="padding-bottom:15px">
+						<div class="itable">
+							<div class="tcell" style="width:100px;"><div class="s-corner-all coverimg" style="width:100px;height:90px;border:1px solid #ccc;margin:5px;background-image:url(https://s3.amazonaws.com/one-light/upload/1f602ce89169d6/square.jpeg);" class="coverimg"></div></div>
+							<div class="tcell" style="text-align:left;padding-left:5px">
+								<div style="font-size: 20px;padding-bottom:5px;padding-top:5px;font-weight: bold;">Schuyler</div>
+								<div>Systems Engineer</div>
+								<div style="padding-left:5px">
+									<div style="padding-bottom: 10px;padding-bottom:5px"><a href="mailto:schuyler.sowa@gmail.com">schuyler.sowa@gmail.com</a></div>
+									<div style="">(715) 410-6523</div>
+									<div style="display: none;">View Bio</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="padding-bottom:15px">
+						<div class="itable">
+							<div class="tcell" style="width:100px;"><div class="s-corner-all coverimg" style="width:100px;height:100px;border:1px solid #ccc;margin:5px;background-image:url(https://one-light.s3.dualstack.us-east-1.amazonaws.com/img/0fdb3670944b63/small.jpeg);" class="coverimg"></div></div>
+							<div class="tcell" style="text-align:left;padding-left:5px">
+								<div style="font-size: 20px;padding-bottom:5px;padding-top:5px;font-weight: bold;">Cameron</div>
+								<div>Marketing</div>
+								<div style="padding-left:5px">
+									<div style="padding-bottom: 10px;padding-bottom:5px"><a href="mailto:murdock.cameron@gmail.com">murdock.cameron@gmail.com</a></div>
+									<div style="">(720) 375-2593</div>
+									<div style="display: none;">View Bio</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%}%>
+				<%if(window._eventinfo){%>
+				<div style="text-align:center;padding-bottom:20px;">
+					<img src="<%=_.getImg(_eventinfo.data.pic,'background')%>" style="height:120px" class="l-corner-all">
+				</div>
+				<div style="padding:5px;text-align: center;color:#555;font-size:24px">Welcome to <%=_eventinfo.data.name%></div>
+				<div style="padding:10px;text-align: center;color:#555;font-size:14px">An event by <b>ONE</b>|Boulder</div>
+				<%}else if(window.location.href.indexOf('/team')==-1){%>
+				<div style="text-align:center;padding-bottom:20px;">
+					<img src="<%=img%>" style="height:120px" class="l-corner-all">
+				</div>
+				<div style="padding:5px;text-align: center;color:#555;font-size:24px">Welcome to</div>
+				<div style="padding:10px;text-align: center;color:#555;font-size:24px">ONE|<b>Boulder</b></div>
+				<%}else{%>
+				<div style="max-width:320px;width:100%;margin:auto;">
+					<div class="itable">
+						<div class="tcell" style="width:40px;">
+							<i class="icon-add-friend" style="font-size:36px;"></i>
+						</div>
+						<div class="tcell" style="font-weight:bold;text-align:left;padding-left:15px">
+							<div></div>
+							<div>Create an account</div>
+						</div>
+					</div>
+				</div>
+				<%}%>
+				<div class="topbox" data-page="login">
+					<div style="padding-top:10px;max-width:320px;width:100%;margin:auto;position:relative;" class="truebox l-corner-top glossybg2">
+						<%if(window.location.href.indexOf('/team')==-1){%>
+						<div style="margin-bottom:20px;">
+							<%if(window.location.pathname=='/welcome'){%>
+							<div style="padding-top:20px;text-align: center;padding-bottom:15px">
+								<div class="button1 x_donate">Donate to ONE|Boulder</div>
+							</div>
+							<%}%>
+							<div>
+								<div class="button2 x_open" style="text-align: center;">I have an account on the App</div>
+							</div>
+							<div style="padding-top:20px;text-align: center;">
+								~ OR ~
+							</div>
+							<div style="padding-top:20px;text-align: center;">
+								Continue as an Explorer
+							</div>
+						</div>
+						<%}%>
+						<div class="prettyinput">
+							<label>
+							  <input type="text" required id="name" style="box-sizing: border-box;"/>
+							  <div class="label-text">Name</div>
+							</label>
+						</div>
+						<div class="prettyinput">
+							<label>
+							  <input type="email" required id="email" style="box-sizing: border-box;"/>
+							  <div class="label-text">Email</div>
+							</label>
+						</div>
+					</div>
+					<div style="position: relative;max-width: 320px;margin:auto;">
+						<div class="searcharea">
+							<div class="prettyinput">
+								<label>
+								  <input type="text" style="box-sizing: border-box;width:100%;background: transparent;" required id="referedby"/>
+								  <div class="label-text">Refered By</div>
+								</label>
+							</div>
+						</div>
+						<div class="resultarea" style="display: none;padding:0px 10px 20px 10px;z-index: 2">
+							<div style="padding-left:5px;padding-top:0px;font-weight: bold;color:#555;font-size:14px">Refered By</div>
+							<div class="resultareacontent" style="color:white"></div>
+						</div>
+						<div class="searchele m-corner-all" style="position: absolute;top:60px;left:5px;right:5px;border:1px solid #ccc;display: none;max-height:250px;background: white;z-index: 2"></div>
+					</div>
+					<div style="width:280px;color:#555;margin:10px auto;display: none" class="x_toggle notifications" id="notifications">
+						<i class="icon-check-empty toggler"></i> Send me email notifications
+					</div>
+					<div style="display: none;">
+						<div style="width:280px;color:#555;margin:10px auto;" class="x_toggle waiver" data-waiver="media">
+							<i class="icon-check-empty toggler"></i> I Agree to the <a href="https://docs.google.com/document/d/15TPsy0JaG9Kh_UvKi8V1Q1guXFAhrykz0de_GDTSaEo" target="_blank" class="linker">Covid Waiver</a>
+						</div>
+						<div style="width:280px;color:#555;margin:10px auto;" class="x_toggle waiver" data-waiver="media">
+							<i class="icon-check-empty toggler"></i> I Agree to the <a href="https://docs.google.com/document/d/1EQDh_uuR0-_VADxsjP4A_oevdf0eVGayIuo5eADLaN4" target="_blank" class="linker">Liability Waiver</a>
+						</div>
+						<div style="width:280px;color:#555;margin:10px auto;" class="x_toggle waiver" data-waiver="media">
+							<i class="icon-check-empty toggler"></i> I Agree to the <a href="https://docs.google.com/document/d/1lmmZrtDhIp_IYbXf2M9mZAryQQEClSNzxgcOLLWtnfs" target="_blank" class="linker">Media Waiver</a>
+						</div>
+					</div>
+					<div id="response" style="padding-top: 15px;text-align:left;display:none;font-size:16px;color:#555;font-weight: bold;width:320px;margin:auto;"></div>
+					<div style="max-width:320px;margin:auto;margin-top:40px;margin-bottom:50px;position: relative;">
+						<div class="truebox">
+							<div style="display:inline-block;width:100%;text-align:center;padding:10px;color:white;font-size:20px;font-weight: normal" id="reset" class="x_loginbtn truebox shineybutton button1">
+								<%if(window._eventinfo){%>
+								<b>Get Tickets!</b>
+								<%}else{%>
+								<b>Join ONE|<b>Boulder</b>!</b>
+								<%}%>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@home_team@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg scrollY" style="background:white">
+	<div style="width:100%;height:100%;">
+		<div style="max-width:320px;margin:auto;">
+			<div style="padding:5px;font-size:20px;border-bottom:1px solid #ccc;">Team page <i class="icon-cancel" style="float:right;font-size:24px"></i></div>
+			<div style="border-bottom: 1px solid #xxx;">
+				<div class="itable">
+					<div class="tcell" style="width:50px;"><div class="s-corner-all" style="width:50px;height:50px;border:1px solid #ccc;margin:5px"></div></div>
+					<div class="tcell" style="text-align:left">
+						<div style="font-size: 20px;padding-bottom:5px;padding-top:5px;font-weight: bold;">Argon</div>
+						<div style="padding-bottom: 10px;">Strategic Networking</div>
+					</div>
+				</div>
+			</div>
+			<div style="border-bottom: 1px solid #xxx;">
+				<div class="itable">
+					<div class="tcell" style="width:50px;"><div class="s-corner-all" style="width:50px;height:50px;border:1px solid #ccc;margin:5px"></div></div>
+					<div class="tcell" style="text-align:left">
+						<div style="font-size: 20px;padding-bottom:5px;padding-top:5px">Juicy</div>
+						<div style="padding-bottom: 10px;">Strategic Networking</div>
+					</div>
+				</div>
+			</div>
+			<div style="border-bottom: 1px solid #xxx;">
+				<div class="itable">
+					<div class="tcell" style="width:50px;"><div class="s-corner-all" style="width:50px;height:50px;border:1px solid #ccc;margin:5px"></div></div>
+					<div class="tcell" style="text-align:left">
+						<div style="font-size: 20px;padding-bottom:5px;padding-top:5px">Schuyler</div>
+						<div style="padding-bottom: 10px;">Strategic Networking</div>
+					</div>
+				</div>
+			</div>
+			<div style="border-bottom: 1px solid #xxx;">
+				<div class="itable">
+					<div class="tcell" style="width:50px;"><div class="s-corner-all" style="width:50px;height:50px;border:1px solid #ccc;margin:5px"></div></div>
+					<div class="tcell" style="text-align:left">
+						<div style="font-size: 20px;padding-bottom:5px;padding-top:5px">Cameron</div>
+						<div style="padding-bottom: 10px;">Strategic Networking</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@home_tickets@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg scrollY" style="background:white">
+	<div style="width:100%;height:100%;">
+		<div style="max-width:320px;margin:auto;">
+			<div style="position: relative;">
+				<div class="highlightbutton2" style="padding:5px;text-align: left;font-weight: bold;padding-bottom: 20px;padding-top: 10px">Tickets for <%=_eventinfo.data.name%></div>
+			<%if(_eventinfo.data.ticket&&_eventinfo.data.ticket.tickets){
+				var isDonation=false;
+			%>
+			<div style="padding:5px;background:#eee" class="m-corner-all">
+			<%for (var i = _eventinfo.data.ticket.tickets.order.length - 1; i >= 0; i--) {
+				var ticket=_eventinfo.data.ticket.tickets.list[_eventinfo.data.ticket.tickets.order[i]];
+				if(ticket.available_to&&ticket.available_to.length&&ticket.available_to.indexOf('explorer')==-1) continue;
+				if(ticket.type=='donation'){
+					isDonation=true;
+				%>
+				<div style="padding:5px;text-align: center;font-size:20px;font-weight: bold;"><%=ticket.name%></div>
+				<div style="font-size:40px;color:#888;text-align: center;padding:10px;" class="x_donate">$0</div>
+				<%}else{
+			%>
+				<div style="padding:5px;font-size:15px;" class="ticketitem" data-id="<%=ticket.id%>" data-type="web">
+	                <table style="width:100%">
+	                    <tr>
+	                        <td style="padding-left:5px">
+	                            <div style="font-size:16px" class="bold"><%=ticket.name%></div>
+	                            <div style="padding-left:5px"><%if(event.ticket_settings&&event.ticket_settings.showremaining||ticket.remaining<10){%><span style="font-size:12px;font-weight: normal"><%=ticket.remaining%>/<%=ticket.quantity%> remaining</span><%}%></div>
+	                        </td>
+	                        <td style="width:80px;text-align: right;padding-right:5px;font-size:16px;vertical-align: middle;">
+	                            <%if(ticket.type=='donation'){%><%=$.fn.render({template:'event_donation',data:{data:{id:ticket.id}},returntemplate:true})%><%}else{%>$<%=modules.tools.toMoney(ticket.price)%><%}%></td>
+	                        <td style="width:60px;text-align: right;padding-right:5px;font-size:16px;vertical-align: top;padding-top: 3px;position: relative;">
+	                            <div class="ticketselect m-corner-all" style="display:inline-block;border:1px solid #ccc;">
+	                                <div style="display: inline-block;">
+	                                    <span class="ticket_quantity select"></span>
+	                                </div>
+	                                <i class="icon-down-open" style="position: absolute;top:12px;right:8px;pointer-events: none;font-size:12px"></i>
+	                            </div>
+	                            <div class="ticketsoldout" style="font-size:11px">
+	                                Sold Out!
+	                            </div>
+	                        </td>
+	                    </tr>
+	                </table>
+	            </div>
+	            <%}%>
+			<%}%>
+			</div>
+			<%if(!isDonation){%>
+			<div style="padding:5px;text-align:right;">
+				<div class="itable" style="padding-bottom:5px">
+					<div class="tcell" style="text-align: right;">Tickets:</div>
+					<div class="tcell" style="width:60px;"><span class="x_original_total"></span></div>
+				</div>
+				<div class="itable" style="padding-bottom:5px">
+					<div class="tcell" style="text-align: right;">Card Processing Fees:</div>
+					<div class="tcell" style="width:60px;"><span class="x_fees"></span></div>
+				</div>
+				<div class="itable" style="padding-bottom:5px">
+					<div class="tcell" style="text-align: right;">Platform Fees:</div>
+					<div class="tcell" style="width:60px;"><span class="x_pfees"></span></div>
+				</div>
+				<div style="text-align:right">
+					<div class="button2 s-corner-all number_input_click" style="display: inline-block;">
+						<div style="text-align: right;display: inline-block;"><b>Donation</b>:</div>
+						<div style="width:60px;display: inline-block;"><span class="number_input"></span></div>
+					</div>
+				</div>
+				<div class="itable">
+					<div class="tcell" style="text-align: right;"><b>Total</b>:</div>
+					<div class="tcell" style="width:60px;"><span class="x_total"></span></div>
+				</div>
+				<div style="padding-top:5px;color:green;font-size:11px;display:none" class="x_include">Includes One Month Membership!</div>
+			</div>
+			<%}%>
+			<div style="background: white;padding:0px 10px;margin-top:40px;">
+				<div style="font-size:14px;color:#333;font-weight: bold;" class="bold">Payment Information</div>
+				<div style="padding-top:5px;">
+					<div style="padding:10px 5px;border-bottom:1px solid #ccc">
+					    <div id="card-element" style="min-height:20px"></div>
+					    <div id="card-errors"></div>
+					</div>
+				</div>
+			</div>
+			<%if(df(_eventinfo,'data.ticket_settings.onboard')){%>
+			<div style="padding-top:40px;">
+				<div style="margin-top:15px">
+					<div class="itable x_toggleplayer">
+						<div class="tcell" style="width:40px;text-align: center">
+							<i class="icon-check-empty" style="font-size:24px;"></i>
+						</div>
+						<div class="tcell" style="text-align: left;">
+							Upgrade to player level ($11/mo) to unlock donation based events.  Save $11 on the first month!
+						</div>
+					</div>
+				</div>
+			</div>
+			<%}%>
+			<div style="text-align: center;padding-top:20px;" class="x_terms">
+				<div class="itable">
+					<div class="tcell" style="width:40px;text-align: center">
+						<i class="checker icon-check-empty" style="font-size:24px;"></i>
+					</div>
+					<div class="tcell" style="text-align: left;">
+						I agree to the <span class="bold x_viewterms" style="font-weight:bold">terms and conditions</span>.
+					</div>
+				</div>
+			</div>
+			<div style="margin-top:40px;margin-bottom:50px;position: relative;">
+				<div class="truebox">
+					<div style="display:inline-block;width:100%;text-align:center;padding:10px;color:white;font-size:14px;font-weight: normal" id="reset" class="x_send truebox shineybutton button1">
+						<b><span class="submittext">Buy Tickets!</span></b>
+					</div>
+				</div>
+			</div>
+			<%}else{%>
+			<div style="padding:5px;background: #eee;margin-bottom:30px;" class="m-corner-all"><i class="icon-thumbs-up"></i>There are no tickets for this event, come on in!</div>
+			<div style="padding:5px;text-align:center;" link="<%=(app.siteurl+'/download')%>" data-type="self" class="button1">Get the app and stay connected!</div>
+			<%}%>
+		</div>
+	</div>
+</div>
+@@@home_qrs@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg scrollY" style="background:white">
+	<div style="max-width: 600px;margin:auto;width:100%;padding-top:50px;">
+		<div style="height: 50px" class="button1 x_next truebox">
+			<table style="width:100%;height:100%;text-align: center;font-size:18px;" class="bold">
+				<tr>
+					<td class="x_done">Download the ONE|Boulder app to Play!</td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<%if(content&&content.confirmation){%>
+			<div style="padding:16px;" class="redactor_content">
+				<%=content.confirmation%>
+			</div>
+			<%}else{%>
+			<div style="padding:20px;font-size:24px;text-align: center;">Congrats!</div>
+			<div style="padding:10px;text-align: center;font-size:16px;">You are going to <%=eventdata.data.name%>!</div>
+			<div style="padding:10px;text-align: center;font-size:16px;">We emailed you a copy of your receipt.</div>
+			<%}%>
+			<div>
+			<%for (var i = 0; i < qrs.length; i++) {
+				var qr=qrs[i];%>
+				<div style="padding:5px;text-align: center;"><div style="padding-bottom:5px;font-size: 18px;color:#888;font-weight: bold">Ticket <%=(i+1)%>/<%=(qrs.length)%></div><div><img src="<%=qr%>" style="width:50%;text-align: center;display: inline-block;"></div></div>
+			<%}%>
+			</div>
+		</div>
+	</div>
+</div>
+@@@home_plans@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit coverimg scrollY" style="background:white">
+	<div style="width:100%;height:100%;">
+		<div style="width:100%;height:100%;position:absolute;top:0;left:0;">
+			<div style="position:absolute;top:40px;left:0;right:0;padding:5px;z-index:1" class="loginform">
+				<div style="text-align:center;padding-bottom:20px;">
+					<img src="<%=img%>" style="height:120px" class="l-corner-all">
+				</div>
+				<div style="padding:10px;text-align: center;color:#555;font-size:24px">Pick a Plan!</div>
+				<div class="topbox">
+					<div style="width:500px;max-width: 100%;margin:auto">
+						<div style="padding-top:10px;max-width:420px;width:100%;margin:auto;position:relative;text-align: center;padding-bottom:100px" class="truebox l-corner-top">
+							<div style="padding-bottom: 20px ">
+								<div style="display:inline-block;padding:5px 10px;margin:0px 5px;" class="s-corner-all button0 x_goto" data-to="player">Player</div>
+								<div style="display:inline-block;padding:5px 10px;margin:0px 5px;" class="s-corner-all button0 x_goto" data-to="onepass">ONE|Pass</div>
+							</div>
+							<div>
+								<div class="page" data-page="onepass">
+									<div style="font-size:22px">Get a ONE|Pass</div>
+									<div style="font-size:16px;padding-top:5px">$22/month - Includes $11/month Player Membership</div>
+									<div style="padding:15px 0px;text-align: left;" class="redactorcontent">
+										<%if(_apptext.list.onepass_plan){%>
+										<%=_apptext.list.onepass_plan.content%>
+										<%}%>
+									</div>
+								</div>
+								<div class="page" data-page="player">
+									<div style="font-size:22px">Become a Player</div>
+									<div style="font-size:16px;padding-top:5px">$11/month</div>
+									<div style="padding:15px 0px;text-align: left;" class="redactorcontent">
+										<%=_apptext.list.welcome_become_player.content%>
+									</div>
+								</div>
+							</div>
+							<div>
+	                            <div class="highlightbutton2" style="padding:5px;text-align: left;font-weight: bold">Card Info</div>
+	                            <div id="card-element" style="min-height:20px;border:1px solid #ccc;padding:4px 2px"></div>
+	                            <div id="card-errors"></div>
+	                        </div>
+							<div style="padding-top:15px;text-align: center;">
+								<div class="button1 x_go submittext">Let's Go!</div>
+							</div>
+							<div style="padding-top:15px;text-align: center;" class="x_next">No Thanks</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@onepass_success@@@
+<div style="background:white">
+	<div class="mobileheader frostedbg">
+		<div class="table">
+			<div class="tcell" style="width:60px;text-align: center;">
+			</div>
+			<div class="tcell" style="text-align: center;font-size:22px">
+                ONE|Pass Checkin
+            </div>
+			<div class="tcell" style="width:60px;text-align: center;font-size:20px">
+				
+			</div>
+		</div>
+	</div>
+	<div >
+		<div>
+            <div style="padding:5px">
+                <div style="text-align:center">
+                    <img src="https://s3.amazonaws.com/one-light/img/bc2f6a448a960f/full.png" style="width:90%">
+                </div>
+                <div style="padding:40px 20px;font-size:26px;color:green;font-weight: bold;">
+                    <%=modules.moment.format(new Date().getTime(),'event_full')%>
+                </div>
+                <div style="text-align: center;margin-top:30px">
+                    <div style="width:120px;height:120px;background:green;text-align: center;display: inline-block;" class="circle">
+                        <div class="table">
+                            <div class="tcell"><i class="icon-check-thin" style="font-size:55px;color:white"></i></div>
+                        </div>
+                    </div>
+                </div>
+           </div>
+        </div>
+	</div>
+</div>

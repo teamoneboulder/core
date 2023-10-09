@@ -1,0 +1,630 @@
+@@@ticket_checkout_page@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 100;background: transparent;overflow: hidden" class="apppageview">
+	<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;" class="content m-corner-top ticket_checkoutcontent">
+			<div style="position: absolute;bottom:100%;left:0;right:0;margin-bottom:5px;padding:5px;text-align: center;height:160px;" class="swiper">
+				<div style="width:80px;height:6px;background:rgba(255,255,255,.6);position: absolute;bottom:0;left:50%;margin-left:-40px;" class="s-corner-all"></div>
+			</div>
+			<div style="padding:5px;font-size:18px;font-weight: bold;margin-bottom:0px;border-bottom:1px solid #ccc" class="themebg m-corner-top">
+				<table style="width:100%;color:#888">
+					<tr>
+						<td style="width:50px;text-align: left;padding-left:5px" class="x_closer truebox">
+							<i class="icon-cancel" style="font-size:14px;"></i>
+						</td>
+						<td style="text-align: center;font-size:18px;color:#888;padding:3px;"><%if(this.fundraiser&&fundraiser){%>Fundraiser Checkout<%}else{%>Ticket Checkout<%}%></td>
+						<td style="width:50px;text-align: right;padding-right:5px;font-size:16px;" class="timeremaining">
+							<%if(this.fundraiser&&fundraiser){%>
+							<%}else{%>
+							10:00
+							<%}%>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="position: relative;overflow: hidden" class="ticket_checkout_height">
+				<div style="position: absolute;top:0;left:0;width:100%;height:100%;" class="pagepane">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@ticket_questionaire_awaiting_response@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+	<div style="padding:20px;font-size:16px;">You have already submitted your responses, you will receive a notification if you are approved.</div>
+</div>
+@@@ticket_questionaire_required@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+	<div>
+		<div style="padding:20px;font-size:16px;">
+			<p>This event requires an application to be filled out and approved to purchase tickets.</p><p>Please fill out the following questions, and you will receive a notification when your application is approved.</p>
+		</div>
+		<div style="text-align: center;">
+			<span class="button1 x_respond">Respond to Questionaire!</span>
+		</div>
+	</div>
+</div>
+@@@ticket_questionaire_login_required@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+	<div style="padding:20px;font-size:16px;">
+		<div>This event requires a questionaire to be completed and approved to purchase a ticket.</div>
+	    <div style="padding-top:20px;font-size:16px;">Please log in or create an account to complete the questionaire.</div>
+	    <div style="padding-top:40px;text-align: center;">
+	    	<span class="button1 x_create">Create Account</span>
+	    	<span class="button2 x_login" style="margin-left:10px">Login</span>
+	    </div>
+	</div>
+</div>
+@@@ticket_checkout_closed@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit scrollY">
+	<div>
+		<%if(message){%>
+		<div style="padding:20px;font-size:14px;">
+			<%=message%>
+		</div>
+		<%}else{%>
+		<div style="padding:20px;font-size:18px;text-align: center;">
+			Ticket sales have stopped
+		</div>
+		<%}%>
+	</div>
+</div>
+@@@ticket_checkout_login@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div class="sfit scroller">
+		<div class="guestarea">
+			<%if(login){%>
+			<div style="text-align: center;padding:20px;">
+				<div class="nbtn button1 bold x_login" style="font-size:16px;">Log In</div>
+			</div>
+			<div style="padding:5px;text-align: center;font-size:16px">OR</div>
+			<div style="padding:20px;text-align: center;">
+				<%if(!resp.settings||!resp.settings.onboard){%>
+				<div style="font-size:16px;padding-bottom:5px" class="bold">Continue as a Guest</div>
+				<%}else{%>
+				<div style="font-size:16px;padding-bottom:5px" class="bold">Continue as a Guest</div>
+				<%}%>
+			</div>
+			<%}%>
+			<div class="content" style="padding:0px 5px"></div>
+			<div style="text-align: center;padding:20px;">
+				<div class="nbtn button1 bold disabled x_next" style="font-size:16px;">Next</div>
+			</div>
+		</div>
+		<div class="sfit loginboxarea" style="display: none;">
+			<div style="position: absolute;top:0;left:0;right:0;height:30px">
+				<table style="width:100%;height:100%">
+					<tr>
+						<td style="padding-left:5px;text-align: left" class="x_back"><i class="icon-left-open"></i> Back to checkout</td>
+					</tr>
+				</table>
+			</div>
+			<div class="loginarea sfit" style="top:30px;"></div>
+		</div>
+	</div>
+</div>
+@@@ticket_checkout_login_fundraiser@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div class="sfit scroller">
+		<div class="guestarea">
+			<div style="text-align: center;padding:20px;">
+				<div class="nbtn button1 bold x_login" style="font-size:16px;">Log In</div>
+			</div>
+			<div style="padding:5px;text-align: center;font-size:16px">OR</div>
+			<div style="padding:20px;text-align: center;">
+				<div style="font-size:16px;padding-bottom:5px" class="bold">Continue as a Guest</div>
+				<div style="font-size:12px;">You can create an account after completing your payment</div>
+			</div>
+			<div class="content" style="padding:0px 5px"></div>
+			<div style="text-align: center;padding:20px;">
+				<div class="nbtn button1 bold disabled x_next" style="font-size:16px;">Next</div>
+			</div>
+		</div>
+		<div class="sfit loginboxarea" style="display: none;">
+			<div style="position: absolute;top:0;left:0;right:0;height:30px">
+				<table style="width:100%;height:100%">
+					<tr>
+						<td style="padding-left:5px;text-align: left" class="x_back"><i class="icon-left-open"></i> Back to checkout</td>
+					</tr>
+				</table>
+			</div>
+			<div class="loginarea sfit" style="top:30px;"></div>
+		</div>
+	</div>
+</div>
+@@@ticket_checkout_cart@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;top:0;left:<%=left%>%;position:absolute">
+	<div class="sfit scrollY" style="bottom:50px">
+		<div>
+			<div style="padding:10px;font-size:24px;text-align: center">Cart</div>
+			<div style="font-size: 16px;padding:10px;" class="bold">
+				Tickets
+			</div>
+			<div>
+				<div>
+					<table style="width:100%">
+						<tr>
+							<td></td>
+							<td style="width:100px;padding-right:5px;text-align: right;font-size:12px">Quantity</td>
+						</tr>
+					</table>
+				</div>
+				<%for (var i = 0; i < tickets.length; i++) {
+					var ticket=tickets[i];%>
+					<div style="padding:10px;">
+						<table style="width:100%">
+							<tr>
+								<td>
+									<div style="font-size:18px;"><%=ticket.data.name%></div>
+								</td>
+								<td style="width:100px;text-align: right;padding-right:5px;font-size:18px;"><i class="icon-ticket"></i><%=ticket.quantity%></td>
+							</tr>
+						</table>
+					</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;bottom:0;left:0;right:0;text-align: center;height: 50px" class="button1 x_next">
+		<table style="width:100%;height:100%;text-align: center;font-size:18px;" class="bold">
+			<tr>
+				<td>To the Payments <i class="icon-hero"></i></td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ticket_checkout_cart_fundraiser@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;top:0;left:<%=left%>%;position:absolute">
+	<div class="sfit scrollY" style="bottom:50px">
+		<div>
+			<div style="padding:10px;font-size:24px;text-align: center">Cart</div>
+			<div style="font-size: 16px;padding:10px;" class="bold">
+				Tickets
+			</div>
+			<div>
+				<div>
+					<table style="width:100%">
+						<tr>
+							<td></td>
+							<td style="width:100px;padding-right:5px;text-align: right;font-size:12px">Quantity</td>
+						</tr>
+					</table>
+				</div>
+				<%for (var i = 0; i < tickets.length; i++) {
+					var ticket=tickets[i];%>
+					<div style="padding:10px;">
+						<table style="width:100%">
+							<tr>
+								<td>
+									<div style="font-size:18px;"><%=ticket.data.name%></div>
+								</td>
+								<td style="width:100px;text-align: right;padding-right:5px;font-size:18px;"><i class="icon-ticket"></i><%=ticket.quantity%></td>
+							</tr>
+						</table>
+					</div>
+				<%}%>
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;bottom:0;left:0;right:0;text-align: center;height: 50px" class="button1 x_next">
+		<table style="width:100%;height:100%;text-align: center;font-size:18px;" class="bold">
+			<tr>
+				<td>To the Payments <i class="icon-hero"></i></td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ticket_checkout_payment@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;top:0;left:<%=left%>%;position:absolute">
+	<div class="sfit scrollY" style="bottom:102px">
+		<div class="scrollcontent">
+			<div>
+				<div style="padding:5px;margin:10px 0px;">
+					<table style="width:100%">
+						<tr>
+							<td style="width:50px">
+								<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(receipt.event.pic,'small')%>)" class="coverimg"></div>
+							</td>
+							<td style="padding:10px;font-size:18px;">
+								<%=receipt.event.name%>
+							</td>
+							<td style="width:60px;text-align: center;">
+								<div style="font-size:12px;padding-top:1px;" class="highlighttext"><%=modules.moment.months[new Date(receipt.event.start*1000).getMonth()].short%></div>
+								<div style="font-size:20px;"><%=new Date(receipt.event.start*1000).getDate()%></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<%if(mode=='donation'){%>
+			<%var item=receipt.tickets[0];%>
+			<div style="padding:5px;text-align: center;font-size:20px;font-weight: bold;"><%=item.data.name%></div>
+			<div style="font-size:40px;color:#888;text-align: center;padding:10px;" class="x_donate">$0</div>
+			<%}else{%>
+			<div style="padding:5px;font-size:15px;border-bottom:1px solid #eee" class="headercolor">
+				<table style="width:100%">
+					<tr>
+						<td style="padding-left:5px;text-align: left;font-size: 16px">
+							Item
+						</td>
+						<td style="width:25px;text-align: center;padding-right:5px;font-size:16px">
+							Qty
+						</td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">Price</td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">Total</td>
+					</tr>
+				</table>
+			</div>
+			<div>
+			<%for (var i = 0; i < receipt.tickets.length; i++) {
+				var item=receipt.tickets[i];
+				var ticket=item.data;%>
+				<div style="padding:5px;font-size:15px;border-bottom:1px solid #eee" class="ticketitem" data-id="<%=ticket.id%>">
+					<table style="width:100%">
+						<tr>
+							<td style="padding-left:5px">
+								<div style="font-size:16px"><%=ticket.name%></div>
+							</td>
+							<td style="width:25px;text-align: center;padding-right:5px;font-size:16px">
+								<span class="ticket_quantity"><%=item.quantity%></span>
+							</td>
+							<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">$<%=modules.tools.toMoney(ticket.price)%></td>
+							<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">$<%=modules.tools.toMoney(ticket.price*parseInt(item.quantity,10))%></td>
+						</tr>
+					</table>
+				</div>
+			<%}%>
+			</div>
+			<%if(receipt.fee){%>
+			<div style="padding:5px;font-size:15px;">
+				<table style="width:100%">
+					<tr>
+						<td style="padding-right:5px;text-align: right">
+							<div style="font-size:16px">Card Processing Fee</div>
+						</td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">$<span class="x_processing"><%=modules.tools.toMoney(receipt.fee)%></span></td>
+					</tr>
+				</table>
+			</div>
+			<%}%>
+			<%if(receipt.platformFee){%>
+			<div style="padding:5px;font-size:15px;">
+				<table style="width:100%">
+					<tr>
+						<td style="padding-right:5px;text-align: right">
+							<div style="font-size:16px">Platform Fee</div>
+						</td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">$<span class="x_platform"><%=modules.tools.toMoney(receipt.platformFee)%></span></td>
+					</tr>
+				</table>
+			</div>
+			<%}%>
+			<div style="padding:5px;font-size:15px;border-bottom:1px solid #eee;background: rgba(0,255,0,1);color:#888" class="x_total_discount_row">
+				<table style="width:100%">
+					<tr>
+						<td style="padding-right:5px;text-align: right">
+							<div style="font-size:16px">Total Discounts</div>
+						</td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">- $<span class="x_total_discount"></span></td>
+					</tr>
+				</table>
+			</div>
+			<div class="donationarea" style="margin-top:5px"></div>
+			<div style="padding:10px;font-size:18px;text-align: right">
+				<span class="bold" style="margin-right:5px;">Total</span> $<span class="x_total"><%=modules.tools.toMoney(receipt.total)%></span>
+			</div>
+			<div class="discountarea"></div>
+			<%}%>
+			<%if(onboard){%>
+			<div style="padding:5px;background: #eee;margin:10px;" class="s-corner-all">
+				<div class="itable">
+					<div class="tcell" style="width:40px;text-align: center">
+						<i class="icon-info" style="font-size:24px;"></i>
+					</div>
+					<div class="tcell">
+						Become a player for $11/mo and <b>save $11 on</b> membership.
+					</div>
+				</div>
+			</div>
+			<div style="padding:5px;margin:5px 10px 15px 10px;">
+				<div class="itable x_toggleplayer">
+					<div class="tcell" style="width:40px;text-align: center">
+						<i class="icon-check-empty" style="font-size:24px;"></i>
+					</div>
+					<div class="tcell">
+						Yes, I want to become a Player and attend this event!  This will start an $11/mo player subscription with the first month of service gifted to you.
+					</div>
+				</div>
+			</div>
+			<%}%>
+			<div class="methodarea" style="padding-bottom: 50px">
+				
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;bottom:60px;left:0;right:0;text-align: center;height: 50px;border-top:1px solid #ccc;border-bottom:1px solid #ccc;background:white" class="x_terms">
+		<table style="width:100%;height:100%;text-align: center;font-size:14px;">
+			<tr>
+				<td ><i class="checker icon-check-empty"></i> I agree to the <span class="bold x_viewterms" style="font-weight:bold">terms and conditions</span>.</td>
+			</tr>
+		</table>
+	</div>
+	<div style="position: absolute;bottom:0;left:0;right:0;text-align: center;height: 50px" class="button1 x_next disabled">
+		<table style="width:100%;height:100%;text-align: center;font-size:18px;" class="bold">
+			<tr>
+				<%if(donationBased){%>
+				<td class="x_sendtext">Make Donation</td>
+				<%}else{%>
+				<td class="x_sendtext">Purchase Tickets</td>
+				<%}%>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ticket_checkout_add_donation@@@
+<div data-<%=template%>="<%=_tid%>" style="text-align: right;">
+	<div class="number_input_click s-corner-all button2" style="display:inline-block;font-size:14px;padding:5px 8px;border:1px solid #ccc;margin:3px">Optional Donation <span style="padding:5px 8px;font-size:18px;" class="number_input">$0</span></div>
+</div>
+@@@ticket_checkout_payment_fundraiser@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;top:0;left:<%=left%>%;position:absolute">
+	<div class="sfit scrollY" style="bottom:102px">
+		<div>
+			<div>
+				<div style="padding:5px;margin:10px 0px;">
+					<table style="width:100%">
+						<tr>
+							<td style="width:50px">
+								<div style="width:50px;height:50px;background-image:url(<%=modules.tools.getImg(receipt.event.pic,'small')%>)" class="coverimg"></div>
+							</td>
+							<td style="padding:10px;font-size:18px;">
+								<%=receipt.event.name%>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div style="padding:5px;font-size:15px;border-bottom:1px solid #eee" class="headercolor">
+				<table style="width:100%">
+					<tr>
+						<td style="padding-left:5px;text-align: left;font-size: 16px">
+							Item
+						</td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">Total</td>
+					</tr>
+				</table>
+			</div>
+			<div>
+			<%for (var i = 0; i < receipt.tickets.length; i++) {
+				var item=receipt.tickets[i];
+				var ticket=item.data;%>
+				<div style="padding:5px;font-size:15px;border-bottom:1px solid #eee" class="ticketitem" data-id="<%=ticket.id%>">
+					<table style="width:100%">
+						<tr>
+							<td style="padding-left:5px">
+								<div style="font-size:16px"><%=ticket.name%></div>
+							</td>
+							<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">$<%=modules.tools.toMoney(receipt.donate_amount)%></td>
+						</tr>
+					</table>
+				</div>
+			<%}%>
+			</div>
+			<div style="padding:5px;font-size:15px;border-bottom:1px solid #eee">
+				<table style="width:100%">
+					<tr>
+						<td style="padding-left:5px">
+							<div style="font-size:16px">Processing Fee</div>
+						</td>
+						<td style="width:25px;text-align: center;padding-right:5px;font-size:16px">
+						</td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;"></td>
+						<td style="width:60px;text-align: right;padding-right:5px;font-size:16px;">$<span class="x_processing"><%=modules.tools.toMoney(receipt.fee)%></span></td>
+					</tr>
+				</table>
+			</div>
+			<div style="padding:10px;font-size:18px;text-align: right">
+				<span class="bold" style="margin-right:5px;">Total</span> $<span class="x_total"><%=modules.tools.toMoney(receipt.total)%></span>
+			</div>
+			<div class="methodarea">
+				
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;bottom:60px;left:0;right:0;text-align: center;height: 50px;border-top:1px solid #ccc;border-bottom:1px solid #ccc;background:white" class="x_terms">
+		<table style="width:100%;height:100%;text-align: center;font-size:14px;">
+			<tr>
+				<td ><i class="checker icon-check-empty"></i> I agree to the <span class="bold x_viewterms">terms and conditions</span>.</td>
+			</tr>
+		</table>
+	</div>
+	<div style="position: absolute;bottom:0;left:0;right:0;text-align: center;height: 50px" class="button1 x_next disabled truebox">
+		<table style="width:100%;height:100%;text-align: center;font-size:18px;" class="bold">
+			<tr>
+				<td class="x_sendtext">Support <%=fundraiser_for%>!</td>
+			</tr>
+		</table>
+	</div>
+</div>
+@@@ticket_checkout_discount@@@
+<div data-<%=template%>="<%=_tid%>">
+	<%if(discount){%>
+	<div style="padding:20px 0px;">
+		<table style="width:300px;;margin-left:auto">
+			<tr>
+				<td style="width:30px;text-align: center;"><i class="icon-cancel x_remove"></i></td>
+				<td>
+					<div style="padding-bottom:3px"><b>Code: <%=discount.code%></b></div>
+					<div>Save <%=discount.discount_percent%>% off the whole order!</div>
+				</td>
+				<td style="width:50px;text-align: right;padding-right:5px;font-size:16px">
+					-<span style="color:green;font-weight: bold">$<span class="x_discount_total"></span></span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%}else{%>
+	<div  style="padding:5px 0px 20px 0px;text-align: right;">
+		<table style="margin-left: auto;">
+			<tr>
+				<td>
+					<input type="text" style="padding:5px 10px;border:1px solid #ccc;width:200px;" class="l-corner-all x_discount" placeholder="Enter Discount Code">
+				</td>
+				<td>
+					<div class="nbtn button1 l-corner-all x_discount_send" style="font-size:14px;padding:2px 10px"><i class="icon-add-clean"></i> Add</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+</div>
+@@@ticket_checkout_anonmethods@@@
+<div data-<%=template%>="<%=_tid%>">
+	<div style="background: white;padding:0px 10px">
+		<div style="font-size:16px;color:#333" class="bold">Credit/Debit Card</div>
+		<div style="padding-top:15px;">
+			<div style="padding:10px 5px;border-bottom:1px solid #ccc">
+			    <div id="card-element" style="min-height:20px"></div>
+			    <div id="card-errors"></div>
+			</div>
+		</div>
+	</div>
+</div>
+@@@ticket_checkout_methods_loading@@@
+<div style="padding-bottom: 20px;text-align: center;padding-top:20px;font-size:18px;color:#888" data-<%=template%>="<%=_tid%>">
+	<div>
+		<i class="icon-refresh animate-spin" style="font-size:30px;"></i>
+	</div>
+	<div style="padding-top:15px">
+		Loading Payment Methods
+	</div>
+</div>
+@@@ticket_checkout_methods@@@
+<div style="padding-bottom: 20px;padding-top:15px" data-<%=template%>="<%=_tid%>">
+	<div style="font-size:16px;padding:10px;text-align: left;font-weight:bold" class="headercolor">Select Payment Method</div>
+	<div>
+		<%if(resp.data.methods){%>
+	<%for (var i = 0; i < resp.data.methods.length; i++) {
+		var method=resp.data.methods[i];%>
+		<div style="background:white;padding:10px;" class="accountitem toggler <%if(resp.data.preferred==method.id){%>selected<%}%>" data-id="<%=method.id%>">
+			<div>
+				<table style="width:100%">
+					<tr>
+						<td style="width:40px;text-align: center;" class="">
+							<i class="icon-check" style="font-size:30px;color:#0193be"></i>
+							<i class="icon-check-empty" style="font-size:30px;"></i>
+						</td>
+						<td style="width:40px;text-align: center;">
+							<i class="icon-credit-card" style="font-size:18px;"></i>
+						</td>
+						<td style="padding-left:5px;font-size:18px"><%=method.brand%> &middot; <%=method.last4%>
+						</td>
+						<td style="width:100px;text-align: right;padding-right:5px">
+							exp <%=method.exp_month%>/<%=method.exp_year%>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	<%}%>
+	<%}%>
+	<div style="padding:10px;background:white;margin-top:5px;text-align: center;" class="x_addcard">
+		Add a Credit/Debit Card
+	</div>
+	</div>
+</div>
+@@@ticket_checkout_donation@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden">
+	<div style="width:600px;max-width:100%;margin:auto;">
+		<div style="background: white;">
+			<div style="text-align: left;font-size:18px;padding:10px;color:#888" class="bolder">Please enter a donation amount</div>
+			<div style="padding:5px;" class="content">
+			</div>
+		</div>
+		<div style="text-align: center;padding:20px;">
+			<div class="nbtn button1 bold disabled x_next truebox" style="font-size:16px;">Next</div>
+		</div>
+	</div>
+</div>
+@@@ticket_checkout_addcard@@@
+<div data-<%=template%>="<%=_tid%>" style="position:absolute;top:0;height:100%;left:<%=left%>%;width:100%;overflow:hidden">
+	<div style="width:600px;max-width:100%;margin:auto;">
+		<div style="padding:10px;color:#888;font-size:16px" class="goback">
+			<i class="icon-left-open"></i> Back to Checkout
+		</div>
+		<div style="background: white;">
+			<div style="display:none;text-align: center;font-size:18px;padding-bottom:10px;color:#888" class="bolder">Add Card</div>
+			<div style="padding:5px;">
+				<div style="padding-bottom:30px;padding-top:30px;">
+				    <div id="card-element" style="min-height:20px"></div>
+				    <div id="card-errors"></div>
+				</div>
+			</div>
+		</div>
+		<div style="height:40px;background:#0193be" class="x_submit">
+			<table style="width:100%;height:100%;color:white;text-align: center;">
+				<tr>
+					<td class="bold submittext">
+						Add Card
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+@@@ticket_checkout_thanks@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;top:0;left:<%=left%>%;position:absolute">
+	<div style="position: absolute;top:0;left:0;right:0;<%if(anon&&false){%>bottom:102px;<%}else{%>bottom:51px;<%}%>" class="scrollY">
+		<div>
+			<div style="text-align: center;padding:5px;">
+				<div style="padding:10px;border:3px solid green;" class="m-corner-all">
+					<div class="itable" style="width:400px;margin:auto;max-width: 85%;">
+						<div class="tcell" style="width:60px;">
+							<div style="width:60px;height:60px;background:green;color:white;position:relative;" class="circle">
+								<div class="table">
+									<div class="tcell"><i class="icon-check-thin" style="font-size:30px;"></i></div>
+								</div>
+							</div>
+						</div>
+						<div class="tcell" style="font-size:20px;font-weight: bold;padding-left: 5px;padding-right: 10px;color:green">
+							Ticket Purchase Success!
+						</div>
+					</div> 
+				</div>
+			</div>
+			<%if(content&&content.confirmation){%>
+			<div style="padding:16px;" class="redactor_content">
+				<%=_.parseString(content.confirmation,renderdata)%>
+			</div>
+			<%}else{%>
+			<div style="padding:20px;font-size:24px;text-align: center;">Congrats!</div>
+			<div style="padding:10px;text-align: center;font-size:16px;">You are going to <%=event.name%>!</div>
+			<div style="padding:10px;text-align: center;font-size:16px;">We emailed you a copy of your receipt.</div>
+			<%}%>
+			<%if(showQrs){%>
+			<div>
+				<%for (var i = 0; i < qrs.length; i++) {
+					var qr=qrs[i];%>
+					<div style="padding:5px;text-align: center;"><div style="padding-bottom:5px;font-size: 18px;color:#888;font-weight: bold">Ticket <%=(i+1)%>/<%=(qrs.length)%></div><div><img src="<%=qr%>" style="width:50%;text-align: center;display: inline-block;"></div></div>
+				<%}%>
+			</div>
+			<%}%>
+		</div>
+	</div>
+	<%if(created){%>
+	<div style="position: absolute;bottom:0;left:0;right:0;text-align: center;height: 50px" class="button1 x_next truebox">
+		<table style="width:100%;height:100%;text-align: center;font-size:18px;" class="bold">
+			<tr>
+				<td class="x_done">Download the ONE|Boulder app to Play!</td>
+			</tr>
+		</table>
+	</div>
+	<%}else{%>
+	<div style="position: absolute;bottom:0;left:0;right:0;text-align: center;height: 50px" class="button1 x_next truebox">
+		<table style="width:100%;height:100%;text-align: center;font-size:18px;" class="bold">
+			<tr>
+				<td class="x_done">Done</td>
+			</tr>
+		</table>
+	</div>
+	<%}%>
+</div>

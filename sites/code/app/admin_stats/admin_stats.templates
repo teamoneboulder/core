@@ -1,0 +1,122 @@
+@@@admin_stats@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit page">
+    <div style="position:relative;height:100%;">
+        <div style="position:absolute;top:5;left:0;right:0;height:50px;background:#eee;max-width:1000px;margin:auto;" class="l-corner-all">
+            <table style="width:100%;height:100%;font-size:20px;">
+                <tr>
+                    <td style="width:40px;text-align:center"><i class="icon-refresh" id="refreshstats" style="font-size:24px;"></i></td>
+                    <td>Stats</td>
+                </tr>
+            </table>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;top:55px;" class="scroller">
+            <div style="max-width:1000px;margin:auto;">
+                <div id="statspage"></div>
+            </div>
+        </div>
+    </div>
+</div>
+@@@admin_stats_data@@@
+<div data-<%=template%>="<%=_tid%>">
+    <div>
+        <%for (var i = 0; i < stats.boxes.order.length; i++) {
+            var stat=stats.boxes.list[stats.boxes.order[i]];%>
+            <div style="position:relative;width:150px;height:120px;border:1px solid #ccc;display:inline-block;margin:5px;" class="l-corner-all">
+                <div style="position:absolute;top:30;left:0;right:0;bottom:0px;background:white;" class="l-corner-bottom">
+                    <table style="width:100%;height:100%;text-align:center">
+                        <tr>
+                            <td style="font-size:30px"><%=stat.value.addCommas()%></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="position:absolute;top:0;left:0;right:0;height:30px;background-image:url(<%=app.header%>);color:white" class="coverimg l-corner-top">
+                    <table style="width:100%;height:100%;text-align:center">
+                        <tr>
+                            <td style="font-size:12px;color:white"><b><%=stat.name%></b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+       <% };%>
+       <%if(stats.membership_stats){%>
+       <div style="padding:10px;font-size:18px"><b>Overall Membership Stats</b></div>
+      <%for (var i = 0; i < stats.membership_stats.order.length; i++) {
+            var stat=stats.membership_stats.list[stats.membership_stats.order[i]];%>
+            <div style="font-size:16px;"><%=stat.name%></div>
+            <div>
+                <%for (var ti = 0; ti < stats.membership_stats.typeorder.length; ti++) {
+                    var tstat=stats.membership_stats.typeorder[ti];%>
+                    <div style="position:relative;width:150px;height:120px;border:1px solid #ccc;display:inline-block;margin:5px;" class="l-corner-all">
+                        <div style="position:absolute;top:30;left:0;right:0;bottom:0px;background:white;" class="l-corner-bottom">
+                            <table style="width:100%;height:100%;text-align:center">
+                                <tr>
+                                    <td style="font-size:30px"><%=stat[tstat].addCommas()%></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="position:absolute;top:0;left:0;right:0;height:30px;background-image:url(<%=app.header%>);color:white" class="coverimg l-corner-top">
+                            <table style="width:100%;height:100%;text-align:center">
+                                <tr>
+                                    <td style="font-size:12px;color:white"><b><%=tstat%></b></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                <%}%>
+            </div>
+        <%}%>
+        <%}%>
+         <%if(stats.membership_stats2){%>
+         <div style="padding:10px;font-size:18px"><b>Plan Stats</b></div>
+      <%for (var i = 0; i < stats.membership_stats2.order.length; i++) {
+            var stat=stats.membership_stats2.list[stats.membership_stats2.order[i]];%>
+            <div style="font-size:16px;"><%=stat.plan.title%> - <%=stat.plan.id%></div>
+            <div>
+                <%
+                var order=['count','active','notactive','paid','trial','overdue','stopped'];
+                for (var ti = 0; ti < order.length; ti++) {
+                    var tstat=order[ti];%>
+                    <div style="position:relative;width:130px;height:120px;border:1px solid #ccc;display:inline-block;margin:5px;" class="l-corner-all">
+                        <div style="position:absolute;top:30;left:0;right:0;bottom:0px;background:white;" class="l-corner-bottom">
+                            <table style="width:100%;height:100%;text-align:center">
+                                <tr>
+                                    <td style="font-size:30px"><%=stat[tstat].addCommas()%></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div style="position:absolute;top:0;left:0;right:0;height:30px;background-image:url(<%=app.header%>);color:white" class="coverimg l-corner-top">
+                            <table style="width:100%;height:100%;text-align:center">
+                                <tr>
+                                    <td style="font-size:12px;color:white"><b><%=tstat%></b></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                <%}%>
+            </div>
+        <%}%>
+        <%}%>
+       <div style="padding:10px;font-size:18px;margin-bottom:10px"><b>Referal Leaderboard</b></div>
+       <div>
+            <table>
+                <tr>
+                    <th style="width:50px;"></th>
+                    <th style="width:200px;text-align: left">Name</th>
+                    <th style="width:200px;">Referals</th>
+                    <th style="width:200px;">Landing Page Loads</th>
+                </tr>
+               <%for (var i = 0; i < stats.referals.order.length; i++) {
+                    var stat=stats.referals.list[stats.referals.order[i]];%>
+                <tr>
+                    <td style="width:50px;text-align: center;padding:5px">
+                        <div class="coverimg s-corner-all" style="background-image: url(<%=modules.tools.getImg(stat.user.pic,'small')%>);width:40px;height:40px"></div>
+                    </td>
+                    <td style="width:200px;"><%=stat.user.name%></td>
+                    <td style="width:200px;text-align: center;"><%=stat.referals%></td>
+                    <td style="width:200px;text-align: center;"><%=stat.landing%></td>
+                </tr>
+               <% };%>
+           </table>
+       </div>
+    </div>
+</div>

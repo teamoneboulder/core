@@ -1,0 +1,5 @@
+#!/bin/bash
+connection_string="$(jq '.mongo["connection_string"]' ${HOME}/priv/config.json)"
+username="$(jq '.mongo["username"]' ${HOME}/priv/config.json)"
+password="$(jq '.mongo["password"]' ${HOME}/priv/config.json)"
+mongodump --host ${connection_string} --ssl --username ${username} --password ${password} --authenticationDatabase admin --db XXXXX

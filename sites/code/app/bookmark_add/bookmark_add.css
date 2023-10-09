@@ -1,0 +1,36 @@
+@media only screen and (min-device-width: 802px) {
+	.bookmarkpage .mainpage,.bookmarkaddedit .mainpage{
+		width:310px;
+		height:420px !important;
+		display: inline-block;
+	}
+	.addbookmarkinput{
+		width:300px !important;
+	}
+	.addbookmarksearch{
+		top:4px !important;
+		left:5px !important;
+		margin-left: 0px !important;
+	}
+	.addbookmarksearch2{
+		top:11px !important;
+		left:4px !important;
+		margin-left: 0px !important;
+	}
+	.bookmarkadd .pane,.bookmarkaddedit .pane{
+		width:320px !important;
+		left:auto !important; 
+	}
+}
+.bookmarkpage .mainpage{
+	height:90vh;
+}
+.addbookmarkinput{
+	width:90vw;
+}
+.addbookmarksearch{
+	top:4px;left:50%;margin-left:-45vw;
+}
+.addbookmarksearchadd{
+	top:4px;right:4px;
+}

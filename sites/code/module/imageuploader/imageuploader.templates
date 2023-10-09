@@ -1,0 +1,2 @@
+@@@imageuploader_circle@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit indicator" style="background: rgba(55,55,55,.3);z-index: 10"></div>

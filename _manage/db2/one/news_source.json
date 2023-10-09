@@ -1,0 +1,13 @@
+[{
+	"id":"G7AOYW53EFZCK",
+	"name":"Daily Camera",
+	"type":"page",
+	"feed_urls":["https://www.dailycamera.com/news/feed/"],
+	"loc":{}
+},{
+	"id":"GX3FBIDAPJ0CK",
+	"name":"Boulder Government",
+	"type":"page",
+	"feed_urls":["https://bouldercolorado.gov/feeds/city/news"],
+	"loc":{}
+}]

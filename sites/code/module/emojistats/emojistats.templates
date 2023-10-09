@@ -1,0 +1,66 @@
+@@@modules_emojistats@@@
+<div data-<%=template%>="<%=_tid%>" style="width:100%;height:100%;position:absolute;top:0;left:0;z-index: 10000;background: transparent;" class="emojistatspage">
+	<div style="position: absolute;top:100%;left:0;width:100%;height:100%;z-index:2;pointer-events: none;" class="pane">
+		<div style="position: absolute;bottom:0;left:0;right:0;background: white;pointer-events: none;pointer-events: auto" class="s-corner-top page">
+			<%if(this.nav){%>
+			<div style="height:40px;border-bottom: 1px solid #ccc">
+				<%=_ui.swipenav.render({id:'emojistats',nav:nav,template:'ui_swipenav_emoji',title:title})%>
+				<i class="icon-cancel x_close" style="color:#888;position: absolute;top:4px;right:4px;padding:5px;font-size:18px;"></i>
+			</div>
+			<%}%>
+			<div style="height: 80vh;max-height:80vh;background: white;position: relative;">
+				<div class="results"></div>
+			</div>
+		</div>
+	</div>
+	<div style="position: absolute;top:0;left:0;right:0;z-index:3" class="pane2">
+	</div>
+</div>
+@@@modules_emojistats_loading@@@
+<div style="position: relative;height:100%;">
+	<%=_ui.pageloader.render({theme:false,themeClass:'lds-ellipsis-black'})%>
+</div>
+@@@modules_emojistats_feed@@@
+<div data-<%=template%>="<%=_tid%>" class="sfit">
+	<div>
+	<%for (var i = 0; i < data.order.length; i++) {
+		var user=data.list[data.order[i]];%>
+		<div style="position: relative;border-bottom: 1px solid #eee;" class="x_viewprofile" data-id="<%=user.id%>">
+			<table style="width:100%">
+				<tr>
+					<td style="width:50px;vertical-align:top">
+						<div class="coverimg" style="width:40px;height:40px;background-image:url(<%=modules.tools.getImg(user.pic,'small')%>)"></div>
+					</td>
+					<td style="vertical-align:top;padding-top:2px">
+						<div style="font-size:18px;"><%=user.name%></div>
+						<!-- <div style="padding-top:2px;padding-left:2px">Mutual</div> -->
+					</td>
+					<td style="width:40px;text-align: right;vertical-align: top;">
+					</td>
+				</tr>
+			</table>
+		</div>
+	<%}%>
+	</div>
+</div>
+@@@emojistats_item@@@
+<div style="position: relative;border-bottom: 1px solid #eee;" class="x_viewprofile navitem" data-id="<%=data.user.id%>">
+	<table style="width:100%">
+		<tr>
+			<td style="width:50px;vertical-align:top">
+				<div class="coverimg" style="position:relative;width:50px;height:50px;background-image:url(<%=modules.tools.getImg(data.user.pic,'small')%>)">
+
+				</div>
+			</td>
+			<%
+				var r=modules.feed_global.getReaction(data.v);
+			%>
+			<td style="vertical-align:top;padding-top:2px;padding-left:5px">
+				<div style="font-size:18px;"><%=data.user.name%></div>
+				<div><%if(r){%><img src="<%=r%>" style="height:20px"><%}%></div>
+			</td>
+			<td style="width:40px;text-align: right;vertical-align: top;">
+			</td>
+		</tr>
+	</table>
+</div>
