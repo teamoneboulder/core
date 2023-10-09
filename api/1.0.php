@@ -14,7 +14,6 @@
 		} else {
 		    $origin = $_SERVER['REMOTE_ADDR'];
 		}
-		
 		if(isset($_SERVER['HTTP_SEC_FETCH_SITE'])&&$_SERVER['HTTP_SEC_FETCH_SITE']=='same-site'){
 			if(!isset($r['qs']['oneBrowser'])) header('Access-Control-Allow-Origin: '.$origin);
 			header('Access-Control-Allow-Credentials: true');
